@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/fade_in_slide.dart';
-import '../widgets/restaurant_ui/home_app_bar.dart';
-import '../widgets/restaurant_ui/home_drawer.dart';
-import '../widgets/restaurant_ui/order_card_widget.dart';
-import '../widgets/restaurant_ui/order_status_tabs.dart';
-import '../widgets/restaurant_ui/restaurant_status_switch.dart';
-import '../widgets/restaurant_ui/statistics_cards.dart';
+import '../widgets/home_app_bar.dart';
+import '../widgets/home_drawer.dart';
+import '../widgets/order_card_widget.dart';
+import '../widgets/order_status_tabs.dart';
+import '../widgets/restaurant_status_switch.dart';
+import '../widgets/statistics_cards.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

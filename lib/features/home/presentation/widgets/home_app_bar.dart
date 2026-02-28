@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/theme/app_colors.dart';
+import 'package:spider_restaurant/core/theme/app_images.dart';
+import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key, required this.scaffoldKey});
@@ -57,31 +59,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none,
-                color: AppColors.black,
-                size: 28,
-              ),
-              onPressed: () {},
-            ),
-            Positioned(
-              right: 12,
-              top: 14,
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
-                  color: AppColors.red,
-                  shape: BoxShape.circle,
-                ),
-                constraints: const BoxConstraints(minWidth: 10, minHeight: 10),
-              ),
-            ),
-          ],
-        ),
+         CustomImageView(imagePath: AppImages.notification,width: 24 ,fit: BoxFit.scaleDown,),
+        SizedBox(width: 16,)
       ],
     );
   }

@@ -38,4 +38,16 @@ class AppStrings {
   static const String freeDelivery = "Free delivery";
   static const String fastest = "Fastest!";
   static const String offerEndsIn = "Offer ends in:";
+
+  // Drawer
+  static const String personalInformation = "Personal Information";
+  static const String myOrders = "My Orders";
+  static const String myRestaurant = "My Restaurant";
+  static const String wallet = "Wallet";
+  static const String savedCards = "Saved Cards";
+  static const String language = "Language";
+  static const String customerService = "Customer Service";
+  static const String appSettings = "App Settings";
+  static const String privacyPolicy = "Privacy Policy";
+  static const String logOut = "Log Out";
 }
