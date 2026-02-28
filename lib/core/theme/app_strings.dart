@@ -50,4 +50,15 @@ class AppStrings {
   static const String appSettings = "App Settings";
   static const String privacyPolicy = "Privacy Policy";
   static const String logOut = "Log Out";
+
+  // Orders
+  static const String orders = "Orders";
+  static const String today = "Today";
+  static const String thisWeek = "This Week";
+  static const String thisMonth = "This Month";
+  static const String delivered = "Delivered";
+  static const String returned = "Returned";
+  static const String orderCode = "ORDER CODE";
+  static const String delivery = "Delivery";
+  static const String items = "Items";
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../orders/presentation/pages/my_orders_page.dart';
 import '../models/drawer_item_model.dart';
 import 'drawer_header_widget.dart';
 import 'drawer_item_widget.dart';
@@ -30,7 +31,12 @@ class HomeDrawer extends StatelessWidget {
       DrawerItemModel(
         icon: Icons.list_alt,
         title: AppStrings.myOrders,
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyOrdersPage()),
+          );
+        },
       ),
       DrawerItemModel(
         icon: Icons.restaurant_outlined,
