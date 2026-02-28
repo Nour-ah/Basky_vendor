@@ -61,4 +61,31 @@ class AppStrings {
   static const String orderCode = "ORDER CODE";
   static const String delivery = "Delivery";
   static const String items = "Items";
+
+  // My Restaurant
+  static const String open = "Open";
+  static const String closed = "Closed";
+  static const String addWithPlus = "+Add";
+  static const String deals = "Deals";
+  static const String burgers = "Burgers";
+  static const String chicken = "Chicken";
+  static const String sandwich = "Sandwich";
+
+  // Add Food
+  static const String addFood = "Add Food";
+  static const String mealImage = "Meal Image";
+  static const String mealName = "Meal Name";
+  static const String mealDescription = "Meal Description";
+  static const String price = "Price: \$";
+  static const String percentage = "Percentage";
+  static const String discountPercentage = "Discount Percentage";
+  static const String productCategory = "Product Category";
+  static const String subcategory = "Subcategory";
+  static const String maximumOrderQuantity = "Maximum Order Quantity";
+  static const String addOns = "Add-Ons";
+  static const String add = "Add";
+  static const String confirmOrderQuestion =
+      "Do you want to confirm the order?";
+  static const String yes = "Yes";
+  static const String no = "No";
 }

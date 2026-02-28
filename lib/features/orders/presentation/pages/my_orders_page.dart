@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
@@ -16,13 +17,7 @@ class MyOrdersPage extends StatefulWidget {
 }
 
 class _MyOrdersPageState extends State<MyOrdersPage> {
-  String _selectedFilter = AppStrings.all;
-
-  final List<String> _filters = [
-    AppStrings.all,
-    AppStrings.delivered,
-    AppStrings.returned,
-  ];
+  String _selectedFilter = '';
 
   // Dummy statistics
   final OrderSummaryModel _summary = OrderSummaryModel(
@@ -31,51 +26,62 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     thisMonthOrders: 1658,
   );
 
-  // Dummy orders list
-  final List<OrderCardModel> _dummyOrders = [
-    OrderCardModel(
-      orderCode: '#545555',
-      status: AppStrings.delivered,
-      dateTime: '15/1/2024 12:30 AM',
-      orderType: AppStrings.delivery,
-      itemCount: 3,
-    ),
-    OrderCardModel(
-      orderCode: '#545555',
-      status: AppStrings.delivered,
-      dateTime: '15/1/2024 12:30 AM',
-      orderType: AppStrings.delivery,
-      itemCount: 3,
-    ),
-    OrderCardModel(
-      orderCode: '#545555',
-      status: AppStrings.delivered,
-      dateTime: '15/1/2024 12:30 AM',
-      orderType: AppStrings.delivery,
-      itemCount: 3,
-    ),
-    OrderCardModel(
-      orderCode: '#545555',
-      status: AppStrings.returned,
-      dateTime: '15/1/2024 12:30 AM',
-      orderType: AppStrings.delivery,
-      itemCount: 3,
-    ),
-    OrderCardModel(
-      orderCode: '#545555',
-      status: AppStrings.delivered,
-      dateTime: '15/1/2024 12:30 AM',
-      orderType: AppStrings.delivery,
-      itemCount: 3,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    // Only init inside build context
+    if (_selectedFilter.isEmpty) {
+      _selectedFilter = AppStrings.all.tr();
+    }
+
+    final List<String> filters = [
+      AppStrings.all.tr(),
+      AppStrings.delivered.tr(),
+      AppStrings.returned.tr(),
+    ];
+
+    // Dummy orders list with translation
+    final List<OrderCardModel> dummyOrders = [
+      OrderCardModel(
+        orderCode: '#545555',
+        status: AppStrings.delivered.tr(),
+        dateTime: '15/1/2024 12:30 AM',
+        orderType: AppStrings.delivery.tr(),
+        itemCount: 3,
+      ),
+      OrderCardModel(
+        orderCode: '#545555',
+        status: AppStrings.delivered.tr(),
+        dateTime: '15/1/2024 12:30 AM',
+        orderType: AppStrings.delivery.tr(),
+        itemCount: 3,
+      ),
+      OrderCardModel(
+        orderCode: '#545555',
+        status: AppStrings.delivered.tr(),
+        dateTime: '15/1/2024 12:30 AM',
+        orderType: AppStrings.delivery.tr(),
+        itemCount: 3,
+      ),
+      OrderCardModel(
+        orderCode: '#545555',
+        status: AppStrings.returned.tr(),
+        dateTime: '15/1/2024 12:30 AM',
+        orderType: AppStrings.delivery.tr(),
+        itemCount: 3,
+      ),
+      OrderCardModel(
+        orderCode: '#545555',
+        status: AppStrings.delivered.tr(),
+        dateTime: '15/1/2024 12:30 AM',
+        orderType: AppStrings.delivery.tr(),
+        itemCount: 3,
+      ),
+    ];
+
     // Basic local filter implementation
-    List<OrderCardModel> displayedOrders = _dummyOrders;
-    if (_selectedFilter != AppStrings.all) {
-      displayedOrders = _dummyOrders
+    List<OrderCardModel> displayedOrders = dummyOrders;
+    if (_selectedFilter != AppStrings.all.tr()) {
+      displayedOrders = dummyOrders
           .where((order) => order.status == _selectedFilter)
           .toList();
     }
@@ -94,7 +100,10 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(AppStrings.orders, style: AppTextStyle.fontBlack16Bold),
+        title: Text(
+          AppStrings.orders.tr(),
+          style: AppTextStyle.fontBlack16Bold,
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -106,7 +115,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
               const SizedBox(height: 16),
               OrdersFilterTabs(
                 selectedFilter: _selectedFilter,
-                filters: _filters,
+                filters: filters,
                 onFilterChanged: (filter) {
                   setState(() {
                     _selectedFilter = filter;

@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../my_restaurant/presentation/pages/my_restaurant_page.dart';
 import '../../../orders/presentation/pages/my_orders_page.dart';
 import '../models/drawer_item_model.dart';
 import 'drawer_header_widget.dart';
@@ -25,12 +27,12 @@ class HomeDrawer extends StatelessWidget {
     final List<DrawerItemModel> drawerItems = [
       DrawerItemModel(
         icon: Icons.person_outline,
-        title: AppStrings.personalInformation,
+        title: AppStrings.personalInformation.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.list_alt,
-        title: AppStrings.myOrders,
+        title: AppStrings.myOrders.tr(),
         onTap: () {
           Navigator.push(
             context,
@@ -40,37 +42,48 @@ class HomeDrawer extends StatelessWidget {
       ),
       DrawerItemModel(
         icon: Icons.restaurant_outlined,
-        title: AppStrings.myRestaurant,
-        onTap: () {},
+        title: AppStrings.myRestaurant.tr(),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyRestaurantPage()),
+          );
+        },
       ),
       DrawerItemModel(
         icon: Icons.account_balance_wallet_outlined,
-        title: AppStrings.wallet,
+        title: AppStrings.wallet.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.credit_card_outlined,
-        title: AppStrings.savedCards,
+        title: AppStrings.savedCards.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.language_outlined,
-        title: AppStrings.language,
-        onTap: () {},
+        title: AppStrings.language.tr(),
+        onTap: () {
+          final newLocale = context.locale.languageCode == 'ar'
+              ? const Locale('en')
+              : const Locale('ar');
+          context.setLocale(newLocale);
+          Navigator.pop(context); // Close the drawer
+        },
       ),
       DrawerItemModel(
         icon: Icons.headset_mic_outlined,
-        title: AppStrings.customerService,
+        title: AppStrings.customerService.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.settings_outlined,
-        title: AppStrings.appSettings,
+        title: AppStrings.appSettings.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.shield_outlined,
-        title: AppStrings.privacyPolicy,
+        title: AppStrings.privacyPolicy.tr(),
         onTap: () {},
       ),
     ];
@@ -115,7 +128,7 @@ class HomeDrawer extends StatelessWidget {
               child: DrawerItemWidget(
                 item: DrawerItemModel(
                   icon: Icons.logout_outlined,
-                  title: AppStrings.logOut,
+                  title: AppStrings.logOut.tr(),
                   onTap: () {},
                 ),
                 textStyle: AppTextStyle.fontPrimary14Regular.copyWith(

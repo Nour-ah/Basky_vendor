@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
@@ -20,9 +21,9 @@ class OrdersStatisticsCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildStatItem(AppStrings.today, summary.todayOrders),
-          _buildStatItem(AppStrings.thisWeek, summary.thisWeekOrders),
-          _buildStatItem(AppStrings.thisMonth, summary.thisMonthOrders),
+          _buildStatItem(AppStrings.today.tr(), summary.todayOrders),
+          _buildStatItem(AppStrings.thisWeek.tr(), summary.thisWeekOrders),
+          _buildStatItem(AppStrings.thisMonth.tr(), summary.thisMonthOrders),
         ],
       ),
     );

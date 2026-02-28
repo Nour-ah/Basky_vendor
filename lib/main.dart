@@ -1,17 +1,26 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
 import 'package:spider_restaurant/features/auth/presentation/pages/auth_options_page.dart';
-
-import 'core/theme/app_colors.dart';
 
 void main() async {
   // Ensure that widget binding is initialized before using native services.
   WidgetsFlutterBinding.ensureInitialized();
 
+  await EasyLocalization.ensureInitialized();
+
   // TODO: Initialize Dependency Injection (GetIt) and local storages here
   // await di.init();
 
-  runApp(const SpiderRestaurantApp());
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      startLocale: const Locale('ar'), // Defaulting to arabic for the user
+      child: const SpiderRestaurantApp(),
+    ),
+  );
 }
 
 class SpiderRestaurantApp extends StatelessWidget {
@@ -22,6 +31,9 @@ class SpiderRestaurantApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Spider Restaurant App',
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(

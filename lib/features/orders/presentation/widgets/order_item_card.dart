@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
@@ -39,7 +40,7 @@ class OrderItemCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${AppStrings.orderCode}: ${order.orderCode}',
+                '${AppStrings.orderCode.tr()}: ${order.orderCode}',
                 style: AppTextStyle.fontBlack14Bold,
               ),
               Container(
@@ -81,7 +82,7 @@ class OrderItemCard extends StatelessWidget {
               ),
               _buildDivider(),
               Text(
-                '${order.itemCount} ${AppStrings.items}',
+                '${order.itemCount} ${AppStrings.items.tr()}',
                 style: AppTextStyle.fontPrimary12Regular.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
