@@ -7,7 +7,7 @@ class ApiConstants {
   static const String apiVersion = '/api';
 
   // Auth Endpoints
-  static const String register = '/auth/register';
+  static const String register = '/auth/vendor/register';
   static const String login = '/auth/login';
   static const String logout = '/auth/logout';
   static const String verifyEmail = '/auth/verify-email';

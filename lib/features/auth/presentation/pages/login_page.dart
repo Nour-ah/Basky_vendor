@@ -9,6 +9,7 @@ import 'package:spider_restaurant/features/auth/presentation/widgets/auth_backgr
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_button.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_card_widget.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:spider_restaurant/features/auth/presentation/pages/register_page.dart';
 import 'package:spider_restaurant/features/home/presentation/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -101,17 +102,32 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     const SizedBox(height: 24),
                                     AuthButton(
-                                      text: state is AuthLoading ? 'Loading...' : 'Log In',
+                                      text: 'Log In',
                                       backgroundColor: AppColors.promoRed,
                                       isLoading: state is AuthLoading,
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
                                           context.read<AuthCubit>().login(
-                                                login: _emailController.text,
+                                                login: _emailController.text.trim(),
                                                 password: _passwordController.text,
                                               );
                                         }
                                       },
+                                    ),
+                                    const SizedBox(height: 12),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => const RegisterPage(),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text(
+                                        "Don't have an account? Sign Up",
+                                        style: TextStyle(color: Colors.white, fontSize: 13),
+                                      ),
                                     ),
                                   ],
                                 ),

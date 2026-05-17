@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spider_restaurant/core/di/injection_container.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/login_page.dart';
+import 'package:spider_restaurant/features/auth/presentation/pages/auth_options_page.dart';
 
 void main() async {
   // Ensure that widget binding is initialized before using native services.
@@ -59,7 +59,7 @@ class SpiderRestaurantApp extends StatelessWidget {
         ),
       ),
 
-      home: const LoginPage(),
+      home: const AuthOptionsPage(),
     );
   }
 }

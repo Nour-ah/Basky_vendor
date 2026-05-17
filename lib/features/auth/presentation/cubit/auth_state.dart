@@ -41,3 +41,36 @@ class AuthCheckStatus extends AuthState {
   @override
   List<Object?> get props => [isLoggedIn];
 }
+
+class AuthRegisterSuccess extends AuthState {
+  final String message;
+  final String phone;
+  final String email;
+
+  const AuthRegisterSuccess({
+    required this.message,
+    required this.phone,
+    required this.email,
+  });
+
+  @override
+  List<Object?> get props => [message, phone, email];
+}
+
+class AuthVerifyPhoneSuccess extends AuthState {
+  final String message;
+
+  const AuthVerifyPhoneSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class AuthResendCodeSuccess extends AuthState {
+  final String message;
+
+  const AuthResendCodeSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

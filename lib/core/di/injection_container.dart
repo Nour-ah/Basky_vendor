@@ -10,6 +10,9 @@ import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
+import '../../features/auth/domain/usecases/register_usecase.dart';
+import '../../features/auth/domain/usecases/resend_verification_code_usecase.dart';
+import '../../features/auth/domain/usecases/verify_phone_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/is_logged_in_usecase.dart';
@@ -61,6 +64,9 @@ Future<void> initDependencies() async {
   // Auth Feature - Use Cases
   // ============================================================
   sl.registerLazySingleton(() => LoginUseCase(sl()));
+  sl.registerLazySingleton(() => RegisterUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneUseCase(sl()));
+  sl.registerLazySingleton(() => ResendVerificationCodeUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => IsLoggedInUseCase(sl()));
@@ -71,6 +77,9 @@ Future<void> initDependencies() async {
   sl.registerFactory(
     () => AuthCubit(
       loginUseCase: sl(),
+      registerUseCase: sl(),
+      verifyPhoneUseCase: sl(),
+      resendVerificationCodeUseCase: sl(),
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
       isLoggedInUseCase: sl(),
