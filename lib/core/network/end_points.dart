@@ -1,40 +1,74 @@
 // ============================================================================
-// API ENDPOINTS - SHEIKHY APP
+// API ENDPOINTS - SPIDER RESTAURANT VENDOR
 // ============================================================================
-// This file contains all API endpoints for the Sheikhy application.
-// Update the baseUrl when backend is ready.
+// Base URL: https://zew.backendpro.site/api/
 // ============================================================================
 
 class EndPoints {
-  // Base URL - Update this when backend is ready
-  static const String baseUrl = 'https://api.sheikhy.com/api/';
+  // Base URL - Spider Vendor API
+  static const String baseUrl = 'https://spider.backendpro.site/api/';
 
-  // TODO: Add Sheikhy-specific endpoints here as features are developed
-  // Example:
-  // static const String login = 'auth/login';
-  // static const String profile = 'user/profile';
-
-  /* ========================================================================
-   * OLD sheikhy ENDPOINTS (COMMENTED OUT FOR REFERENCE)
-   * ========================================================================
-  static const String baseUrl = 'https://back.dr-law.site/api/';
+  // ========================================================================
+  // AUTH ENDPOINTS
+  // ========================================================================
+  static const String register = 'auth/register';
   static const String login = 'auth/login';
   static const String logout = 'auth/logout';
+  static const String verifyEmail = 'auth/verify-email';
+  static const String verifyPhone = 'auth/verify-phone';
+  static const String resendVerificationCode = 'auth/resend-verification-code';
+
+  // ========================================================================
+  // RESET PASSWORD ENDPOINTS
+  // ========================================================================
+  static const String resetPasswordSendCode = 'auth/reset-password/send-code';
+  static const String resetPasswordVerifyCode = 'auth/reset-password/verify-code';
+  static const String resetPasswordSetNew = 'auth/reset-password/set-new-password';
+
+  // ========================================================================
+  // USER ENDPOINTS
+  // ========================================================================
+  static const String user = 'user';
   static const String profile = 'profile';
+  static const String updatePassword = 'password';
+
+  // ========================================================================
+  // VENDOR ENDPOINTS
+  // ========================================================================
+  static const String vendorHome = 'vendor/home';
+  static const String vendorBranches = 'vendor/branches';
+  static const String vendorProducts = 'vendor/products';
+  static const String vendorCategories = 'vendor/categories';
+  static const String vendorVariants = 'vendor/variants';
+  static const String vendorRatings = 'vendor/ratings';
+  static const String vendorTimeSlots = 'vendor/time-slots';
+  static const String vendorWallet = 'vendor/wallet';
+  static const String vendorWithdrawals = 'vendor/wallet/withdrawals';
+  static const String vendorReports = 'vendor/reports/summary';
+  static const String vendorOrders = 'vendor/orders';
+
+  // Wallet
+  static const String walletHistory = 'wallet/history';
+
+  /* ========================================================================
+   * OLD sheikhy ENDPOINTS (Kept for reference)
+   * ========================================================================
+  static const String baseUrlOld = 'https://back.dr-law.site/api/';
+  static const String loginOld = 'auth/login';
+  static const String logoutOld = 'auth/logout';
+  static const String profileOld = 'profile';
   static const String banners = 'web/banners';
   static const String courses = 'web/courses';
   static const String categories = 'web/categories';
-  static const String categoryCourses =
-      'mobile/student/categories/{id}/courses';
+  static const String categoryCourses = 'mobile/student/categories/{id}/courses';
   static const String courseDetails = 'mobile/student/courses/{id}';
   static const String courseExams = 'mobile/student/exams/course/{id}';
   static const String examContent = 'mobile/student/exams/{id}';
   static const String submitExam = 'mobile/student/exams/{id}/submit';
-  static const String featuredCourses =
-      'mobile/student/courses/featured/all-years';
+  static const String featuredCourses = 'mobile/student/courses/featured/all-years';
   static const String myCourses = 'mobile/student/my-courses';
   static const String landing = 'web/landing';
-  static const String register = 'register';
+  static const String registerStudent = 'register';
   static const String uploadProfileImage = 'user/area/profile-image';
   static const String requestCar = '/reques -api/v1/car';
   static const String carRequests = '/wp/v2/car_request';
@@ -45,7 +79,6 @@ class EndPoints {
   static const String rateCourse = '/mobile/student/ratings/course';
   static const String help = 'mobile/student/help';
   static const String cart = 'mobile/student/cart';
-  static const String registerStudent = 'auth/register/student';
   static const String terms = 'mobile/student/terms';
   static const String privacyPolicy = 'mobile/student/privacy-policy';
   static const String helpSupport = 'mobile/student/help-support';
@@ -54,7 +87,7 @@ class EndPoints {
   static const String videoFinish = 'mobile/student/video/finish';
   static const String deleteAccount = 'mobile/student/profile';
   static const String forgetPassword = 'auth/forget-password/student';
-  static const String resetPassword = 'auth/reset-password/student';
+  static const String resetPasswordOld = 'auth/reset-password/student';
   */
 }
 

@@ -1,23 +1,23 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:spider_restaurant/core/di/injection_container.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/auth_options_page.dart';
+import 'package:spider_restaurant/features/auth/presentation/pages/login_page.dart';
 
 void main() async {
   // Ensure that widget binding is initialized before using native services.
   WidgetsFlutterBinding.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
-
-  // TODO: Initialize Dependency Injection (GetIt) and local storages here
-  // await di.init();
+  await initDependencies();
 
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
-      startLocale: const Locale('ar'), // Defaulting to arabic for the user
+      startLocale: const Locale('ar'),
+      // Defaulting to arabic for the user
       child: const SpiderRestaurantApp(),
     ),
   );
@@ -47,7 +47,8 @@ class SpiderRestaurantApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,
         primaryColor: AppColors.primary,
-        fontFamily: 'CoHeadline', // Default font family
+        fontFamily: 'CoHeadline',
+        // Default font family
         useMaterial3: true,
 
         // Define common app bar behavior
@@ -58,8 +59,7 @@ class SpiderRestaurantApp extends StatelessWidget {
         ),
       ),
 
-      // Set the Auth Options Page as the starting point of the application
-      home: const AuthOptionsPage(),
+      home: const LoginPage(),
     );
   }
 }

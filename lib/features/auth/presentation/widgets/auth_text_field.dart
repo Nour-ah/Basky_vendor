@@ -4,12 +4,16 @@ class AuthTextField extends StatelessWidget {
   final String hintText;
   final IconData prefixIcon;
   final bool obscureText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const AuthTextField({
     super.key,
     required this.hintText,
     required this.prefixIcon,
     this.obscureText = false,
+    this.controller,
+    this.validator,
   });
 
   @override
@@ -20,7 +24,9 @@ class AuthTextField extends StatelessWidget {
         color: Colors.white.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: TextField(
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
         obscureText: obscureText,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
@@ -29,6 +35,7 @@ class AuthTextField extends StatelessWidget {
           prefixIcon: Icon(prefixIcon, color: Colors.white, size: 20),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 15),
+          errorStyle: const TextStyle(color: Colors.white70, fontSize: 12),
         ),
       ),
     );

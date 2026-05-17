@@ -9,6 +9,10 @@
 .buildlog/
 .history
 .svn/
+API_INTEGRATION_REPORT.md
+README.md
+mo5Learn.md
+.claude
 .swiftpm/
 migrate_working_dir/
 

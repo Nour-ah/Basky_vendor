@@ -1,0 +1,2849 @@
+{
+  "info": {
+    "_postman_id": "a4e72277-c087-473f-838b-d11945ba9a2c",
+    "name": "spider-vendor",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51802266",
+    "_collection_link": "https://go.postman.co/collection/51802266-a4e72277-c087-473f-838b-d11945ba9a2c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Vendor",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Register",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "owner_name",
+                      "value": "Ahmed Salem",
+                      "type": "text"
+                    },
+                    {
+                      "key": "owner_email",
+                      "value": "el3amed22@gmail.com",
+                      "type": "text"
+                    },
+                    {
+                      "key": "owner_phone",
+                      "value": "01006573885",
+                      "type": "text"
+                    },
+                    {
+                      "key": "owner_password",
+                      "value": "As@292001",
+                      "type": "text"
+                    },
+                    {
+                      "key": "owner_password_confirmation",
+                      "value": "As@292001",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": [
+                        "Al-Salem"
+                      ],
+                      "type": "text"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "01006573885",
+                      "type": "text"
+                    },
+                    {
+                      "key": "address",
+                      "value": "3 makram",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": "file://C:\\Users\\user\\Downloads\\download.jpg"
+                    },
+                    {
+                      "key": "name[ar]",
+                      "value": "السالم",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/vendor/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "vendor",
+                    "register"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success Response",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"user@example.com\",\n  \"phone\": \"+1234567890\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/vendor/register",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "vendor",
+                        "register"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"success\": true,\n  \"message\": \"Registration successful. Please verify your account before logging in.\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"John Doe\",\n      \"email\": \"user@example.com\",\n      \"phone\": \"+1234567890\",\n      \"image\": \"http://example.com/storage/users/default.png\",\n      \"email_verified_at\": null,\n      \"phone_verified_at\": null,\n      \"is_active\": true,\n      \"is_verified\": false,\n      \"roles\": [],\n      \"permissions\": [],\n      \"created_at\": \"2026-01-15T12:00:00Z\",\n      \"updated_at\": \"2026-01-15T12:00:00Z\"\n    }\n  }\n}"
+                },
+                {
+                  "name": "Validation Error - Email Taken",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"existing@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/vendor/register",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "vendor",
+                        "register"
+                      ]
+                    }
+                  },
+                  "status": "Unprocessable Entity",
+                  "code": 422,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"message\": \"The email has already been taken.\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"]\n  }\n}"
+                },
+                {
+                  "name": "Password Confirmation Mismatch",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"differentpassword\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/vendor/register",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "vendor",
+                        "register"
+                      ]
+                    }
+                  },
+                  "status": "Unprocessable Entity",
+                  "code": 422,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"message\": \"The password confirmation does not match.\",\n  \"errors\": {\n    \"password\": [\"The password confirmation does not match.\"]\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "login",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "login",
+                      "value": "test@vendor.com",
+                      "type": "text"
+                    },
+                    {
+                      "key": "password",
+                      "value": "123456789",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success Response",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/logout",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "logout"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"success\": true,\n  \"message\": \"Logged out successfully.\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Verify Email",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "email",
+                      "value": "el3amed22@gmail.com",
+                      "type": "text"
+                    },
+                    {
+                      "key": "code",
+                      "value": "233898",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/verify-email",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "verify-email"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Invalid Code Verify Email",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"email\" : \"test@user.com\",\r\n    \"code\" : \"1234567\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/verify-email",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "verify-email"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"success\": false,\n    \"message\": \"Invalid verification code.\"\n}"
+                },
+                {
+                  "name": "Wrong Email",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"email\" : \"test@user1.com\",\r\n    \"code\" : \"1234567\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/verify-email",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "verify-email"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"success\": false,\n    \"message\": \"User not found.\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Verify Phone",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\" : \"+201234567890\",\n    \"code\" : \"334999\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/verify-phone",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "verify-phone"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"phone\" : \"+201234567890\",\n    \"code\" : \"334999\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/verify-phone",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "verify-phone"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": "Text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            },
+            {
+              "name": "Resend Verification Code",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "email",
+                      "value": "el3amed22@gmail.com",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/resend-verification-code",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "resend-verification-code"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"email\" : \"delivery1@zew.com\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/resend-verification-code",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "resend-verification-code"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": "Text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            },
+            {
+              "name": "Get User",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/user",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "user"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/user",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "user"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": "Text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            }
+          ],
+          "description": "Authentication endpoints for user login, logout, and token management.",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reset Password ",
+          "item": [
+            {
+              "name": "Send Code",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "email",
+                      "value": "el3amed22@gmail.com",
+                      "description": "sometimes | required | email | exists:users,email",
+                      "type": "text"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "+2012002212002",
+                      "description": "sometimes | required | string | exists:users,phone",
+                      "type": "text",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/reset-password/send-code",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "reset-password",
+                    "send-code"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "email",
+                          "value": "test@user.com",
+                          "description": "sometimes | required | email | exists:users,email",
+                          "type": "text"
+                        },
+                        {
+                          "key": "phone",
+                          "value": "+2012002212002",
+                          "description": "sometimes | required | string | exists:users,phone",
+                          "type": "text",
+                          "disabled": true
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/reset-password/send-code",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "reset-password",
+                        "send-code"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": "Text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            },
+            {
+              "name": "Verify Code",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "code",
+                      "value": "263543",
+                      "description": "required | digits:6",
+                      "type": "text"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "+2012002212002",
+                      "description": "sometimes | required | string | exists:users,phone",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "email",
+                      "value": "test@user.com",
+                      "description": "sometimes | required | email | exists:users,email",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/reset-password/verify-code",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "reset-password",
+                    "verify-code"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "code",
+                          "value": "263543",
+                          "description": "required | digits:6",
+                          "type": "text"
+                        },
+                        {
+                          "key": "phone",
+                          "value": "+2012002212002",
+                          "description": "sometimes | required | string | exists:users,phone",
+                          "type": "text",
+                          "disabled": true
+                        },
+                        {
+                          "key": "email",
+                          "value": "test@user.com",
+                          "description": "sometimes | required | email | exists:users,email",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/reset-password/verify-code",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "reset-password",
+                        "verify-code"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": "Text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            },
+            {
+              "name": "Set New Password",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "reset_token",
+                      "value": "3ebc190c-63d0-4b9d-b28c-7c02105def30",
+                      "description": "required | string | exists:password_reset_tokens,token",
+                      "type": "text"
+                    },
+                    {
+                      "key": "password",
+                      "value": "123456789",
+                      "description": "required | string | confirmed",
+                      "type": "text"
+                    },
+                    {
+                      "key": "password_confirmation",
+                      "value": "123456789",
+                      "description": "required | string | same:password",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/reset-password/set-new-password",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "reset-password",
+                    "set-new-password"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "reset_token",
+                          "value": "3ebc190c-63d0-4b9d-b28c-7c02105def30",
+                          "description": "required | string | exists:password_reset_tokens,token",
+                          "type": "text"
+                        },
+                        {
+                          "key": "password",
+                          "value": "123456789",
+                          "description": "required | string | confirmed",
+                          "type": "text"
+                        },
+                        {
+                          "key": "password_confirmation",
+                          "value": "123456789",
+                          "description": "required | string | same:password",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/auth/reset-password/set-new-password",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "auth",
+                        "reset-password",
+                        "set-new-password"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": "Text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Wallet History ",
+          "item": [
+            {
+              "name": "Wallet History",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/wallet/history",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "wallet",
+                    "history"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/wallet/history",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "wallet",
+                        "history"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": "Text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                }
+              ]
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "orders",
+          "item": [
+            {
+              "name": "list orders",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/orders?status=cancelled",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "orders"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "cancelled",
+                      "description": "complete | cancelled | pending | processing | ready_for_pickup | shipped | delivered | refunded",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "order details",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/orders/:order_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "orders",
+                    ":order_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "order_id",
+                      "value": "19"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update order status",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/orders/:order_id/update-status?status=processing",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "orders",
+                    ":order_id",
+                    "update-status"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "processing",
+                      "description": "processing| ready_for_pickup | shipped | delivered | cancelled",
+                      "type": "string"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "order_id",
+                      "value": "19"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "order invoice",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/orders/:order_id/invoice",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "orders",
+                    ":order_id",
+                    "invoice"
+                  ],
+                  "variable": [
+                    {
+                      "key": "order_id",
+                      "value": "19"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Branches",
+          "item": [
+            {
+              "name": "list branches",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/branches",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "branches"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "list branch details",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/branches/:branch_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "branches",
+                    ":branch_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "branch_id",
+                      "value": "3"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "product details",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/products/:product_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "products",
+                    ":product_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "product_id",
+                      "value": "6"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "active/inactive product",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/products/:product_id/toggle-active",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "products",
+                    ":product_id",
+                    "toggle-active"
+                  ],
+                  "variable": [
+                    {
+                      "key": "product_id",
+                      "value": "6"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete a product",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/products/:product_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "products",
+                    ":product_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "product_id"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reviews",
+          "item": [
+            {
+              "name": "reviews",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/ratings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "ratings"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Opening times",
+          "item": [
+            {
+              "name": "list time slots",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/time-slots",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "time-slots"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "add time slot",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "day_of_week",
+                      "value": "3",
+                      "type": "text"
+                    },
+                    {
+                      "key": "opens_at",
+                      "value": "07:00 ",
+                      "type": "text"
+                    },
+                    {
+                      "key": "closes_at",
+                      "value": "09:00 ",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/time-slots",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "time-slots"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update time slot",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/time-slots/:timeSlot?day_of_week=0&opens_at=07:00&closes_at=23:00",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "time-slots",
+                    ":timeSlot"
+                  ],
+                  "query": [
+                    {
+                      "key": "day_of_week",
+                      "value": "0",
+                      "type": "string"
+                    },
+                    {
+                      "key": "opens_at",
+                      "value": "07:00",
+                      "type": "string"
+                    },
+                    {
+                      "key": "closes_at",
+                      "value": "23:00",
+                      "type": "string"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "timeSlot",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "wallet",
+          "item": [
+            {
+              "name": "list wallet datails",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/wallet",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "wallet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Withdrawal Requests",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "amount",
+                      "value": "10",
+                      "type": "text"
+                    },
+                    {
+                      "key": "method",
+                      "value": "cash",
+                      "type": "text"
+                    },
+                    {
+                      "key": "notes",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/wallet/withdrawals",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "wallet",
+                    "withdrawals"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Home",
+          "item": [
+            {
+              "name": "home",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/home",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "home"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "product",
+          "item": [
+            {
+              "name": "variants",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/variants",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "list products",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/products",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "add product",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "type",
+                      "value": "variable",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "Premium Coffee Bundle",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name[ar]",
+                      "value": "باقة قهوة مميزة",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description[en]",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "باقة قهوة محمصة طازجة مع خيارات متعددة للحجم والتحميص",
+                      "type": "text"
+                    },
+                    {
+                      "key": "sku",
+                      "value": "COFFEE-BUNDLE-002",
+                      "type": "text"
+                    },
+                    {
+                      "key": "slug",
+                      "value": "premium-coffee",
+                      "type": "text"
+                    },
+                    {
+                      "key": "price",
+                      "value": "0",
+                      "type": "text"
+                    },
+                    {
+                      "key": "discount",
+                      "value": "10",
+                      "type": "text"
+                    },
+                    {
+                      "key": "discount_type",
+                      "value": "percentage",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_featured",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_new",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_bookable",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "categories[0]",
+                      "value": "10",
+                      "type": "text"
+                    },
+                    {
+                      "key": "branch_stocks[2]",
+                      "value": "25",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][name][en]",
+                      "value": "250g / Medium Roast",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][name][ar]",
+                      "value": "250 جم / تحميص متوسط",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][sku]",
+                      "value": "COFFEE-BUNDLE-001-250-MED",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][price]",
+                      "value": "145",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][0][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][0][option_id]",
+                      "value": "4",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][1][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][1][option_id]",
+                      "value": "5",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][branch_stocks][2]",
+                      "value": "10",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][name][en]",
+                      "value": "500g / Dark Roast",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][name][ar]",
+                      "value": "500 جم / تحميص داكن",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][sku]",
+                      "value": "COFFEE-BUNDLE-001-500-DRK",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][price]",
+                      "value": "230",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][0][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][0][option_id]",
+                      "value": "4",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][1][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][1][option_id]",
+                      "value": "5",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][branch_stocks][2]",
+                      "value": "8",
+                      "type": "text"
+                    },
+                    {
+                      "key": "related_products[0]",
+                      "value": "41",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "related_products[1]",
+                      "value": "42",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "cross_sell_products[0]",
+                      "value": "55",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "cross_sell_products[1]",
+                      "value": "56",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "upsell_products[0]",
+                      "value": "60",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "upsell_products[1]",
+                      "value": "61",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "thumbnail",
+                      "description": "Upload product thumbnail",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "images[0]",
+                      "description": "Upload additional product image 1",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "images[1]",
+                      "description": "Upload additional product image 2",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "variations[0][thumbnail]",
+                      "description": "Upload variation 0 thumbnail",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "variations[1][thumbnail]",
+                      "description": "Upload variation 1 thumbnail",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/products",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update product ",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "type",
+                      "value": "variable",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name[en]",
+                      "value": "Premium Coffee Bundle",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name[ar]",
+                      "value": "باقة قهوة مميزة",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description[en]",
+                      "value": "Fresh roasted coffee bundle with multiple size and roast options.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description[ar]",
+                      "value": "باقة قهوة محمصة طازجة مع خيارات متعددة للحجم والتحميص",
+                      "type": "text"
+                    },
+                    {
+                      "key": "sku",
+                      "value": "COFFEE-BUNDLE-002",
+                      "type": "text"
+                    },
+                    {
+                      "key": "slug",
+                      "value": "premium-coffee",
+                      "type": "text"
+                    },
+                    {
+                      "key": "price",
+                      "value": "0",
+                      "type": "text"
+                    },
+                    {
+                      "key": "discount",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "discount_type",
+                      "value": "percentage",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_featured",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_new",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_bookable",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "categories[0]",
+                      "value": "10",
+                      "type": "text"
+                    },
+                    {
+                      "key": "branch_stocks[2]",
+                      "value": "25",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][name][en]",
+                      "value": "250g / Medium Roast",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][name][ar]",
+                      "value": "250 جم / تحميص متوسط",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][sku]",
+                      "value": "COFFEE-BUNDLE-001-250-MED",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][price]",
+                      "value": "145",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][0][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][0][option_id]",
+                      "value": "4",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][1][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][values][1][option_id]",
+                      "value": "5",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[0][branch_stocks][2]",
+                      "value": "10",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][name][en]",
+                      "value": "500g / Dark Roast",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][name][ar]",
+                      "value": "500 جم / تحميص داكن",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][sku]",
+                      "value": "COFFEE-BUNDLE-001-500-DRK",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][price]",
+                      "value": "230",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][0][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][0][option_id]",
+                      "value": "4",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][1][variant_id]",
+                      "value": "2",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][values][1][option_id]",
+                      "value": "5",
+                      "type": "text"
+                    },
+                    {
+                      "key": "variations[1][branch_stocks][2]",
+                      "value": "8",
+                      "type": "text"
+                    },
+                    {
+                      "key": "related_products[0]",
+                      "value": "41",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "related_products[1]",
+                      "value": "42",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "cross_sell_products[0]",
+                      "value": "55",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "cross_sell_products[1]",
+                      "value": "56",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "upsell_products[0]",
+                      "value": "60",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "upsell_products[1]",
+                      "value": "61",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "thumbnail",
+                      "description": "Upload product thumbnail",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "images[0]",
+                      "description": "Upload additional product image 1",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "images[1]",
+                      "description": "Upload additional product image 2",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "variations[0][thumbnail]",
+                      "description": "Upload variation 0 thumbnail",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "variations[1][thumbnail]",
+                      "description": "Upload variation 1 thumbnail",
+                      "type": "file",
+                      "src": "file://C:\\Users\\Ahmed Salem\\Downloads\\ice-coffe.jpeg"
+                    },
+                    {
+                      "key": "_method",
+                      "value": "PUT",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/products/:product_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "products",
+                    ":product_id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "product_id",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "list categories ",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/categories",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "categories"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reports ",
+          "item": [
+            {
+              "name": "reports",
+              "protocolProfileBehavior": {
+                "strictSSL": false,
+                "followRedirects": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "string"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/vendor/reports/summary?range=last_30_days",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "vendor",
+                    "reports",
+                    "summary"
+                  ],
+                  "query": [
+                    {
+                      "key": "range",
+                      "value": "last_30_days",
+                      "description": "today,yesterday,last_7_days,last_30_days,custom",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ]
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ]
+    }
+  ]
+}
