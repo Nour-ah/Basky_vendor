@@ -99,9 +99,13 @@ class AuthInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    debugPrint('🔐 AuthInterceptor: Reading token for ${options.method} ${options.uri}');
     final token = await LocalStorage.getAuthToken();
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
+      debugPrint('✅ AuthInterceptor: Authorization header attached (Bearer ${token.substring(0, 10)}...)');
+    } else {
+      debugPrint('⚠️ AuthInterceptor: No token found — skipping Authorization header');
     }
     super.onRequest(options, handler);
   }

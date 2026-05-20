@@ -18,32 +18,30 @@ import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/is_logged_in_usecase.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 
-/// Service locator instance
-final sl = GetIt.instance;
+import '../../features/home/data/datasources/home_remote_datasource.dart';
+import '../../features/home/data/repositories/home_repository_impl.dart';
+import '../../features/home/domain/repositories/home_repository.dart';
+import '../../features/home/domain/usecases/get_home_stats_usecase.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
 
-/// Initialize dependency injection
-/// Call this once during app initialization
+import '../../features/auth/presentation/cubit/splash_cubit.dart';
+
+ final sl = GetIt.instance;
+
 Future<void> initDependencies() async {
-  // Initialize local storage
-  await LocalStorage.init();
+   await LocalStorage.init();
 
-  // ============================================================
-  // External Dependencies (Third-party packages)
-  // ============================================================
   sl.registerLazySingleton<Dio>(() => ApiClient().dio);
 
-  // SharedPreferences
+
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
 
-  // ============================================================
-  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+    sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
-  // ============================================================
-  // Auth Feature - Data Sources
-  // ============================================================
+
   sl.registerLazySingleton<AuthLocalDataSource>(
-    () => AuthLocalDataSourceImpl(sharedPreferences: sl()),
+    () => AuthLocalDataSourceImpl(),
   );
 
   sl.registerLazySingleton<AuthRemoteDataSource>(
@@ -87,7 +85,38 @@ Future<void> initDependencies() async {
   );
 
   // ============================================================
+  // Home Feature - Data Sources
+  // ============================================================
+  sl.registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSourceImpl(dio: sl()),
+  );
+
+  // ============================================================
+  // Home Feature - Repositories
+  // ============================================================
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // ============================================================
+  // Home Feature - Use Cases
+  // ============================================================
+  sl.registerLazySingleton(() => GetHomeStatsUseCase(sl()));
+
+  // ============================================================
+  // Home Feature - Cubits
+  // ============================================================
+  sl.registerFactory(() => HomeCubit(getHomeStatsUseCase: sl()));
+
+  // ============================================================
   // Cubits
   // ============================================================
   sl.registerFactory(() => LocaleCubit());
+  sl.registerFactory(
+    () => SplashCubit(
+      isLoggedInUseCase: sl(),
+      getCurrentUserUseCase: sl(),
+      logoutUseCase: sl(),
+    ),
+  );
 }

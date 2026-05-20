@@ -113,6 +113,23 @@ class _LoginPageState extends State<LoginPage> {
                                         }
                                       },
                                     ),
+
+                                    DropdownButtonFormField<String>(
+                                      style: TextStyle(
+                                        color: Colors.lightBlue,
+                                        fontSize: 16,
+                                      ),
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      items: [
+                                        DropdownMenuItem(
+                                          value: '1',
+                                          child: Text('Option 1'),
+                                        ),
+                                      ],
+                                      onChanged: (value) {},
+                                    ),
                                     const SizedBox(height: 12),
                                     TextButton(
                                       onPressed: () {

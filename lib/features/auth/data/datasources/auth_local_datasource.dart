@@ -1,4 +1,5 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
+import '../../../../core/cache_helper/local_storage.dart';
 
 abstract class AuthLocalDataSource {
   Future<void> cacheToken(String token);
@@ -8,24 +9,27 @@ abstract class AuthLocalDataSource {
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  final SharedPreferences sharedPreferences;
-  static const String tokenKey = 'auth_token';
-
-  AuthLocalDataSourceImpl({required this.sharedPreferences});
+  AuthLocalDataSourceImpl();
 
   @override
   Future<void> cacheToken(String token) async {
-    await sharedPreferences.setString(tokenKey, token);
+    debugPrint('🔐 AuthLocalDataSource: Caching token...');
+    await LocalStorage.saveAuthToken(token);
+    debugPrint('✅ AuthLocalDataSource: Token cached to SecureStorage');
   }
 
   @override
   Future<String?> getToken() async {
-    return sharedPreferences.getString(tokenKey);
+    final token = await LocalStorage.getAuthToken();
+    debugPrint('🔑 AuthLocalDataSource: Read token = ${token != null ? '${token.substring(0, 10)}...' : 'NULL'}');
+    return token;
   }
 
   @override
   Future<void> removeToken() async {
-    await sharedPreferences.remove(tokenKey);
+    debugPrint('🗑️ AuthLocalDataSource: Removing token...');
+    await LocalStorage.clearAuthToken();
+    debugPrint('✅ AuthLocalDataSource: Token removed');
   }
 
   @override

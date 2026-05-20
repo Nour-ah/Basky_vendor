@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../core/network/api_constants.dart';
 import '../../domain/entities/auth_action_result.dart';
 import '../models/user_model.dart';
@@ -42,12 +43,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String login,
     required String password,
   }) async {
-    print('🔵 DataSource: Sending login request');
+    debugPrint('🔵 DataSource: Sending login request');
     final response = await dio.post(
-      '${ApiConstants.baseUrl}${ApiConstants.apiVersion}${ApiConstants.login}',
+      ApiConstants.login,
       data: {'login': login, 'password': password},
     );
-    print('✅ DataSource: Login success');
+    debugPrint('✅ DataSource: Login success');
     return AuthResponseModel.fromJson(response.data['data']);
   }
 
@@ -64,7 +65,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String address,
   }) async {
     final response = await dio.post(
-      '${ApiConstants.baseUrl}${ApiConstants.apiVersion}${ApiConstants.register}',
+      ApiConstants.register,
       data: FormData.fromMap({
         'owner_name': ownerName,
         'owner_email': ownerEmail,
@@ -90,7 +91,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String code,
   }) async {
     final response = await dio.post(
-      '${ApiConstants.baseUrl}${ApiConstants.apiVersion}${ApiConstants.verifyPhone}',
+      ApiConstants.verifyPhone,
       data: {'phone': phone, 'code': code},
     );
     return _parseActionResponse(response.data);
@@ -99,7 +100,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AuthActionResult> resendVerificationCode({required String email}) async {
     final response = await dio.post(
-      '${ApiConstants.baseUrl}${ApiConstants.apiVersion}${ApiConstants.resendVerificationCode}',
+      ApiConstants.resendVerificationCode,
       data: {'email': email},
     );
     return _parseActionResponse(response.data);
@@ -107,20 +108,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> logout() async {
-    print('🔵 DataSource: Sending logout request');
-    await dio.post(
-      '${ApiConstants.baseUrl}${ApiConstants.apiVersion}${ApiConstants.logout}',
-    );
-    print('✅ DataSource: Logout success');
+    debugPrint('🔵 DataSource: Sending logout request');
+    await dio.post(ApiConstants.logout);
+    debugPrint('✅ DataSource: Logout success');
   }
 
   @override
   Future<UserModel> getCurrentUser() async {
-    print('🔵 DataSource: Fetching current user');
-    final response = await dio.get(
-      '${ApiConstants.baseUrl}${ApiConstants.apiVersion}${ApiConstants.user}',
-    );
-    print('✅ DataSource: Get user success');
+    debugPrint('🔵 DataSource: Fetching current user');
+    final response = await dio.get(ApiConstants.user);
+    debugPrint('✅ DataSource: Get user success');
     return UserModel.fromJson(response.data['data']);
   }
 }
