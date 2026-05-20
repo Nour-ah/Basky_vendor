@@ -26,6 +26,14 @@ import '../../features/home/presentation/cubit/home_cubit.dart';
 
 import '../../features/auth/presentation/cubit/splash_cubit.dart';
 
+import '../../features/orders/data/datasources/orders_remote_datasource.dart';
+import '../../features/orders/data/repositories/orders_repository_impl.dart';
+import '../../features/orders/domain/repositories/orders_repository.dart';
+import '../../features/orders/domain/usecases/get_order_details_usecase.dart';
+import '../../features/orders/domain/usecases/get_orders_usecase.dart';
+import '../../features/orders/domain/usecases/update_order_status_usecase.dart';
+import '../../features/orders/presentation/cubit/orders_cubit.dart';
+
  final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -107,6 +115,32 @@ Future<void> initDependencies() async {
   // Home Feature - Cubits
   // ============================================================
   sl.registerFactory(() => HomeCubit(getHomeStatsUseCase: sl()));
+
+  // ============================================================
+  // Orders Feature
+  // ============================================================
+  // Data Sources
+  sl.registerLazySingleton<OrdersRemoteDataSource>(
+    () => OrdersRemoteDataSourceImpl(dio: sl()),
+  );
+
+  // Repositories
+  sl.registerLazySingleton<OrdersRepository>(
+    () => OrdersRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton(() => GetOrdersUseCase(sl()));
+  sl.registerLazySingleton(() => GetOrderDetailsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));
+
+  // Cubit
+  sl.registerFactory(
+    () => OrdersCubit(
+      getOrdersUseCase: sl(),
+      updateOrderStatusUseCase: sl(),
+    ),
+  );
 
   // ============================================================
   // Cubits

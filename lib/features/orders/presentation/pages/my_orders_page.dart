@@ -1,13 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../models/order_card_model.dart';
-import '../models/order_summary_model.dart';
+import '../../domain/entities/order_status.dart';
+import '../cubit/orders_cubit.dart';
+import '../cubit/orders_state.dart';
 import '../widgets/order_item_card.dart';
 import '../widgets/orders_filter_tabs.dart';
-import '../widgets/orders_statistics_card.dart';
 
 class MyOrdersPage extends StatefulWidget {
   const MyOrdersPage({super.key});
@@ -17,126 +19,133 @@ class MyOrdersPage extends StatefulWidget {
 }
 
 class _MyOrdersPageState extends State<MyOrdersPage> {
-  String _selectedFilter = '';
+  late final OrdersCubit _ordersCubit;
+  final ScrollController _scrollController = ScrollController();
+  OrderStatus _selectedFilter = OrderStatus.unknown;
 
-  // Dummy statistics
-  final OrderSummaryModel _summary = OrderSummaryModel(
-    todayOrders: 30,
-    thisWeekOrders: 387,
-    thisMonthOrders: 1658,
-  );
+  @override
+  void initState() {
+    super.initState();
+    _ordersCubit = sl<OrdersCubit>()..fetchOrders(filter: _selectedFilter);
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _ordersCubit.close();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      _ordersCubit.loadMore();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Only init inside build context
-    if (_selectedFilter.isEmpty) {
-      _selectedFilter = AppStrings.all.tr();
-    }
-
-    final List<String> filters = [
-      AppStrings.all.tr(),
-      AppStrings.delivered.tr(),
-      AppStrings.returned.tr(),
-    ];
-
-    // Dummy orders list with translation
-    final List<OrderCardModel> dummyOrders = [
-      OrderCardModel(
-        orderCode: '#545555',
-        status: AppStrings.delivered.tr(),
-        dateTime: '15/1/2024 12:30 AM',
-        orderType: AppStrings.delivery.tr(),
-        itemCount: 3,
-      ),
-      OrderCardModel(
-        orderCode: '#545555',
-        status: AppStrings.delivered.tr(),
-        dateTime: '15/1/2024 12:30 AM',
-        orderType: AppStrings.delivery.tr(),
-        itemCount: 3,
-      ),
-      OrderCardModel(
-        orderCode: '#545555',
-        status: AppStrings.delivered.tr(),
-        dateTime: '15/1/2024 12:30 AM',
-        orderType: AppStrings.delivery.tr(),
-        itemCount: 3,
-      ),
-      OrderCardModel(
-        orderCode: '#545555',
-        status: AppStrings.returned.tr(),
-        dateTime: '15/1/2024 12:30 AM',
-        orderType: AppStrings.delivery.tr(),
-        itemCount: 3,
-      ),
-      OrderCardModel(
-        orderCode: '#545555',
-        status: AppStrings.delivered.tr(),
-        dateTime: '15/1/2024 12:30 AM',
-        orderType: AppStrings.delivery.tr(),
-        itemCount: 3,
-      ),
-    ];
-
-    // Basic local filter implementation
-    List<OrderCardModel> displayedOrders = dummyOrders;
-    if (_selectedFilter != AppStrings.all.tr()) {
-      displayedOrders = dummyOrders
-          .where((order) => order.status == _selectedFilter)
-          .toList();
-    }
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
+    return BlocProvider.value(
+      value: _ordersCubit,
+      child: Scaffold(
         backgroundColor: AppColors.background,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.black,
-            size: 20,
+        appBar: AppBar(
+          backgroundColor: AppColors.background,
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.black, size: 20),
+            onPressed: () => Navigator.pop(context),
           ),
-          onPressed: () => Navigator.pop(context),
+          title: Text(AppStrings.orders.tr(), style: AppTextStyle.fontBlack16Bold),
         ),
-        title: Text(
-          AppStrings.orders.tr(),
-          style: AppTextStyle.fontBlack16Bold,
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 12),
-              OrdersStatisticsCard(summary: _summary),
               const SizedBox(height: 16),
               OrdersFilterTabs(
-                selectedFilter: _selectedFilter,
-                filters: filters,
+                selectedFilter: _selectedFilter.toApiString(),
+                filters: [
+                  OrderStatus.unknown.toApiString(),
+                  OrderStatus.delivered.toApiString(),
+                  OrderStatus.returned.toApiString(),
+                ],
                 onFilterChanged: (filter) {
-                  setState(() {
-                    _selectedFilter = filter;
-                  });
+                  setState(() => _selectedFilter = OrderStatus.fromString(filter));
+                  _ordersCubit.fetchOrders(filter: _selectedFilter, isRefresh: true);
                 },
               ),
               const SizedBox(height: 20),
-              // Expanded ListView for orders
               Expanded(
-                child: ListView.separated(
-                  itemCount: displayedOrders.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
-                  itemBuilder: (context, index) {
-                    return OrderItemCard(order: displayedOrders[index]);
+                child: BlocConsumer<OrdersCubit, OrdersState>(
+                  listener: (context, state) {
+                    if (state is OrderStatusUpdateError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message), backgroundColor: AppColors.promoRed),
+                      );
+                    }
+                  },
+                  buildWhen: (previous, current) => current is OrdersLoaded || current is OrdersLoading || current is OrdersEmpty || current is OrdersNetworkError || current is OrdersGenericError,
+                  builder: (context, state) {
+                    if (state is OrdersLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is OrdersNetworkError) {
+                      return _buildErrorState(context, 'No Internet Connection. Please check your network.', Icons.wifi_off);
+                    } else if (state is OrdersGenericError) {
+                      return _buildErrorState(context, state.message, Icons.error_outline);
+                    } else if (state is OrdersEmpty) {
+                      return _buildErrorState(context, 'No orders found.', Icons.inbox);
+                    } else if (state is OrdersLoaded) {
+                      return RefreshIndicator(
+                        onRefresh: () => _ordersCubit.fetchOrders(filter: state.filter, isRefresh: true),
+                        child: ListView.separated(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: state.orders.length + (state.hasReachedMax ? 0 : 1),
+                          separatorBuilder: (_, __) => const SizedBox(height: 16),
+                          itemBuilder: (context, index) {
+                            if (index >= state.orders.length) {
+                              return const Center(child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: CircularProgressIndicator(),
+                              ));
+                            }
+                            return OrderItemCard(
+                              order: state.orders[index],
+                              onStatusChange: (newStatus) {
+                                _ordersCubit.updateOrderStatus(state.orders[index].id, newStatus);
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
                   },
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, String message, IconData icon) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 64, color: AppColors.grey),
+          const SizedBox(height: 16),
+          Text(message, style: AppTextStyle.fontBlack14Regular, textAlign: TextAlign.center),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => _ordersCubit.fetchOrders(filter: _selectedFilter, isRefresh: true),
+            child: const Text('Retry'),
+          ),
+        ],
       ),
     );
   }

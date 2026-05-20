@@ -44,7 +44,10 @@ class _LoginPageState extends State<LoginPage> {
             );
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
             );
           }
         },
@@ -73,8 +76,13 @@ class _LoginPageState extends State<LoginPage> {
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: IconButton(
-                                      icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios,
+                                        color: Colors.white,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
                                       alignment: Alignment.centerLeft,
                                       onPressed: () => Navigator.pop(context),
                                     ),
@@ -82,14 +90,22 @@ class _LoginPageState extends State<LoginPage> {
                                 const Spacer(),
                                 AuthCardWidget(
                                   children: [
-                                    const Text('Welcome Back!',
-                                        style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                                    const Text(
+                                      'Welcome Back!',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                     const SizedBox(height: 24),
                                     AuthTextField(
                                       hintText: 'Email',
                                       prefixIcon: Icons.email_outlined,
                                       controller: _emailController,
-                                      validator: (v) => (v == null || v.isEmpty) ? 'Enter your email' : null,
+                                      validator: (v) => (v == null || v.isEmpty)
+                                          ? 'Enter your email'
+                                          : null,
                                     ),
                                     const SizedBox(height: 12),
                                     AuthTextField(
@@ -97,7 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                                       prefixIcon: Icons.lock_outline,
                                       obscureText: true,
                                       controller: _passwordController,
-                                      validator: (v) => (v == null || v.isEmpty) ? 'Enter your password' : null,
+                                      validator: (v) => (v == null || v.isEmpty)
+                                          ? 'Enter your password'
+                                          : null,
                                     ),
                                     const SizedBox(height: 24),
                                     AuthButton(
@@ -107,9 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
                                           context.read<AuthCubit>().login(
-                                                login: _emailController.text.trim(),
-                                                password: _passwordController.text,
-                                              );
+                                            login: _emailController.text.trim(),
+                                            password: _passwordController.text,
+                                          );
                                         }
                                       },
                                     ),
@@ -136,18 +154,25 @@ class _LoginPageState extends State<LoginPage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (_) => const RegisterPage(),
+                                            builder: (_) =>
+                                                const RegisterPage(),
                                           ),
                                         );
                                       },
                                       child: const Text(
                                         "Don't have an account? Sign Up",
-                                        style: TextStyle(color: Colors.white, fontSize: 13),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.1,
+                                ),
                               ],
                             ),
                           ),
