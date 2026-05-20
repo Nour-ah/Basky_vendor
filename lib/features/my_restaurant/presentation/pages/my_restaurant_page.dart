@@ -1,7 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/di/injection_container.dart';
+import '../cubit/restaurant_catalog_cubit.dart';
+import '../cubit/restaurant_catalog_state.dart';
 import '../models/menu_category_model.dart';
 import '../models/menu_item_model.dart';
 import '../models/restaurant_details_model.dart';
@@ -10,12 +15,6 @@ import '../widgets/restaurant_categories_tabs.dart';
 import '../widgets/restaurant_cover_widget.dart';
 import '../widgets/restaurant_info_card.dart';
 import 'add_food_page.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/di/injection_container.dart';
-import '../cubit/restaurant_catalog_cubit.dart';
-import '../cubit/restaurant_catalog_state.dart';
-import '../models/menu_category_model.dart';
-import '../models/menu_item_model.dart';
 
 class MyRestaurantPage extends StatefulWidget {
   const MyRestaurantPage({super.key});
@@ -67,7 +66,10 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
         backgroundColor: AppColors.white,
         body: Stack(
           children: [
-            RestaurantCoverWidget(coverImageUrl: _restaurantDetails.coverImageUrl, onBackPressed: () => Navigator.pop(context)),
+            RestaurantCoverWidget(
+              coverImageUrl: _restaurantDetails.coverImageUrl,
+              onBackPressed: () => Navigator.pop(context),
+            ),
             RefreshIndicator(
               onRefresh: () => _cubit.initCatalog(),
               child: SingleChildScrollView(
@@ -78,7 +80,13 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                     const SizedBox(height: 220),
                     Container(
                       width: double.infinity,
-                      decoration: const BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                      decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                        ),
+                      ),
                       padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +97,12 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                           BlocConsumer<RestaurantCatalogCubit, RestaurantCatalogState>(
                             listener: (context, state) {
                               if (state is CatalogDeleteError) {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: AppColors.promoRed));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(state.message),
+                                    backgroundColor: AppColors.promoRed,
+                                  ),
+                                );
                               }
                             },
                             builder: (context, state) {
@@ -99,9 +112,11 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
 
                               List<MenuCategoryModel> catModels = [];
                               if (state is CatalogLoaded) {
-                                catModels = [MenuCategoryModel(name: '+', isAddButton: true)] + state.categories.map((e) => MenuCategoryModel(name: e.name)).toList();
+                                catModels = [MenuCategoryModel(name: '+', isAddButton: true)] +
+                                    state.categories.map((e) => MenuCategoryModel(name: e.name)).toList();
                               } else if (state is CatalogEmpty) {
-                                catModels = [MenuCategoryModel(name: '+', isAddButton: true)] + state.categories.map((e) => MenuCategoryModel(name: e.name)).toList();
+                                catModels = [MenuCategoryModel(name: '+', isAddButton: true)] +
+                                    state.categories.map((e) => MenuCategoryModel(name: e.name)).toList();
                               }
 
                               return Column(
@@ -111,13 +126,18 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                                       categories: catModels,
                                       selectedCategory: state is CatalogLoaded && state.selectedCategoryId != null 
                                           ? state.categories.firstWhere((c) => c.id == state.selectedCategoryId).name 
-                                          : AppStrings.all.tr(),
+                                          : LocaleKeys.all.tr(),
                                       onCategorySelected: (categoryName) async {
                                         if (categoryName == '+') {
-                                          final didChange = await Navigator.push(context, MaterialPageRoute(builder: (context) => const AddFoodPage()));
+                                          final didChange = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const AddFoodPage()),
+                                          );
                                           if (didChange == true) _cubit.initCatalog();
                                         } else {
-                                          final cat = state is CatalogLoaded ? state.categories.firstWhere((c) => c.name == categoryName, orElse: () => state.categories.first) : null;
+                                          final cat = state is CatalogLoaded
+                                              ? state.categories.firstWhere((c) => c.name == categoryName, orElse: () => state.categories.first)
+                                              : null;
                                           _cubit.filterProducts(categoryId: cat?.id);
                                         }
                                       },
@@ -125,7 +145,12 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                                   const SizedBox(height: 24),
                                   
                                   if (state is CatalogEmpty) 
-                                    const Center(child: Padding(padding: EdgeInsets.all(32.0), child: Text('No products found.'))),
+                                    Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(32.0),
+                                        child: Text(LocaleKeys.noProductsFound.tr()),
+                                      ),
+                                    ),
                                     
                                   if (state is CatalogLoaded)
                                     ListView.builder(
@@ -143,7 +168,7 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                                             price: product.price,
                                             imageUrl: product.imageUrl ?? '',
                                           ),
-                                          onEdit: () {}, // would map to edit mode
+                                          onEdit: () {},
                                           onDelete: () => _cubit.deleteProduct(product.id),
                                         );
                                       },
@@ -164,7 +189,10 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final didChange = await Navigator.push(context, MaterialPageRoute(builder: (context) => const AddFoodPage()));
+            final didChange = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddFoodPage()),
+            );
             if (didChange == true) _cubit.initCatalog();
           },
           backgroundColor: AppColors.primary,

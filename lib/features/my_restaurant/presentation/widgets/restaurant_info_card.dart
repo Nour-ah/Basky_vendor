@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../models/restaurant_details_model.dart';
 
@@ -40,8 +40,8 @@ class RestaurantInfoCard extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: details.isOpen
-                              ? AppStrings.open.tr()
-                              : AppStrings.closed.tr(),
+                              ? LocaleKeys.open.tr()
+                              : LocaleKeys.closed.tr(),
                           style: AppTextStyle.fontGreen14Bold.copyWith(
                             fontSize: 12,
                             color: details.isOpen

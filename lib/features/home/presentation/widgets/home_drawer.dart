@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/localization/cubit/locale_cubit.dart';
 import '../../../my_restaurant/presentation/pages/my_restaurant_page.dart';
 import '../../../orders/presentation/pages/my_orders_page.dart';
 import '../../../wallet/presentation/pages/wallet_page.dart';
@@ -28,12 +30,12 @@ class HomeDrawer extends StatelessWidget {
     final List<DrawerItemModel> drawerItems = [
       DrawerItemModel(
         icon: Icons.person_outline,
-        title: AppStrings.personalInformation.tr(),
+        title: LocaleKeys.personalInformation.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.list_alt,
-        title: AppStrings.myOrders.tr(),
+        title: LocaleKeys.myOrders.tr(),
         onTap: () {
           Navigator.push(
             context,
@@ -43,7 +45,7 @@ class HomeDrawer extends StatelessWidget {
       ),
       DrawerItemModel(
         icon: Icons.restaurant_outlined,
-        title: AppStrings.myRestaurant.tr(),
+        title: LocaleKeys.myRestaurant.tr(),
         onTap: () {
           Navigator.push(
             context,
@@ -53,7 +55,7 @@ class HomeDrawer extends StatelessWidget {
       ),
       DrawerItemModel(
         icon: Icons.account_balance_wallet_outlined,
-        title: AppStrings.wallet.tr(),
+        title: LocaleKeys.wallet.tr(),
         onTap: () {
           Navigator.push(
             context,
@@ -63,33 +65,31 @@ class HomeDrawer extends StatelessWidget {
       ),
       DrawerItemModel(
         icon: Icons.credit_card_outlined,
-        title: AppStrings.savedCards.tr(),
+        title: LocaleKeys.savedCards.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.language_outlined,
-        title: AppStrings.language.tr(),
+        title: LocaleKeys.language.tr(),
         onTap: () {
-          final newLocale = context.locale.languageCode == 'ar'
-              ? const Locale('en')
-              : const Locale('ar');
-          context.setLocale(newLocale);
+          final newLangCode = context.locale.languageCode == 'ar' ? 'en' : 'ar';
+          context.read<LocaleCubit>().changeLocale(newLangCode);
           Navigator.pop(context); // Close the drawer
         },
       ),
       DrawerItemModel(
         icon: Icons.headset_mic_outlined,
-        title: AppStrings.customerService.tr(),
+        title: LocaleKeys.customerService.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.settings_outlined,
-        title: AppStrings.appSettings.tr(),
+        title: LocaleKeys.appSettings.tr(),
         onTap: () {},
       ),
       DrawerItemModel(
         icon: Icons.shield_outlined,
-        title: AppStrings.privacyPolicy.tr(),
+        title: LocaleKeys.privacyPolicy.tr(),
         onTap: () {},
       ),
     ];
@@ -134,7 +134,7 @@ class HomeDrawer extends StatelessWidget {
               child: DrawerItemWidget(
                 item: DrawerItemModel(
                   icon: Icons.logout_outlined,
-                  title: AppStrings.logOut.tr(),
+                  title: LocaleKeys.logOut.tr(),
                   onTap: () {},
                 ),
                 textStyle: AppTextStyle.fontPrimary14Regular.copyWith(

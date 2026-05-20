@@ -20,7 +20,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       title: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           const CircleAvatar(
             backgroundImage: AssetImage(
@@ -29,38 +28,50 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             radius: 20,
           ),
           const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Heba Yasser',
-                style: TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.location_on, color: AppColors.red, size: 14),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Kattamya, Stone Residence',
-                    style: TextStyle(
-                      color: AppColors.grey.withOpacity(0.8),
-                      fontSize: 12,
-                    ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Heba Yasser',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                ],
-              ),
-            ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, color: AppColors.red, size: 14),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        'Kattamya, Stone Residence',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AppColors.grey.withValues(alpha: 0.8),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
       actions: [
-         CustomImageView(imagePath: AppImages.notification,width: 24 ,fit: BoxFit.scaleDown,),
-        SizedBox(width: 16,)
+        CustomImageView(
+          imagePath: AppImages.notification,
+          width: 24,
+          fit: BoxFit.scaleDown,
+        ),
+        const SizedBox(width: 16),
       ],
     );
   }

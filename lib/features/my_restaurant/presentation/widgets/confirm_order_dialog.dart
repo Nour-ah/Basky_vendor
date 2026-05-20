@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/theme/app_text_styles.dart';
 
 class ConfirmOrderDialog extends StatelessWidget {
@@ -30,7 +30,7 @@ class ConfirmOrderDialog extends StatelessWidget {
             const SizedBox(height: 24),
             // Confirmation Text
             Text(
-              AppStrings.confirmOrderQuestion.tr(),
+              LocaleKeys.confirmOrderQuestion.tr(),
               textAlign: TextAlign.center,
               style: AppTextStyle.fontBlack16Bold,
             ),
@@ -53,7 +53,7 @@ class ConfirmOrderDialog extends StatelessWidget {
                       Navigator.pop(context, true); // Close dialog with true
                     },
                     child: Text(
-                      AppStrings.yes.tr(),
+                      LocaleKeys.yes.tr(),
                       style: AppTextStyle.fontWhite14Regular.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -75,7 +75,7 @@ class ConfirmOrderDialog extends StatelessWidget {
                       Navigator.pop(context, false); // Close dialog with false
                     },
                     child: Text(
-                      AppStrings.no.tr(),
+                      LocaleKeys.no.tr(),
                       style: AppTextStyle.fontGrey14Regular.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

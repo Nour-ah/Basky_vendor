@@ -1,12 +1,11 @@
 import 'dart:ui';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_images.dart';
+import '../translations/locale_keys.g.dart';
 import 'custom_image_view.dart';
-import '../localization/app_strings.dart';
-import '../localization/locale_keys.dart';
 
 class CustomSearch extends StatelessWidget {
   const CustomSearch({super.key});
@@ -16,7 +15,6 @@ class CustomSearch extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // TODO: Navigate to search screen
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
       },
       child: Container(
         height: 56,
@@ -70,7 +68,7 @@ class CustomSearch extends StatelessWidget {
                     ),
                     // Search Text
                     Text(
-                      AppStrings.tr(context, LocaleKeys.searchSheikh),
+                      LocaleKeys.searchPlaceholder.tr(),
                       style: TextStyle(
                         color: AppColors.textSecondary.withValues(alpha: 0.6),
                         fontSize: 16,

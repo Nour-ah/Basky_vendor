@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spider_restaurant/core/di/injection_container.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
+import 'package:spider_restaurant/core/translations/locale_keys.g.dart';
 import 'package:spider_restaurant/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:spider_restaurant/features/auth/presentation/cubit/auth_state.dart';
 import 'package:spider_restaurant/features/auth/presentation/pages/login_page.dart';
@@ -50,8 +52,8 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   }
 
   String? _validateOtp(String? value) {
-    if (value == null || value.isEmpty) return 'Enter verification code';
-    if (value.length < 6) return 'Code must be 6 digits';
+    if (value == null || value.isEmpty) return LocaleKeys.otpRequired.tr();
+    if (value.length < 6) return LocaleKeys.otpLengthError.tr();
     return null;
   }
 
@@ -92,9 +94,9 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                               key: _formKey,
                               child: AuthCardWidget(
                                 children: [
-                                  const Text(
-                                    'Verify Phone',
-                                    style: TextStyle(
+                                  Text(
+                                    LocaleKeys.verifyPhone.tr(),
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
@@ -114,7 +116,9 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                                     ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'Enter the 6-digit code sent to\n${widget.phone}',
+                                    LocaleKeys.enterVerificationCode.tr(
+                                      namedArgs: {'phone': widget.phone},
+                                    ),
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       color: Colors.white,
@@ -129,7 +133,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                                   ),
                                   const SizedBox(height: 24),
                                   AuthButton(
-                                    text: 'Verify',
+                                    text: LocaleKeys.verify.tr(),
                                     backgroundColor: AppColors.promoRed,
                                     isLoading: isLoading,
                                     onPressed: isLoading
@@ -152,9 +156,9 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                                                 .read<AuthCubit>()
                                                 .resendVerificationCode(email: widget.email);
                                           },
-                                    child: const Text(
-                                      'Resend code',
-                                      style: TextStyle(color: Colors.white, fontSize: 13),
+                                    child: Text(
+                                      LocaleKeys.resendCode.tr(),
+                                      style: const TextStyle(color: Colors.white, fontSize: 13),
                                     ),
                                   ),
                                 ],

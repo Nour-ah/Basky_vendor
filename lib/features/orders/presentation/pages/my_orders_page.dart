@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../../domain/entities/order_status.dart';
 import '../cubit/orders_cubit.dart';
 import '../cubit/orders_state.dart';
@@ -45,6 +45,8 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isAr = context.locale.languageCode == 'ar';
+
     return BlocProvider.value(
       value: _ordersCubit,
       child: Scaffold(
@@ -54,10 +56,14 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.black, size: 20),
+            icon: Icon(
+              isAr ? Icons.arrow_back_ios_new : Icons.arrow_back_ios,
+              color: AppColors.black,
+              size: 20,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text(AppStrings.orders.tr(), style: AppTextStyle.fontBlack16Bold),
+          title: Text(LocaleKeys.orders.tr(), style: AppTextStyle.fontBlack16Bold),
         ),
         body: SafeArea(
           child: Column(
@@ -85,16 +91,29 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                       );
                     }
                   },
-                  buildWhen: (previous, current) => current is OrdersLoaded || current is OrdersLoading || current is OrdersEmpty || current is OrdersNetworkError || current is OrdersGenericError,
+                  buildWhen: (previous, current) =>
+                      current is OrdersLoaded ||
+                      current is OrdersLoading ||
+                      current is OrdersEmpty ||
+                      current is OrdersNetworkError ||
+                      current is OrdersGenericError,
                   builder: (context, state) {
                     if (state is OrdersLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (state is OrdersNetworkError) {
-                      return _buildErrorState(context, 'No Internet Connection. Please check your network.', Icons.wifi_off);
+                      return _buildErrorState(
+                        context,
+                        LocaleKeys.noInternetConnection.tr(),
+                        Icons.wifi_off,
+                      );
                     } else if (state is OrdersGenericError) {
                       return _buildErrorState(context, state.message, Icons.error_outline);
                     } else if (state is OrdersEmpty) {
-                      return _buildErrorState(context, 'No orders found.', Icons.inbox);
+                      return _buildErrorState(
+                        context,
+                        LocaleKeys.noOrdersFound.tr(),
+                        Icons.inbox,
+                      );
                     } else if (state is OrdersLoaded) {
                       return RefreshIndicator(
                         onRefresh: () => _ordersCubit.fetchOrders(filter: state.filter, isRefresh: true),
@@ -106,10 +125,12 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                           separatorBuilder: (_, __) => const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             if (index >= state.orders.length) {
-                              return const Center(child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: CircularProgressIndicator(),
-                              ));
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
                             }
                             return OrderItemCard(
                               order: state.orders[index],
@@ -143,7 +164,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => _ordersCubit.fetchOrders(filter: _selectedFilter, isRefresh: true),
-            child: const Text('Retry'),
+            child: Text(LocaleKeys.retry.tr()),
           ),
         ],
       ),

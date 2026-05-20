@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/di/injection_container.dart';
 import '../widgets/add_food_image_picker.dart';
 import '../widgets/add_food_text_field.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/di/injection_container.dart';
 import '../cubit/add_food_cubit.dart';
 import '../cubit/add_food_state.dart';
 import '../../domain/entities/add_product_params.dart';
@@ -43,7 +43,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
       price: double.tryParse(_priceController.text) ?? 0.0,
       discountPercentage: double.tryParse(_discountController.text) ?? 0.0,
       categoryId: 1,
-      // mapping would go here
       maxOrderQuantity: 10,
       status: ProductStatus.active,
       isEditMode: false,
@@ -53,21 +52,20 @@ class _AddFoodPageState extends State<AddFoodPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isAr = context.locale.languageCode == 'ar';
+
     return BlocProvider(
       create: (_) => sl<AddFoodCubit>(),
       child: BlocConsumer<AddFoodCubit, AddFoodState>(
         listener: (context, state) {
           if (state is AddFoodSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Saved successfully'),
+              SnackBar(
+                content: Text(LocaleKeys.savedSuccessfully.tr()),
                 backgroundColor: AppColors.primary,
               ),
             );
-            Navigator.pop(
-              context,
-              true,
-            ); // Return true to trigger catalog refresh
+            Navigator.pop(context, true); // Return true to trigger catalog refresh
           } else if (state is AddFoodError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -90,15 +88,15 @@ class _AddFoodPageState extends State<AddFoodPage> {
               elevation: 0,
               centerTitle: true,
               leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
+                icon: Icon(
+                  isAr ? Icons.arrow_back_ios_new : Icons.arrow_back_ios,
                   color: AppColors.black,
                   size: 20,
                 ),
                 onPressed: () => Navigator.pop(context),
               ),
               title: Text(
-                AppStrings.addFood.tr(),
+                LocaleKeys.addFood.tr(),
                 style: AppTextStyle.fontBlack16Bold,
               ),
             ),
@@ -108,11 +106,11 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AddFoodImagePicker(title: AppStrings.mealImage.tr()),
+                    AddFoodImagePicker(title: LocaleKeys.mealImage.tr()),
                     const SizedBox(height: 16),
 
                     AddFoodTextField(
-                      hintText: AppStrings.mealName.tr(),
+                      hintText: LocaleKeys.mealName.tr(),
                       controller: _nameController,
                     ),
                     if (validationErrors.containsKey('name'))
@@ -126,7 +124,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     const SizedBox(height: 16),
 
                     AddFoodTextField(
-                      hintText: AppStrings.mealDescription.tr(),
+                      hintText: LocaleKeys.mealDescription.tr(),
                       maxLines: 5,
                       controller: _descController,
                     ),
@@ -141,7 +139,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     const SizedBox(height: 16),
 
                     AddFoodTextField(
-                      hintText: AppStrings.price.tr(),
+                      hintText: LocaleKeys.price.tr(),
                       controller: _priceController,
                     ),
                     if (validationErrors.containsKey('price'))
@@ -155,7 +153,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     const SizedBox(height: 16),
 
                     AddFoodTextField(
-                      hintText: AppStrings.discountPercentage.tr(),
+                      hintText: LocaleKeys.discountPercentage.tr(),
                       controller: _discountController,
                     ),
                     const SizedBox(height: 32),
@@ -163,9 +161,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     SizedBox(
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: isLoading
-                            ? null
-                            : () => _submitForm(context),
+                        onPressed: isLoading ? null : () => _submitForm(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.promoRed,
                           shape: RoundedRectangleBorder(
@@ -182,7 +178,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                                 ),
                               )
                             : Text(
-                                AppStrings.add.tr(),
+                                LocaleKeys.add.tr(),
                                 style: AppTextStyle.fontWhite16Bold,
                               ),
                       ),

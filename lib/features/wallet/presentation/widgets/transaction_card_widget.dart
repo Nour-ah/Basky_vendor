@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../../domain/entities/transaction_entity.dart';
 
 class TransactionCardWidget extends StatelessWidget {
@@ -40,7 +42,9 @@ class TransactionCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isDeposit ? 'Deposit' : 'Withdrawal (${transaction.type})',
+                  isDeposit
+                      ? LocaleKeys.wallet_deposit.tr()
+                      : LocaleKeys.wallet_withdrawal.tr(namedArgs: {'type': transaction.type}),
                   style: AppTextStyle.fontBlack14Regular.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 4),

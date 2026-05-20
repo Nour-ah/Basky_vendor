@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../models/order_summary_model.dart';
 
@@ -21,9 +21,9 @@ class OrdersStatisticsCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildStatItem(AppStrings.today.tr(), summary.todayOrders),
-          _buildStatItem(AppStrings.thisWeek.tr(), summary.thisWeekOrders),
-          _buildStatItem(AppStrings.thisMonth.tr(), summary.thisMonthOrders),
+          _buildStatItem(LocaleKeys.today.tr(), summary.todayOrders),
+          _buildStatItem(LocaleKeys.thisWeek.tr(), summary.thisWeekOrders),
+          _buildStatItem(LocaleKeys.thisMonth.tr(), summary.thisMonthOrders),
         ],
       ),
     );

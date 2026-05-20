@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spider_restaurant/core/di/injection_container.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
+import 'package:spider_restaurant/core/localization/cubit/locale_cubit.dart';
 import 'package:spider_restaurant/features/auth/presentation/pages/splash_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,8 +20,10 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
       startLocale: const Locale('ar'),
-      // Defaulting to arabic for the user
-      child: const SpiderRestaurantApp(),
+      child: BlocProvider<LocaleCubit>(
+        create: (context) => sl<LocaleCubit>()..getSavedLocale(),
+        child: const SpiderRestaurantApp(),
+      ),
     ),
   );
 }
@@ -29,42 +33,53 @@ class SpiderRestaurantApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Spider Restaurant App',
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: TextScaler.noScaling),
-          child: child!,
-        );
+    return BlocListener<LocaleCubit, LocaleState>(
+      listener: (context, state) {
+        if (context.locale != state.locale) {
+          context.setLocale(state.locale);
+        }
       },
+      child: BlocBuilder<LocaleCubit, LocaleState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Spider Restaurant App',
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            builder: (context, child) {
+              return MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.noScaling),
+                child: child!,
+              );
+            },
 
-      // Main Theme configuration for the entire application
-      theme: ThemeData(
-        scaffoldBackgroundColor: AppColors.background,
-        primaryColor: AppColors.primary,
-        textTheme: context.locale.languageCode == 'ar' 
-            ? GoogleFonts.cairoTextTheme(Theme.of(context).textTheme)
-            : GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-        useMaterial3: true,
+            // Main Theme configuration for the entire application
+            theme: ThemeData(
+              scaffoldBackgroundColor: AppColors.background,
+              primaryColor: AppColors.primary,
+              textTheme: context.locale.languageCode == 'ar'
+                  ? GoogleFonts.cairoTextTheme(Theme.of(context).textTheme)
+                  : GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+              useMaterial3: true,
 
-        // Define common app bar behavior
-        appBarTheme: AppBarTheme(
-          backgroundColor: AppColors.background,
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: AppColors.primary),
-          titleTextStyle: context.locale.languageCode == 'ar'
-              ? GoogleFonts.cairo(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold)
-              : GoogleFonts.poppins(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold),
-        ),
+              // Define common app bar behavior
+              appBarTheme: AppBarTheme(
+                backgroundColor: AppColors.background,
+                centerTitle: true,
+                iconTheme: const IconThemeData(color: AppColors.primary),
+                titleTextStyle: context.locale.languageCode == 'ar'
+                    ? GoogleFonts.cairo(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold)
+                    : GoogleFonts.poppins(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            home: const SplashPage(),
+          );
+        },
       ),
-
-      home: const SplashPage(),
     );
   }
 }

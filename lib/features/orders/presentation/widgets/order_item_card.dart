@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/entities/order_status.dart';
 import '../../domain/entities/order_summary_entity.dart';
@@ -20,7 +20,9 @@ class OrderItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDelivered = order.status == OrderStatus.delivered;
     final statusColor = isDelivered ? AppColors.primary : AppColors.red;
-    final statusBgColor = isDelivered ? AppColors.primary.withOpacity(0.1) : AppColors.red.withOpacity(0.1);
+    final statusBgColor = isDelivered
+        ? AppColors.primary.withValues(alpha: 0.1)
+        : AppColors.red.withValues(alpha: 0.1);
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -29,7 +31,7 @@ class OrderItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             offset: const Offset(0, 2),
             blurRadius: 10,
           ),
@@ -42,12 +44,11 @@ class OrderItemCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${AppStrings.orderCode.tr()}: ${order.orderCode}',
+                '${LocaleKeys.orderCode.tr()}: ${order.orderCode}',
                 style: AppTextStyle.fontBlack14Bold,
               ),
               GestureDetector(
                 onTap: () {
-                  // Example UI trigger for next status update (only presentational)
                   if (order.status == OrderStatus.pending && onStatusChange != null) {
                     onStatusChange!(OrderStatus.processing);
                   }
@@ -82,7 +83,7 @@ class OrderItemCard extends StatelessWidget {
               ),
               _buildDivider(),
               Text(
-                '${order.itemCount} ${AppStrings.items.tr()}',
+                LocaleKeys.itemsCount.tr(namedArgs: {'count': order.itemCount.toString()}),
                 style: AppTextStyle.fontPrimary12Regular.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
@@ -93,9 +94,9 @@ class OrderItemCard extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: const Text('|', style: TextStyle(color: AppColors.border, fontSize: 12)),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Text('|', style: TextStyle(color: AppColors.border, fontSize: 12)),
     );
   }
 }

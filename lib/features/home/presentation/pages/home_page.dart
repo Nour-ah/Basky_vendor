@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/fade_in_slide.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
 import '../widgets/home_app_bar.dart';
@@ -24,14 +26,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late HomeCubit _homeCubit;
 
-  // Dummy State for Tabs
   int selectedTabIndex = 0;
-  final List<String> orderTabs = const [
-    'Ready For Delivery',
-    'Confirmed (1)',
-    'Cooking (1)',
-    'On The Way (5)',
-  ];
 
   @override
   void initState() {
@@ -47,6 +42,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final orderTabs = [
+      LocaleKeys.readyForDelivery.tr(),
+      LocaleKeys.confirmedCount.tr(namedArgs: {'count': '1'}),
+      LocaleKeys.cookingCount.tr(namedArgs: {'count': '1'}),
+      LocaleKeys.onTheWayCount.tr(namedArgs: {'count': '5'}),
+    ];
+
     return BlocProvider.value(
       value: _homeCubit,
       child: Scaffold(
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             } else if (state is HomeError) {
               return Center(
                 child: Text(
-                  'Error: ${state.message}',
+                  '${LocaleKeys.unknown.tr()}: ${state.message}',
                   style: AppTextStyle.fontPrimary14Regular,
                 ),
               );
@@ -111,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                             child: Padding(
                               padding: const EdgeInsets.all(32.0),
                               child: Text(
-                                'No recent orders found',
+                                LocaleKeys.noRecentOrders.tr(),
                                 style: AppTextStyle.fontBlack14Regular,
                               ),
                             ),

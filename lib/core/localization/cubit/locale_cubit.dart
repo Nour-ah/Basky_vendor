@@ -5,7 +5,7 @@ import '../../cache_helper/local_storage.dart';
 part 'locale_state.dart';
 
 class LocaleCubit extends Cubit<LocaleState> {
-  LocaleCubit() : super(const LocaleState(Locale('ar', 'AE')));
+  LocaleCubit() : super(const LocaleState(Locale('ar')));
 
   /// Initialize the locale from cache or device settings
   Future<void> getSavedLocale() async {
@@ -18,10 +18,10 @@ class LocaleCubit extends Cubit<LocaleState> {
       final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale;
       if (deviceLocale.languageCode == 'en') {
         await LocalStorage.saveLanguage('en');
-        emit(const LocaleState(Locale('en', 'US')));
+        emit(const LocaleState(Locale('en')));
       } else {
         await LocalStorage.saveLanguage('ar');
-        emit(const LocaleState(Locale('ar', 'AE')));
+        emit(const LocaleState(Locale('ar')));
       }
     }
   }

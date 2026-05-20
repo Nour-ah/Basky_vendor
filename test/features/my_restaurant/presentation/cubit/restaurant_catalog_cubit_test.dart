@@ -2,14 +2,42 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spider_restaurant/core/error/failures.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/add_product_params.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/category_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_status.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_details_entity.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_summary_entity.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/repositories/restaurant_repository.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_status.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/usecases/delete_product_usecase.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_categories_usecase.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_products_usecase.dart';
 import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
 import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/restaurant_catalog_state.dart';
+
+class FakeRestaurantRepository implements RestaurantRepository {
+  @override
+  Future<Either<Failure, List<CategoryEntity>>> getCategories() async => const Right([]);
+  
+  @override
+  Future<Either<Failure, List<ProductSummaryEntity>>> getProducts({
+    int? categoryId,
+    String? searchQuery,
+    int page = 1,
+    int limit = 15,
+  }) async => const Right([]);
+
+  @override
+  Future<Either<Failure, ProductDetailsEntity>> getProductDetails(int productId) async => throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, void>> addProduct(AddProductParams params) async => const Right(null);
+  
+  @override
+  Future<Either<Failure, void>> updateProduct(int productId, AddProductParams params) async => const Right(null);
+
+  @override
+  Future<Either<Failure, void>> deleteProduct(int productId) async => const Right(null);
+}
 
 class MockGetCategoriesUseCase extends GetCategoriesUseCase {
   MockGetCategoriesUseCase(super.repository);
@@ -60,9 +88,10 @@ void main() {
   late MockDeleteProductUseCase mockDeleteProductUseCase;
 
   setUp(() {
-    mockGetCategoriesUseCase = MockGetCategoriesUseCase(null as dynamic);
-    mockGetProductsUseCase = MockGetProductsUseCase(null as dynamic);
-    mockDeleteProductUseCase = MockDeleteProductUseCase(null as dynamic);
+    final fakeRepo = FakeRestaurantRepository();
+    mockGetCategoriesUseCase = MockGetCategoriesUseCase(fakeRepo);
+    mockGetProductsUseCase = MockGetProductsUseCase(fakeRepo);
+    mockDeleteProductUseCase = MockDeleteProductUseCase(fakeRepo);
     
     cubit = RestaurantCatalogCubit(
       getCategoriesUseCase: mockGetCategoriesUseCase,

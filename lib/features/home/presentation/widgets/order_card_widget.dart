@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 
 class OrderCardWidget extends StatelessWidget {
   const OrderCardWidget({
@@ -29,7 +31,7 @@ class OrderCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.greyLight.withOpacity(0.5),
+            color: AppColors.greyLight.withValues(alpha: 0.5),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -42,7 +44,7 @@ class OrderCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'ORDER CODE: #$orderCode',
+                '${LocaleKeys.orderCode.tr()}: #$orderCode',
                 style: const TextStyle(
                   fontWeight: bold,
                   fontSize: 14,
@@ -51,9 +53,9 @@ class OrderCardWidget extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: onDetailsPressed,
-                child: const Text(
-                  'See Details',
-                  style: TextStyle(
+                child: Text(
+                  LocaleKeys.seeDetails.tr(),
+                  style: const TextStyle(
                     color: AppColors.promoRed,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
@@ -100,7 +102,7 @@ class OrderCardWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '$itemsCount Items',
+                LocaleKeys.itemsCount.tr(namedArgs: {'count': itemsCount.toString()}),
                 style: const TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,

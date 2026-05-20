@@ -3,11 +3,40 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spider_restaurant/core/error/failures.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/add_product_params.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/category_entity.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_details_entity.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_summary_entity.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/repositories/restaurant_repository.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/usecases/add_product_usecase.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/usecases/update_product_usecase.dart';
 import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/add_food_cubit.dart';
 import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/add_food_state.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_status.dart';
+
+class FakeRestaurantRepository implements RestaurantRepository {
+  @override
+  Future<Either<Failure, List<CategoryEntity>>> getCategories() async => const Right([]);
+  
+  @override
+  Future<Either<Failure, List<ProductSummaryEntity>>> getProducts({
+    int? categoryId,
+    String? searchQuery,
+    int page = 1,
+    int limit = 15,
+  }) async => const Right([]);
+
+  @override
+  Future<Either<Failure, ProductDetailsEntity>> getProductDetails(int productId) async => throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, void>> addProduct(AddProductParams params) async => const Right(null);
+  
+  @override
+  Future<Either<Failure, void>> updateProduct(int productId, AddProductParams params) async => const Right(null);
+
+  @override
+  Future<Either<Failure, void>> deleteProduct(int productId) async => const Right(null);
+}
 
 class MockAddProductUseCase extends AddProductUseCase {
   MockAddProductUseCase(super.repository);
@@ -32,8 +61,9 @@ void main() {
   late MockUpdateProductUseCase mockUpdateProductUseCase;
 
   setUp(() {
-    mockAddProductUseCase = MockAddProductUseCase(null as dynamic); // using null repo as we override call
-    mockUpdateProductUseCase = MockUpdateProductUseCase(null as dynamic);
+    final fakeRepo = FakeRestaurantRepository();
+    mockAddProductUseCase = MockAddProductUseCase(fakeRepo);
+    mockUpdateProductUseCase = MockUpdateProductUseCase(fakeRepo);
     
     cubit = AddFoodCubit(
       addProductUseCase: mockAddProductUseCase,
