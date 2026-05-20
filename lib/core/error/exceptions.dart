@@ -29,3 +29,12 @@ class ParsingException implements Exception {
   @override
   String toString() => 'ParsingException: $message';
 }
+
+class ValidationException implements Exception {
+  final String message;
+  final Map<String, List<String>> errors;
+  const ValidationException({this.message = 'Validation Error', this.errors = const {}});
+
+  @override
+  String toString() => 'ValidationException: $message, Errors: $errors';
+}

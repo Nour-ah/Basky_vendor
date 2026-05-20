@@ -5,16 +5,19 @@ import '../../../../core/theme/app_text_styles.dart';
 class AddFoodTextField extends StatelessWidget {
   final String hintText;
   final int maxLines;
+  final TextEditingController? controller;
 
   const AddFoodTextField({
     super.key,
     required this.hintText,
     this.maxLines = 1,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,

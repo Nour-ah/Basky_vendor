@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../widgets/add_food_dropdown.dart';
 import '../widgets/add_food_image_picker.dart';
 import '../widgets/add_food_text_field.dart';
-import '../widgets/confirm_order_dialog.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection_container.dart';
+import '../cubit/add_food_cubit.dart';
+import '../cubit/add_food_state.dart';
+import '../../domain/entities/add_product_params.dart';
+import '../../domain/entities/product_status.dart';
 
 class AddFoodPage extends StatefulWidget {
   const AddFoodPage({super.key});
@@ -17,160 +21,179 @@ class AddFoodPage extends StatefulWidget {
 }
 
 class _AddFoodPageState extends State<AddFoodPage> {
-  // Dummy values for dropdowns
-  String _selectedPercentageType = AppStrings.percentage.tr();
-  String _selectedCategory = AppStrings.productCategory.tr();
-  String _selectedSubcategory = AppStrings.subcategory.tr();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _discountController = TextEditingController();
 
-  final List<String> _percentageTypes = [AppStrings.percentage.tr()];
-  final List<String> _categories = [AppStrings.productCategory.tr()];
-  final List<String> _subcategories = [AppStrings.subcategory.tr()];
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descController.dispose();
+    _priceController.dispose();
+    _discountController.dispose();
+    super.dispose();
+  }
+
+  void _submitForm(BuildContext context) {
+    final cubit = context.read<AddFoodCubit>();
+    final params = AddProductParams(
+      name: _nameController.text,
+      description: _descController.text,
+      price: double.tryParse(_priceController.text) ?? 0.0,
+      discountPercentage: double.tryParse(_discountController.text) ?? 0.0,
+      categoryId: 1,
+      // mapping would go here
+      maxOrderQuantity: 10,
+      status: ProductStatus.active,
+      isEditMode: false,
+    );
+    cubit.submitForm(params);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.black,
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          AppStrings.addFood.tr(),
-          style: AppTextStyle.fontBlack16Bold,
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Meal Image Box
-              AddFoodImagePicker(title: AppStrings.mealImage.tr()),
-              const SizedBox(height: 16),
-
-              // Meal Name
-              AddFoodTextField(hintText: AppStrings.mealName.tr()),
-              const SizedBox(height: 16),
-
-              // Meal Description
-              AddFoodTextField(
-                hintText: AppStrings.mealDescription.tr(),
-                maxLines: 5,
+    return BlocProvider(
+      create: (_) => sl<AddFoodCubit>(),
+      child: BlocConsumer<AddFoodCubit, AddFoodState>(
+        listener: (context, state) {
+          if (state is AddFoodSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Saved successfully'),
+                backgroundColor: AppColors.primary,
               ),
-              const SizedBox(height: 16),
+            );
+            Navigator.pop(
+              context,
+              true,
+            ); // Return true to trigger catalog refresh
+          } else if (state is AddFoodError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.promoRed,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is AddFoodSubmitting;
+          final validationErrors = (state is AddFoodValidationError)
+              ? state.validationErrors
+              : <String, List<String>>{};
 
-              // Price
-              AddFoodTextField(hintText: AppStrings.price.tr()),
-              const SizedBox(height: 16),
+          return Scaffold(
+            backgroundColor: AppColors.white,
+            appBar: AppBar(
+              backgroundColor: AppColors.white,
+              elevation: 0,
+              centerTitle: true,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: AppColors.black,
+                  size: 20,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: Text(
+                AppStrings.addFood.tr(),
+                style: AppTextStyle.fontBlack16Bold,
+              ),
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AddFoodImagePicker(title: AppStrings.mealImage.tr()),
+                    const SizedBox(height: 16),
 
-              // Percentage Row
-              Row(
-                children: [
-                  Expanded(
-                    child: AddFoodDropdown(
-                      value: _selectedPercentageType,
-                      items: _percentageTypes,
-                      onChanged: (val) {
-                        if (val != null)
-                          setState(() => _selectedPercentageType = val);
-                      },
+                    AddFoodTextField(
+                      hintText: AppStrings.mealName.tr(),
+                      controller: _nameController,
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: AddFoodTextField(
+                    if (validationErrors.containsKey('name'))
+                      Text(
+                        validationErrors['name']!.first,
+                        style: const TextStyle(
+                          color: AppColors.promoRed,
+                          fontSize: 12,
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+
+                    AddFoodTextField(
+                      hintText: AppStrings.mealDescription.tr(),
+                      maxLines: 5,
+                      controller: _descController,
+                    ),
+                    if (validationErrors.containsKey('description'))
+                      Text(
+                        validationErrors['description']!.first,
+                        style: const TextStyle(
+                          color: AppColors.promoRed,
+                          fontSize: 12,
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+
+                    AddFoodTextField(
+                      hintText: AppStrings.price.tr(),
+                      controller: _priceController,
+                    ),
+                    if (validationErrors.containsKey('price'))
+                      Text(
+                        validationErrors['price']!.first,
+                        style: const TextStyle(
+                          color: AppColors.promoRed,
+                          fontSize: 12,
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+
+                    AddFoodTextField(
                       hintText: AppStrings.discountPercentage.tr(),
+                      controller: _discountController,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
+                    const SizedBox(height: 32),
 
-              // Category Row
-              Row(
-                children: [
-                  Expanded(
-                    child: AddFoodDropdown(
-                      value: _selectedCategory,
-                      items: _categories,
-                      onChanged: (val) {
-                        if (val != null)
-                          setState(() => _selectedCategory = val);
-                      },
+                    SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: isLoading
+                            ? null
+                            : () => _submitForm(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.promoRed,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.white,
+                                ),
+                              )
+                            : Text(
+                                AppStrings.add.tr(),
+                                style: AppTextStyle.fontWhite16Bold,
+                              ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: AddFoodDropdown(
-                      value: _selectedSubcategory,
-                      items: _subcategories,
-                      onChanged: (val) {
-                        if (val != null)
-                          setState(() => _selectedSubcategory = val);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Max Order Quantity
-              AddFoodTextField(hintText: AppStrings.maximumOrderQuantity.tr()),
-              const SizedBox(height: 16),
-
-              // Add-Ons
-              AddFoodTextField(hintText: AppStrings.addOns.tr()),
-
-              const SizedBox(height: 32),
-
-              // Add Button
-              SizedBox(
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _showConfirmationDialog,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.promoRed,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    AppStrings.add.tr(),
-                    style: AppTextStyle.fontWhite16Bold,
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
-  }
-
-  void _showConfirmationDialog() async {
-    final result = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return const ConfirmOrderDialog();
-      },
-    );
-
-    if (result == true) {
-      // Go back from Add Food page
-      if (mounted) {
-        Navigator.pop(context);
-      }
-    }
   }
 }

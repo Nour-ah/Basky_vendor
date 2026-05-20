@@ -34,6 +34,17 @@ import '../../features/orders/domain/usecases/get_orders_usecase.dart';
 import '../../features/orders/domain/usecases/update_order_status_usecase.dart';
 import '../../features/orders/presentation/cubit/orders_cubit.dart';
 
+import '../../features/my_restaurant/data/datasources/restaurant_remote_datasource.dart';
+import '../../features/my_restaurant/data/repositories/restaurant_repository_impl.dart';
+import '../../features/my_restaurant/domain/repositories/restaurant_repository.dart';
+import '../../features/my_restaurant/domain/usecases/add_product_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/delete_product_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/get_categories_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/get_products_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/update_product_usecase.dart';
+import '../../features/my_restaurant/presentation/cubit/add_food_cubit.dart';
+import '../../features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
+
  final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -124,15 +135,32 @@ Future<void> initDependencies() async {
     () => OrdersRemoteDataSourceImpl(dio: sl()),
   );
 
+  // Restaurant Catalog Feature
+  sl.registerLazySingleton<RestaurantRemoteDataSource>(
+    () => RestaurantRemoteDataSourceImpl(dio: sl()),
+  );
+
   // Repositories
   sl.registerLazySingleton<OrdersRepository>(
     () => OrdersRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Restaurant Catalog Feature
+  sl.registerLazySingleton<RestaurantRepository>(
+    () => RestaurantRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Use Cases
   sl.registerLazySingleton(() => GetOrdersUseCase(sl()));
   sl.registerLazySingleton(() => GetOrderDetailsUseCase(sl()));
   sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));
+
+  // Restaurant Catalog Feature
+  sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
+  sl.registerLazySingleton(() => GetProductsUseCase(sl()));
+  sl.registerLazySingleton(() => AddProductUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateProductUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
 
   // Cubit
   sl.registerFactory(
@@ -141,6 +169,17 @@ Future<void> initDependencies() async {
       updateOrderStatusUseCase: sl(),
     ),
   );
+
+  // Restaurant Catalog Feature
+  sl.registerFactory(() => RestaurantCatalogCubit(
+        getCategoriesUseCase: sl(),
+        getProductsUseCase: sl(),
+        deleteProductUseCase: sl(),
+      ));
+  sl.registerFactory(() => AddFoodCubit(
+        addProductUseCase: sl(),
+        updateProductUseCase: sl(),
+      ));
 
   // ============================================================
   // Cubits

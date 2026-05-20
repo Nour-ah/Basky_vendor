@@ -24,3 +24,12 @@ class UnauthorizedFailure extends Failure {
 class ParsingFailure extends Failure {
   const ParsingFailure(super.message);
 }
+
+class ValidationFailure extends Failure {
+  final Map<String, List<String>> errors;
+  const ValidationFailure(super.message, {this.errors = const {}});
+
+  @override
+  List<Object?> get props => [message, errors];
+}
+
