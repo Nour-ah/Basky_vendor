@@ -4,7 +4,6 @@ import 'package:spider_restaurant/core/di/injection_container.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
 import 'package:spider_restaurant/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:spider_restaurant/features/auth/presentation/cubit/auth_state.dart';
-
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_button.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_card_widget.dart';
