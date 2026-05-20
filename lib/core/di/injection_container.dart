@@ -45,6 +45,15 @@ import '../../features/my_restaurant/domain/usecases/update_product_usecase.dart
 import '../../features/my_restaurant/presentation/cubit/add_food_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
 
+// Wallet Feature
+import '../../features/wallet/data/datasources/wallet_remote_datasource.dart';
+import '../../features/wallet/data/repositories/wallet_repository_impl.dart';
+import '../../features/wallet/domain/repositories/wallet_repository.dart';
+import '../../features/wallet/domain/usecases/get_wallet_details_usecase.dart';
+import '../../features/wallet/domain/usecases/get_wallet_history_usecase.dart';
+import '../../features/wallet/domain/usecases/request_withdrawal_usecase.dart';
+import '../../features/wallet/presentation/cubit/wallet_cubit.dart';
+
  final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -140,6 +149,11 @@ Future<void> initDependencies() async {
     () => RestaurantRemoteDataSourceImpl(dio: sl()),
   );
 
+  // Wallet Feature
+  sl.registerLazySingleton<WalletRemoteDataSource>(
+    () => WalletRemoteDataSourceImpl(dio: sl()),
+  );
+
   // Repositories
   sl.registerLazySingleton<OrdersRepository>(
     () => OrdersRepositoryImpl(remoteDataSource: sl()),
@@ -148,6 +162,11 @@ Future<void> initDependencies() async {
   // Restaurant Catalog Feature
   sl.registerLazySingleton<RestaurantRepository>(
     () => RestaurantRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Wallet Feature
+  sl.registerLazySingleton<WalletRepository>(
+    () => WalletRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Use Cases
@@ -161,6 +180,11 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => AddProductUseCase(sl()));
   sl.registerLazySingleton(() => UpdateProductUseCase(sl()));
   sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
+
+  // Wallet Feature
+  sl.registerLazySingleton(() => GetWalletDetailsUseCase(sl()));
+  sl.registerLazySingleton(() => GetWalletHistoryUseCase(sl()));
+  sl.registerLazySingleton(() => RequestWithdrawalUseCase(sl()));
 
   // Cubit
   sl.registerFactory(
@@ -179,6 +203,13 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => AddFoodCubit(
         addProductUseCase: sl(),
         updateProductUseCase: sl(),
+      ));
+
+  // Wallet Feature
+  sl.registerFactory(() => WalletCubit(
+        getWalletDetailsUseCase: sl(),
+        getWalletHistoryUseCase: sl(),
+        requestWithdrawalUseCase: sl(),
       ));
 
   // ============================================================

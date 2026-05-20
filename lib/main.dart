@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:spider_restaurant/core/di/injection_container.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
 import 'package:spider_restaurant/features/auth/presentation/pages/splash_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   // Ensure that widget binding is initialized before using native services.
@@ -47,15 +48,19 @@ class SpiderRestaurantApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,
         primaryColor: AppColors.primary,
-        fontFamily: 'CoHeadline',
-        // Default font family
+        textTheme: context.locale.languageCode == 'ar' 
+            ? GoogleFonts.cairoTextTheme(Theme.of(context).textTheme)
+            : GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
         useMaterial3: true,
 
         // Define common app bar behavior
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
           backgroundColor: AppColors.background,
           centerTitle: true,
-          iconTheme: IconThemeData(color: AppColors.primary),
+          iconTheme: const IconThemeData(color: AppColors.primary),
+          titleTextStyle: context.locale.languageCode == 'ar'
+              ? GoogleFonts.cairo(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold)
+              : GoogleFonts.poppins(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
 

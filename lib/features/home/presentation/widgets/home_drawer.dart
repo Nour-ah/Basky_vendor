@@ -5,6 +5,7 @@ import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../my_restaurant/presentation/pages/my_restaurant_page.dart';
 import '../../../orders/presentation/pages/my_orders_page.dart';
+import '../../../wallet/presentation/pages/wallet_page.dart';
 import '../models/drawer_item_model.dart';
 import 'drawer_header_widget.dart';
 import 'drawer_item_widget.dart';
@@ -53,7 +54,12 @@ class HomeDrawer extends StatelessWidget {
       DrawerItemModel(
         icon: Icons.account_balance_wallet_outlined,
         title: AppStrings.wallet.tr(),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const WalletPage()),
+          );
+        },
       ),
       DrawerItemModel(
         icon: Icons.credit_card_outlined,

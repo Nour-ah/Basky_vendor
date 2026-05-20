@@ -19,6 +19,7 @@ class AppColors {
   static const Color yellow = Color(0xFFF2D506);
   static const Color orange = Colors.orangeAccent;
   static const Color red = Color(0xFFBE1622);
+  static const Color error = red;
   static const Color blue = Color(0xFF0184B7);
   static const Color pink = Color(0xFFE91E63);
   static const Color purple = Color(0xFF9C27B0);

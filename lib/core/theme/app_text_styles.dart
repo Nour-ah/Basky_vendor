@@ -62,6 +62,20 @@ class AppTextStyle {
     fontFamily: 'CoHeadline',
   );
 
+  static TextStyle fontBlack18Medium = const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: AppColors.black,
+    fontFamily: 'CoHeadline',
+  );
+
+  static TextStyle fontBlack24Bold = const TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: 'CoHeadline',
+  );
+
   static TextStyle fontBlack12Bold = const TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.bold,
@@ -87,6 +101,13 @@ class AppTextStyle {
   static TextStyle fontGrey14Regular = const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+    fontFamily: 'CoHeadline',
+  );
+
+  static TextStyle fontGrey14Medium = const TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     fontFamily: 'CoHeadline',
   );
