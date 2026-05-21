@@ -147,5 +147,28 @@ abstract class  LocaleKeys {
   static const cancelled = 'cancelled';
   static const unknown = 'unknown';
   static const all_categories = 'all_categories';
+  static const forgotPassword = 'forgotPassword';
+  static const forgotPasswordSubtitle = 'forgotPasswordSubtitle';
+  static const sendCode = 'sendCode';
+  static const backToLogin = 'backToLogin';
+  static const verifyCode = 'verifyCode';
+  static const verifyCodeSubtitle = 'verifyCodeSubtitle';
+  static const didntReceiveCode = 'didntReceiveCode';
+  static const setNewPassword = 'setNewPassword';
+  static const setNewPasswordSubtitle = 'setNewPasswordSubtitle';
+  static const newPassword = 'newPassword';
+  static const confirmNewPassword = 'confirmNewPassword';
+  static const resetPassword = 'resetPassword';
+  static const startOver = 'startOver';
+  static const passwordResetSuccess = 'passwordResetSuccess';
+  static const goToLogin = 'goToLogin';
+  static const stepEmail = 'stepEmail';
+  static const stepVerify = 'stepVerify';
+  static const stepReset = 'stepReset';
+  static const pleaseEnterValidEmail = 'pleaseEnterValidEmail';
+  static const pleaseEnterCode = 'pleaseEnterCode';
+  static const codeLengthError = 'codeLengthError';
+  static const passwordConfirmRequired = 'passwordConfirmRequired';
+  static const passwordsDoNotMatchError = 'passwordsDoNotMatchError';
 
 }

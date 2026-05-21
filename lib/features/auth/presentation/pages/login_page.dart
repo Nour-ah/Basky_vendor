@@ -6,6 +6,7 @@ import 'package:spider_restaurant/core/theme/app_colors.dart';
 import 'package:spider_restaurant/core/translations/locale_keys.g.dart';
 import 'package:spider_restaurant/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:spider_restaurant/features/auth/presentation/cubit/auth_state.dart';
+import 'package:spider_restaurant/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:spider_restaurant/features/auth/presentation/pages/register_page.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_button.dart';
@@ -147,7 +148,26 @@ class _LoginPageState extends State<LoginPage> {
                                             }
                                           },
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 8),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const ForgotPasswordPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Forgot Password?',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
                                   TextButton(
                                     onPressed: () => _goToRegister(context),
                                     child: Text(

@@ -71,8 +71,16 @@ class SpiderRestaurantApp extends StatelessWidget {
                 centerTitle: true,
                 iconTheme: const IconThemeData(color: AppColors.primary),
                 titleTextStyle: context.locale.languageCode == 'ar'
-                    ? GoogleFonts.cairo(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold)
-                    : GoogleFonts.poppins(color: AppColors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                    ? GoogleFonts.cairo(
+                        color: AppColors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      )
+                    : GoogleFonts.poppins(
+                        color: AppColors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
               ),
             ),
 

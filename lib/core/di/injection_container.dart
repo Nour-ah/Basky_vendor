@@ -16,7 +16,14 @@ import '../../features/auth/domain/usecases/verify_phone_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/is_logged_in_usecase.dart';
+import '../../features/auth/domain/usecases/send_reset_code_usecase.dart';
+import '../../features/auth/domain/usecases/verify_reset_code_usecase.dart';
+import '../../features/auth/domain/usecases/set_new_password_usecase.dart';
+import '../../features/auth/data/datasources/forgot_password_remote_datasource.dart';
+import '../../features/auth/data/repositories/forgot_password_repository_impl.dart';
+import '../../features/auth/domain/repositories/forgot_password_repository.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/auth/presentation/cubit/reset_password_cubit.dart';
 
 import '../../features/home/data/datasources/home_remote_datasource.dart';
 import '../../features/home/data/repositories/home_repository_impl.dart';
@@ -109,6 +116,33 @@ Future<void> initDependencies() async {
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
       isLoggedInUseCase: sl(),
+    ),
+  );
+
+  // ============================================================
+  // Forgot Password Feature
+  // ============================================================
+  // Data Sources
+  sl.registerLazySingleton<ForgotPasswordRemoteDataSource>(
+    () => ForgotPasswordRemoteDataSourceImpl(dio: sl()),
+  );
+
+  // Repositories
+  sl.registerLazySingleton<ForgotPasswordRepository>(
+    () => ForgotPasswordRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton(() => SendResetCodeUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyResetCodeUseCase(sl()));
+  sl.registerLazySingleton(() => SetNewPasswordUseCase(sl()));
+
+  // Cubits
+  sl.registerFactory(
+    () => ResetPasswordCubit(
+      sendResetCodeUseCase: sl(),
+      verifyResetCodeUseCase: sl(),
+      setNewPasswordUseCase: sl(),
     ),
   );
 
