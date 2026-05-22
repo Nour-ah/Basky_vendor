@@ -56,7 +56,6 @@ class SpiderRestaurantApp extends StatelessWidget {
               );
             },
 
-
             theme: ThemeData(
               scaffoldBackgroundColor: AppColors.background,
               primaryColor: AppColors.primary,
@@ -64,7 +63,6 @@ class SpiderRestaurantApp extends StatelessWidget {
                   ? GoogleFonts.cairoTextTheme(Theme.of(context).textTheme)
                   : GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
               useMaterial3: true,
-
 
               appBarTheme: AppBarTheme(
                 backgroundColor: AppColors.background,
