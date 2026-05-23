@@ -4,11 +4,13 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/api_constants.dart';
 import '../../domain/entities/order_status.dart';
 import '../models/order_details_model.dart';
+import '../models/order_invoice_model.dart';
 import '../models/order_summary_model.dart';
 
 abstract class OrdersRemoteDataSource {
   Future<List<OrderSummaryModel>> getOrders({OrderStatus? status, int page = 1, int limit = 15});
   Future<OrderDetailsModel> getOrderDetails(int orderId);
+  Future<OrderInvoiceModel> getOrderInvoice(int orderId);
   Future<void> updateOrderStatus({required int orderId, required OrderStatus newStatus});
 }
 
@@ -52,6 +54,22 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
       final response = await dio.get('${ApiConstants.vendorOrders}/$orderId');
       debugPrint('✅ OrdersRemoteDataSource: Success fetching details');
       return OrderDetailsModel.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      debugPrint('❌ OrdersRemoteDataSource: Error $e');
+      throw const ParsingException();
+    }
+    throw const ServerException();
+  }
+
+  @override
+  Future<OrderInvoiceModel> getOrderInvoice(int orderId) async {
+    debugPrint('🔵 OrdersRemoteDataSource: Sending GET ${ApiConstants.vendorOrders}/$orderId/invoice');
+    try {
+      final response = await dio.get('${ApiConstants.vendorOrders}/$orderId/invoice');
+      debugPrint('✅ OrdersRemoteDataSource: Success fetching invoice');
+      return OrderInvoiceModel.fromJson(response.data['data'] as Map<String, dynamic>);
     } on DioException catch (e) {
       _handleDioException(e);
     } catch (e) {

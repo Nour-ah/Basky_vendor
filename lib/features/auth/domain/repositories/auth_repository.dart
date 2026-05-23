@@ -21,6 +21,7 @@ abstract class AuthRepository {
     required String address,
   });
   Future<Either<Failure, AuthActionResult>> verifyPhone({required String phone, required String code});
+  Future<Either<Failure, AuthActionResult>> verifyEmail({required String email, required String code});
   Future<Either<Failure, AuthActionResult>> resendVerificationCode({required String email});
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, User>> getCurrentUser();

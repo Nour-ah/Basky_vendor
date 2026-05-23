@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/order_details_entity.dart';
+import '../entities/order_invoice_entity.dart';
 import '../entities/order_status.dart';
 import '../entities/order_summary_entity.dart';
 
@@ -12,6 +13,8 @@ abstract class OrdersRepository {
   });
 
   Future<Either<Failure, OrderDetailsEntity>> getOrderDetails(int orderId);
+
+  Future<Either<Failure, OrderInvoiceEntity>> getOrderInvoice(int orderId);
 
   Future<Either<Failure, void>> updateOrderStatus({
     required int orderId,

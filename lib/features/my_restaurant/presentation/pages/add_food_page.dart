@@ -14,17 +14,45 @@ import '../../domain/entities/add_product_params.dart';
 import '../../domain/entities/product_status.dart';
 
 class AddFoodPage extends StatefulWidget {
-  const AddFoodPage({super.key});
+  const AddFoodPage({
+    super.key,
+    this.productId,
+    this.initialName,
+    this.initialDescription,
+    this.initialPrice,
+    this.initialDiscount,
+  });
+
+  final int? productId;
+  final String? initialName;
+  final String? initialDescription;
+  final double? initialPrice;
+  final double? initialDiscount;
+
+  bool get isEditMode => productId != null;
 
   @override
   State<AddFoodPage> createState() => _AddFoodPageState();
 }
 
 class _AddFoodPageState extends State<AddFoodPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _discountController = TextEditingController();
+  late final TextEditingController _nameController;
+  late final TextEditingController _descController;
+  late final TextEditingController _priceController;
+  late final TextEditingController _discountController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.initialName ?? '');
+    _descController = TextEditingController(text: widget.initialDescription ?? '');
+    _priceController = TextEditingController(
+      text: widget.initialPrice?.toString() ?? '',
+    );
+    _discountController = TextEditingController(
+      text: widget.initialDiscount?.toString() ?? '',
+    );
+  }
 
   @override
   void dispose() {
@@ -36,7 +64,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
   }
 
   void _submitForm(BuildContext context) {
-    final cubit = context.read<AddFoodCubit>();
     final params = AddProductParams(
       name: _nameController.text,
       description: _descController.text,
@@ -45,9 +72,10 @@ class _AddFoodPageState extends State<AddFoodPage> {
       categoryId: 1,
       maxOrderQuantity: 10,
       status: ProductStatus.active,
-      isEditMode: false,
+      isEditMode: widget.isEditMode,
+      productId: widget.productId,
     );
-    cubit.submitForm(params);
+    context.read<AddFoodCubit>().submitForm(params);
   }
 
   @override
@@ -65,7 +93,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 backgroundColor: AppColors.primary,
               ),
             );
-            Navigator.pop(context, true); // Return true to trigger catalog refresh
+            Navigator.pop(context, true);
           } else if (state is AddFoodError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -96,7 +124,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 onPressed: () => Navigator.pop(context),
               ),
               title: Text(
-                LocaleKeys.addFood.tr(),
+                widget.isEditMode ? LocaleKeys.editFood.tr() : LocaleKeys.addFood.tr(),
                 style: AppTextStyle.fontBlack16Bold,
               ),
             ),
@@ -108,7 +136,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
                   children: [
                     AddFoodImagePicker(title: LocaleKeys.mealImage.tr()),
                     const SizedBox(height: 16),
-
                     AddFoodTextField(
                       hintText: LocaleKeys.mealName.tr(),
                       controller: _nameController,
@@ -116,48 +143,25 @@ class _AddFoodPageState extends State<AddFoodPage> {
                     if (validationErrors.containsKey('name'))
                       Text(
                         validationErrors['name']!.first,
-                        style: const TextStyle(
-                          color: AppColors.promoRed,
-                          fontSize: 12,
-                        ),
+                        style: const TextStyle(color: AppColors.promoRed, fontSize: 12),
                       ),
                     const SizedBox(height: 16),
-
                     AddFoodTextField(
                       hintText: LocaleKeys.mealDescription.tr(),
                       maxLines: 5,
                       controller: _descController,
                     ),
-                    if (validationErrors.containsKey('description'))
-                      Text(
-                        validationErrors['description']!.first,
-                        style: const TextStyle(
-                          color: AppColors.promoRed,
-                          fontSize: 12,
-                        ),
-                      ),
                     const SizedBox(height: 16),
-
                     AddFoodTextField(
                       hintText: LocaleKeys.price.tr(),
                       controller: _priceController,
                     ),
-                    if (validationErrors.containsKey('price'))
-                      Text(
-                        validationErrors['price']!.first,
-                        style: const TextStyle(
-                          color: AppColors.promoRed,
-                          fontSize: 12,
-                        ),
-                      ),
                     const SizedBox(height: 16),
-
                     AddFoodTextField(
                       hintText: LocaleKeys.discountPercentage.tr(),
                       controller: _discountController,
                     ),
                     const SizedBox(height: 32),
-
                     SizedBox(
                       height: 48,
                       child: ElevatedButton(
@@ -173,12 +177,10 @@ class _AddFoodPageState extends State<AddFoodPage> {
                             ? const SizedBox(
                                 width: 24,
                                 height: 24,
-                                child: CircularProgressIndicator(
-                                  color: AppColors.white,
-                                ),
+                                child: CircularProgressIndicator(color: AppColors.white),
                               )
                             : Text(
-                                LocaleKeys.add.tr(),
+                                widget.isEditMode ? LocaleKeys.save.tr() : LocaleKeys.add.tr(),
                                 style: AppTextStyle.fontWhite16Bold,
                               ),
                       ),

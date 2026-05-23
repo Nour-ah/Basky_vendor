@@ -6,6 +6,7 @@ import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/resend_verification_code_usecase.dart';
+import '../../domain/usecases/verify_email_usecase.dart';
 import '../../domain/usecases/verify_phone_usecase.dart';
 import 'auth_state.dart';
 
@@ -13,6 +14,7 @@ class AuthCubit extends Cubit<AuthState> {
   final LoginUseCase loginUseCase;
   final RegisterUseCase registerUseCase;
   final VerifyPhoneUseCase verifyPhoneUseCase;
+  final VerifyEmailUseCase verifyEmailUseCase;
   final ResendVerificationCodeUseCase resendVerificationCodeUseCase;
   final LogoutUseCase logoutUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
@@ -22,6 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
     required this.loginUseCase,
     required this.registerUseCase,
     required this.verifyPhoneUseCase,
+    required this.verifyEmailUseCase,
     required this.resendVerificationCodeUseCase,
     required this.logoutUseCase,
     required this.getCurrentUserUseCase,
@@ -88,6 +91,23 @@ class AuthCubit extends Cubit<AuthState> {
           emit(AuthVerifyPhoneSuccess(message: resultEntity.message));
         } else {
           emit(AuthError(message: resultEntity.message.isNotEmpty ? resultEntity.message : 'Verification failed'));
+        }
+      },
+    );
+  }
+
+  Future<void> verifyEmail({required String email, required String code}) async {
+    emit(AuthLoading());
+    final result = await verifyEmailUseCase(email: email, code: code);
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (resultEntity) {
+        if (resultEntity.success || _isAlreadyVerified(resultEntity.message)) {
+          emit(AuthVerifyEmailSuccess(message: resultEntity.message));
+        } else {
+          emit(AuthError(
+            message: resultEntity.message.isNotEmpty ? resultEntity.message : 'Verification failed',
+          ));
         }
       },
     );

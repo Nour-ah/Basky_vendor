@@ -8,6 +8,7 @@ import '../../../../core/translations/locale_keys.g.dart';
 import '../../domain/entities/order_status.dart';
 import '../cubit/orders_cubit.dart';
 import '../cubit/orders_state.dart';
+import '../pages/order_details_page.dart';
 import '../widgets/order_item_card.dart';
 import '../widgets/orders_filter_tabs.dart';
 
@@ -134,6 +135,14 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                             }
                             return OrderItemCard(
                               order: state.orders[index],
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => OrderDetailsPage(
+                                    orderId: state.orders[index].id,
+                                  ),
+                                ),
+                              ),
                               onStatusChange: (newStatus) {
                                 _ordersCubit.updateOrderStatus(state.orders[index].id, newStatus);
                               },

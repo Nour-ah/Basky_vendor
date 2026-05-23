@@ -12,6 +12,7 @@ import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/domain/usecases/resend_verification_code_usecase.dart';
+import '../../features/auth/domain/usecases/verify_email_usecase.dart';
 import '../../features/auth/domain/usecases/verify_phone_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
@@ -37,8 +38,11 @@ import '../../features/orders/data/datasources/orders_remote_datasource.dart';
 import '../../features/orders/data/repositories/orders_repository_impl.dart';
 import '../../features/orders/domain/repositories/orders_repository.dart';
 import '../../features/orders/domain/usecases/get_order_details_usecase.dart';
+import '../../features/orders/domain/usecases/get_order_invoice_usecase.dart';
 import '../../features/orders/domain/usecases/get_orders_usecase.dart';
 import '../../features/orders/domain/usecases/update_order_status_usecase.dart';
+import '../../features/orders/presentation/cubit/order_details_cubit.dart';
+import '../../features/orders/presentation/cubit/order_invoice_cubit.dart';
 import '../../features/orders/presentation/cubit/orders_cubit.dart';
 
 import '../../features/my_restaurant/data/datasources/restaurant_remote_datasource.dart';
@@ -48,6 +52,7 @@ import '../../features/my_restaurant/domain/usecases/add_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/delete_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_categories_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_products_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/get_variants_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_vendor_branch_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/update_product_usecase.dart';
 import '../../features/my_restaurant/presentation/cubit/add_food_cubit.dart';
@@ -62,6 +67,24 @@ import '../../features/wallet/domain/usecases/get_wallet_details_usecase.dart';
 import '../../features/wallet/domain/usecases/get_wallet_history_usecase.dart';
 import '../../features/wallet/domain/usecases/request_withdrawal_usecase.dart';
 import '../../features/wallet/presentation/cubit/wallet_cubit.dart';
+
+import '../../features/reviews/data/datasources/reviews_remote_datasource.dart';
+import '../../features/reviews/data/repositories/reviews_repository_impl.dart';
+import '../../features/reviews/domain/repositories/reviews_repository.dart';
+import '../../features/reviews/domain/usecases/get_ratings_usecase.dart';
+import '../../features/reviews/presentation/cubit/reviews_cubit.dart';
+
+import '../../features/reports/data/datasources/reports_remote_datasource.dart';
+import '../../features/reports/data/repositories/reports_repository_impl.dart';
+import '../../features/reports/domain/repositories/reports_repository.dart';
+import '../../features/reports/domain/usecases/get_reports_summary_usecase.dart';
+import '../../features/reports/presentation/cubit/reports_cubit.dart';
+
+import '../../features/time_slots/data/datasources/time_slots_remote_datasource.dart';
+import '../../features/time_slots/data/repositories/time_slots_repository_impl.dart';
+import '../../features/time_slots/domain/repositories/time_slots_repository.dart';
+import '../../features/time_slots/domain/usecases/time_slots_usecases.dart';
+import '../../features/time_slots/presentation/cubit/time_slots_cubit.dart';
 
  final sl = GetIt.instance;
 
@@ -101,6 +124,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => VerifyPhoneUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyEmailUseCase(sl()));
   sl.registerLazySingleton(() => ResendVerificationCodeUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
@@ -114,6 +138,7 @@ Future<void> initDependencies() async {
       loginUseCase: sl(),
       registerUseCase: sl(),
       verifyPhoneUseCase: sl(),
+      verifyEmailUseCase: sl(),
       resendVerificationCodeUseCase: sl(),
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
@@ -214,6 +239,7 @@ Future<void> initDependencies() async {
   // Use Cases
   sl.registerLazySingleton(() => GetOrdersUseCase(sl()));
   sl.registerLazySingleton(() => GetOrderDetailsUseCase(sl()));
+  sl.registerLazySingleton(() => GetOrderInvoiceUseCase(sl()));
   sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));
 
   // Restaurant Catalog Feature
@@ -223,6 +249,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => AddProductUseCase(sl()));
   sl.registerLazySingleton(() => UpdateProductUseCase(sl()));
   sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
+  sl.registerLazySingleton(() => GetVariantsUseCase(sl()));
 
   // Wallet Feature
   sl.registerLazySingleton(() => GetWalletDetailsUseCase(sl()));
@@ -234,6 +261,53 @@ Future<void> initDependencies() async {
     () => OrdersCubit(
       getOrdersUseCase: sl(),
       updateOrderStatusUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => OrderDetailsCubit(
+      getOrderDetailsUseCase: sl(),
+      updateOrderStatusUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => OrderInvoiceCubit(getOrderInvoiceUseCase: sl()),
+  );
+
+  // Reviews Feature
+  sl.registerLazySingleton<ReviewsRemoteDataSource>(
+    () => ReviewsRemoteDataSourceImpl(dio: sl()),
+  );
+  sl.registerLazySingleton<ReviewsRepository>(
+    () => ReviewsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetRatingsUseCase(sl()));
+  sl.registerFactory(() => ReviewsCubit(getRatingsUseCase: sl()));
+
+  // Reports Feature
+  sl.registerLazySingleton<ReportsRemoteDataSource>(
+    () => ReportsRemoteDataSourceImpl(dio: sl()),
+  );
+  sl.registerLazySingleton<ReportsRepository>(
+    () => ReportsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetReportsSummaryUseCase(sl()));
+  sl.registerFactory(() => ReportsCubit(getReportsSummaryUseCase: sl()));
+
+  // Time Slots Feature
+  sl.registerLazySingleton<TimeSlotsRemoteDataSource>(
+    () => TimeSlotsRemoteDataSourceImpl(dio: sl()),
+  );
+  sl.registerLazySingleton<TimeSlotsRepository>(
+    () => TimeSlotsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetTimeSlotsUseCase(sl()));
+  sl.registerLazySingleton(() => AddTimeSlotUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateTimeSlotUseCase(sl()));
+  sl.registerFactory(
+    () => TimeSlotsCubit(
+      getTimeSlotsUseCase: sl(),
+      addTimeSlotUseCase: sl(),
+      updateTimeSlotUseCase: sl(),
     ),
   );
 

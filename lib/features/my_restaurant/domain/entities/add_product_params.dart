@@ -13,6 +13,7 @@ class AddProductParams extends Equatable {
   final ProductStatus status;
   final ProductImageEntity? image;
   final bool isEditMode;
+  final int? productId;
 
   const AddProductParams({
     required this.name,
@@ -25,6 +26,7 @@ class AddProductParams extends Equatable {
     required this.status,
     this.image,
     this.isEditMode = false,
+    this.productId,
   });
 
   @override
@@ -39,5 +41,6 @@ class AddProductParams extends Equatable {
         status,
         image,
         isEditMode,
+        productId,
       ];
 }

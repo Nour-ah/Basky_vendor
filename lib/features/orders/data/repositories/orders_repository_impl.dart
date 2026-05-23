@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/order_details_entity.dart';
+import '../../domain/entities/order_invoice_entity.dart';
 import '../../domain/entities/order_status.dart';
 import '../../domain/entities/order_summary_entity.dart';
 import '../../domain/repositories/orders_repository.dart';
@@ -24,6 +25,11 @@ class OrdersRepositoryImpl implements OrdersRepository {
   @override
   Future<Either<Failure, OrderDetailsEntity>> getOrderDetails(int orderId) async {
     return _execute(() => remoteDataSource.getOrderDetails(orderId));
+  }
+
+  @override
+  Future<Either<Failure, OrderInvoiceEntity>> getOrderInvoice(int orderId) async {
+    return _execute(() => remoteDataSource.getOrderInvoice(orderId));
   }
 
   @override

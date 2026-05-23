@@ -239,7 +239,21 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                                                 imageUrl:
                                                     product.imageUrl ?? '',
                                               ),
-                                              onEdit: () {},
+                                              onEdit: () async {
+                                                final didChange = await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => AddFoodPage(
+                                                      productId: product.id,
+                                                      initialName: product.name,
+                                                      initialPrice: product.price,
+                                                    ),
+                                                  ),
+                                                );
+                                                if (didChange == true) {
+                                                  _catalogCubit.initCatalog();
+                                                }
+                                              },
                                               onDelete: () => _catalogCubit
                                                   .deleteProduct(product.id),
                                             );

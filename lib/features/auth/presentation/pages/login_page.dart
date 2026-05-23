@@ -12,6 +12,7 @@ import 'package:spider_restaurant/features/auth/presentation/widgets/auth_backgr
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_button.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_card_widget.dart';
 import 'package:spider_restaurant/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:spider_restaurant/features/auth/presentation/pages/verify_email_screen.dart';
 import 'package:spider_restaurant/features/home/presentation/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -57,7 +58,16 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthLoginSuccess) {
-            _goToHome(context);
+            if (state.user.emailVerifiedAt == null || state.user.emailVerifiedAt!.isEmpty) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => VerifyEmailScreen(email: state.user.email),
+                ),
+              );
+            } else {
+              _goToHome(context);
+            }
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

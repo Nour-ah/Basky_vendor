@@ -70,6 +70,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, AuthActionResult>> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    return _execute(() async {
+      return await remoteDataSource.verifyEmail(email: email, code: code);
+    });
+  }
+
+  @override
   Future<Either<Failure, AuthActionResult>> resendVerificationCode({
     required String email,
   }) async {

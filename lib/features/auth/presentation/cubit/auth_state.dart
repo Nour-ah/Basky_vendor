@@ -66,6 +66,15 @@ class AuthVerifyPhoneSuccess extends AuthState {
   List<Object?> get props => [message];
 }
 
+class AuthVerifyEmailSuccess extends AuthState {
+  final String message;
+
+  const AuthVerifyEmailSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class AuthResendCodeSuccess extends AuthState {
   final String message;
 

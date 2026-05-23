@@ -10,10 +10,12 @@ class OrderItemCard extends StatelessWidget {
   const OrderItemCard({
     super.key,
     required this.order,
+    this.onTap,
     this.onStatusChange,
   });
 
   final OrderSummaryEntity order;
+  final VoidCallback? onTap;
   final void Function(OrderStatus newStatus)? onStatusChange;
 
   @override
@@ -24,7 +26,10 @@ class OrderItemCard extends StatelessWidget {
         ? AppColors.primary.withValues(alpha: 0.1)
         : AppColors.red.withValues(alpha: 0.1);
 
-    return Container(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -89,6 +94,7 @@ class OrderItemCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

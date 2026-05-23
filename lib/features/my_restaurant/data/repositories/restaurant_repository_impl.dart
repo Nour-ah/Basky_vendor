@@ -5,6 +5,7 @@ import '../../domain/entities/add_product_params.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/product_details_entity.dart';
 import '../../domain/entities/product_summary_entity.dart';
+import '../../domain/entities/product_variant_entity.dart';
 import '../../domain/entities/vendor_branch_entity.dart';
 import '../../domain/repositories/restaurant_repository.dart';
 import '../datasources/restaurant_remote_datasource.dart';
@@ -26,6 +27,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<Either<Failure, List<CategoryEntity>>> getCategories() async {
     return _execute(() => remoteDataSource.getCategories());
+  }
+
+  @override
+  Future<Either<Failure, List<ProductVariantEntity>>> getVariants() async {
+    return _execute(() => remoteDataSource.getVariants());
   }
 
   @override
@@ -61,6 +67,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<Either<Failure, void>> deleteProduct(int productId) async {
     return _execute(() => remoteDataSource.deleteProduct(productId));
+  }
+
+  @override
+  Future<Either<Failure, void>> toggleProductActive(int productId) async {
+    return _execute(() => remoteDataSource.toggleProductActive(productId));
   }
 
   Future<Either<Failure, T>> _execute<T>(Future<T> Function() action) async {

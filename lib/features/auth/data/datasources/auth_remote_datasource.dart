@@ -21,6 +21,7 @@ abstract class AuthRemoteDataSource {
     required String address,
   });
   Future<AuthActionResult> verifyPhone({required String phone, required String code});
+  Future<AuthActionResult> verifyEmail({required String email, required String code});
   Future<AuthActionResult> resendVerificationCode({required String email});
   Future<void> logout();
   Future<UserModel> getCurrentUser();
@@ -99,6 +100,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {'phone': phone, 'code': code},
       );
       debugPrint('✅ DataSource: Verify phone success');
+      return _parseActionResponse(response.data);
+    } on DioException catch (e) {
+      DioErrorMapper.map(e);
+    }
+  }
+
+  @override
+  Future<AuthActionResult> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    debugPrint('🔵 DataSource: Sending verify email request');
+    try {
+      final response = await dio.post(
+        ApiConstants.verifyEmail,
+        data: {'email': email, 'code': code},
+      );
+      debugPrint('✅ DataSource: Verify email success');
       return _parseActionResponse(response.data);
     } on DioException catch (e) {
       DioErrorMapper.map(e);

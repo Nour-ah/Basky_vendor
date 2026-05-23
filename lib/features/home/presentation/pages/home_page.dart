@@ -10,6 +10,7 @@ import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/home_drawer.dart';
+import '../../../orders/presentation/pages/order_details_page.dart';
 import '../widgets/order_card_widget.dart';
 import '../widgets/order_status_tabs.dart';
 import '../widgets/restaurant_status_switch.dart';
@@ -160,7 +161,12 @@ class _HomePageState extends State<HomePage> {
                           time: '',
                           deliveryType: order.orderType,
                           itemsCount: order.itemCount,
-                          onDetailsPressed: () {},
+                          onDetailsPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => OrderDetailsPage(orderId: order.id),
+                            ),
+                          ),
                         ),
                       );
                     },

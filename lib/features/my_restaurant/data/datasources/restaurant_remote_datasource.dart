@@ -7,12 +7,15 @@ import '../../domain/entities/add_product_params.dart';
 import '../models/category_model.dart';
 import '../models/product_details_model.dart';
 import '../models/product_summary_model.dart';
+import '../models/product_variant_model.dart';
 import '../models/vendor_branch_model.dart';
 
 abstract class RestaurantRemoteDataSource {
   Future<List<VendorBranchModel>> getBranches();
 
   Future<List<CategoryModel>> getCategories();
+
+  Future<List<ProductVariantModel>> getVariants();
   
   Future<List<ProductSummaryModel>> getProducts({
     int? categoryId,
@@ -28,6 +31,8 @@ abstract class RestaurantRemoteDataSource {
   Future<void> updateProduct(int productId, AddProductParams params, {CancelToken? cancelToken});
 
   Future<void> deleteProduct(int productId);
+
+  Future<void> toggleProductActive(int productId);
 }
 
 class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
@@ -68,6 +73,24 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       _handleDioException(e);
     } catch (e) {
       debugPrint('❌ RestaurantRemoteDataSource: Error $e');
+      throw const ParsingException();
+    }
+    throw const ServerException();
+  }
+
+  @override
+  Future<List<ProductVariantModel>> getVariants() async {
+    debugPrint('🔵 RestaurantRemoteDataSource: GET ${ApiConstants.vendorVariants}');
+    try {
+      final response = await dio.get(ApiConstants.vendorVariants);
+      final data = response.data['data'] as List<dynamic>? ?? [];
+      return data
+          .whereType<Map<String, dynamic>>()
+          .map(ProductVariantModel.fromJson)
+          .toList();
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
       throw const ParsingException();
     }
     throw const ServerException();
@@ -145,6 +168,16 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
     } catch (e) {
       debugPrint('❌ RestaurantRemoteDataSource: Error $e');
       throw const ParsingException();
+    }
+  }
+
+  @override
+  Future<void> toggleProductActive(int productId) async {
+    debugPrint('🔵 RestaurantRemoteDataSource: POST toggle-active $productId');
+    try {
+      await dio.post('${ApiConstants.vendorProducts}/$productId/toggle-active');
+    } on DioException catch (e) {
+      _handleDioException(e);
     }
   }
 
