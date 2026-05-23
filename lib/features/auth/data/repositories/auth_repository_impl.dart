@@ -18,9 +18,15 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<Either<Failure, AuthResponse>> login({required String login, required String password}) async {
+  Future<Either<Failure, AuthResponse>> login({
+    required String login,
+    required String password,
+  }) async {
     return _execute(() async {
-      final response = await remoteDataSource.login(login: login, password: password);
+      final response = await remoteDataSource.login(
+        login: login,
+        password: password,
+      );
       await localDataSource.cacheToken(response.token);
       return response;
     });
@@ -64,7 +70,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthActionResult>> resendVerificationCode({required String email}) async {
+  Future<Either<Failure, AuthActionResult>> resendVerificationCode({
+    required String email,
+  }) async {
     return _execute(() async {
       return await remoteDataSource.resendVerificationCode(email: email);
     });

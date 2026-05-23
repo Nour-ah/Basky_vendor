@@ -41,20 +41,31 @@ class SplashCubit extends Cubit<SplashState> {
     debugPrint('🔵 Splash: Validating session with GET /api/user...');
     final userEither = await getCurrentUserUseCase();
     userEither.fold(
-      (failure) {
+      (failure) async {
         debugPrint('❌ Splash: API error — ${failure.message}');
         // Treat any failure as unauthenticated (including 401)
         await logoutUseCase(); // Ignore result
         await _waitMinDuration(stopwatch);
-        emit(const SplashState.unauthenticated(
-          message: 'Session expired. Please login again.',
-        ));
+        emit(
+          const SplashState.unauthenticated(
+            message: 'Session expired. Please login again.',
+          ),
+        );
       },
-      (user) {
+      (user) async {
         debugPrint('✅ Splash: Session valid — welcome ${user.name}');
         await _waitMinDuration(stopwatch);
         emit(SplashState.authenticated(user: user));
       },
     );
+  }
+
+  /// Ensures the splash stays visible for at least [_minSplashDuration]
+  Future<void> _waitMinDuration(Stopwatch stopwatch) async {
+    stopwatch.stop();
+    final elapsed = stopwatch.elapsed;
+    if (elapsed < _minSplashDuration) {
+      await Future.delayed(_minSplashDuration - elapsed);
+    }
   }
 }
