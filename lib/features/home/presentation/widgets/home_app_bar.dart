@@ -19,8 +19,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = userImageUrl?.trim() ?? '';
     final hasNetworkImage =
-        userImageUrl != null && userImageUrl!.trim().isNotEmpty;
+        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
 
     return AppBar(
       backgroundColor: AppColors.background,
@@ -33,23 +34,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Row(
         children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.greyLight,
-            backgroundImage: hasNetworkImage
-                ? null
-                : const AssetImage(AppImages.imageProfile),
-            child: hasNetworkImage
-                ? ClipOval(
-                    child: CustomImageView(
-                      imagePath: userImageUrl,
-                      width: 40,
-                      height: 40,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : null,
-          ),
+          _ProfileAvatar(imageUrl: imageUrl, radius: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -102,4 +87,33 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10);
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar({required this.imageUrl, required this.radius});
+
+  final String imageUrl;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = radius * 2;
+    final hasNetworkImage =
+        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
+
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: AppColors.greyLight,
+      child: hasNetworkImage
+          ? ClipOval(
+              child: CustomImageView(
+                imagePath: imageUrl,
+                width: size,
+                height: size,
+                fit: BoxFit.cover,
+              ),
+            )
+          : Icon(Icons.person, size: radius * 0.95, color: AppColors.grey),
+    );
+  }
 }

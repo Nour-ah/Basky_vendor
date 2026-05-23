@@ -12,7 +12,7 @@ class AppImages {
   static const String myImage = 'assets/images/my_image.png';
   static const String shaghlnyCard = 'assets/images/shaghlny_card.png';
   static const String car = 'assets/images/car.png';
-  static const String imageProfile = 'assets/images/image_profile.png';
+  static const String imageProfile = 'assets/images/profile.png';
   static const String chatProfile = 'assets/images/chat_profile.png';
   static const String driverAccountImg = 'assets/images/driver_accountImg.png';
   static const String card = 'assets/images/idCard.png';

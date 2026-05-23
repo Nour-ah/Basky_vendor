@@ -19,7 +19,9 @@ class DrawerHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isNetworkImage = userImage.startsWith('http');
+    final imageUrl = userImage.trim();
+    final isNetworkImage = imageUrl.startsWith('http://') ||
+        imageUrl.startsWith('https://');
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0),
@@ -35,18 +37,20 @@ class DrawerHeaderWidget extends StatelessWidget {
             child: CircleAvatar(
               radius: 24,
               backgroundColor: AppColors.greyLight,
-              backgroundImage:
-                  isNetworkImage ? null : AssetImage(userImage),
               child: isNetworkImage
                   ? ClipOval(
                       child: CustomImageView(
-                        imagePath: userImage,
+                        imagePath: imageUrl,
                         width: 48,
                         height: 48,
                         fit: BoxFit.cover,
                       ),
                     )
-                  : null,
+                  : Icon(
+                      Icons.person,
+                      size: 28,
+                      color: AppColors.grey,
+                    ),
             ),
           ),
           const SizedBox(width: 12),

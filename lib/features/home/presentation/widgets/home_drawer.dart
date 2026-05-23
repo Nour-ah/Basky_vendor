@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_images.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/localization/cubit/locale_cubit.dart';
@@ -134,7 +133,7 @@ class HomeDrawer extends StatelessWidget {
             DrawerHeaderWidget(
               userName: userName,
               userRating: userRating,
-              userImage: userImage.isNotEmpty ? userImage : AppImages.imageProfile,
+              userImage: userImage,
               onClosePressed: () => Navigator.pop(context),
             ),
             const SizedBox(height: 8),
