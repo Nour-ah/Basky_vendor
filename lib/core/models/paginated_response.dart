@@ -1,4 +1,4 @@
-import 'pagination_model.dart';
+import '../router/pagination_model.dart';
 
 class PaginatedResponse<T> {
   final List<T> data;

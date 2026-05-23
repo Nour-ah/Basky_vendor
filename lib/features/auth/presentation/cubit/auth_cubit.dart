@@ -1,6 +1,7 @@
-import 'package:dio/dio.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/error/failures.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/is_logged_in_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -31,22 +32,17 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> checkAuthStatus() async {
     emit(AuthLoading());
-    try {
-      final isLoggedIn = await isLoggedInUseCase();
-      emit(AuthCheckStatus(isLoggedIn: isLoggedIn));
-    } catch (_) {
-      emit(const AuthCheckStatus(isLoggedIn: false));
-    }
+    final isLoggedIn = await isLoggedInUseCase().then((either) => either.fold((_) => false, (isLoggedIn) => isLoggedIn));
+    emit(AuthCheckStatus(isLoggedIn: isLoggedIn));
   }
 
   Future<void> login({required String login, required String password}) async {
     emit(AuthLoading());
-    try {
-      final response = await loginUseCase(login: login, password: password);
-      emit(AuthLoginSuccess(user: response.user, token: response.token));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
+    final result = await loginUseCase(login: login, password: password);
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (response) => emit(AuthLoginSuccess(user: response.user, token: response.token)),
+    );
   }
 
   Future<void> register({
@@ -61,105 +57,74 @@ class AuthCubit extends Cubit<AuthState> {
     required String address,
   }) async {
     emit(AuthLoading());
-    try {
-      final message = await registerUseCase(
-        ownerName: ownerName,
-        ownerEmail: ownerEmail,
-        ownerPhone: ownerPhone,
-        ownerPassword: ownerPassword,
-        ownerPasswordConfirmation: ownerPasswordConfirmation,
-        restaurantNameEn: restaurantNameEn,
-        restaurantNameAr: restaurantNameAr,
-        restaurantPhone: restaurantPhone,
-        address: address,
-      );
-      emit(
+    final result = await registerUseCase(
+      ownerName: ownerName,
+      ownerEmail: ownerEmail,
+      ownerPhone: ownerPhone,
+      ownerPassword: ownerPassword,
+      ownerPasswordConfirmation: ownerPasswordConfirmation,
+      restaurantNameEn: restaurantNameEn,
+      restaurantNameAr: restaurantNameAr,
+      restaurantPhone: restaurantPhone,
+      address: address,
+    );
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (message) => emit(
         AuthRegisterSuccess(
           message: message,
           phone: ownerPhone,
           email: ownerEmail,
         ),
-      );
-    } on DioException catch (e) {
-      emit(AuthError(message: _dioErrorMessage(e)));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
+      ),
+    );
   }
 
   Future<void> verifyPhone({required String phone, required String code}) async {
     emit(AuthLoading());
-    try {
-      final result = await verifyPhoneUseCase(phone: phone, code: code);
-      if (result.success || _isAlreadyVerified(result.message)) {
-        emit(AuthVerifyPhoneSuccess(message: result.message));
-      } else {
-        emit(AuthError(message: result.message.isNotEmpty ? result.message : 'Verification failed'));
-      }
-    } on DioException catch (e) {
-      final data = e.response?.data;
-      if (data is Map<String, dynamic>) {
-        final message = data['message'] as String? ?? '';
-        if (data['success'] == false && _isAlreadyVerified(message)) {
-          emit(AuthVerifyPhoneSuccess(message: message));
-          return;
+    final result = await verifyPhoneUseCase(phone: phone, code: code);
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (resultEntity) {
+        if (resultEntity.success || _isAlreadyVerified(resultEntity.message)) {
+          emit(AuthVerifyPhoneSuccess(message: resultEntity.message));
+        } else {
+          emit(AuthError(message: resultEntity.message.isNotEmpty ? resultEntity.message : 'Verification failed'));
         }
-      }
-      emit(AuthError(message: _dioErrorMessage(e)));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
+      },
+    );
   }
 
   Future<void> resendVerificationCode({required String email}) async {
     emit(AuthLoading());
-    try {
-      final result = await resendVerificationCodeUseCase(email: email);
-      if (result.success) {
-        emit(AuthResendCodeSuccess(message: result.message));
-      } else {
-        emit(AuthError(message: result.message.isNotEmpty ? result.message : 'Could not resend code'));
-      }
-    } on DioException catch (e) {
-      emit(AuthError(message: _dioErrorMessage(e)));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
+    final result = await resendVerificationCodeUseCase(email: email);
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (resultEntity) {
+        if (resultEntity.success) {
+          emit(AuthResendCodeSuccess(message: resultEntity.message));
+        } else {
+          emit(AuthError(message: resultEntity.message.isNotEmpty ? resultEntity.message : 'Could not resend code'));
+        }
+      },
+    );
   }
 
   bool _isAlreadyVerified(String message) {
     return message.toLowerCase().contains('already verified');
   }
 
-  String _dioErrorMessage(DioException e) {
-    final data = e.response?.data;
-    if (data is Map<String, dynamic>) {
-      final message = data['message'];
-      if (message is String && message.isNotEmpty) return message;
-      final errors = data['errors'];
-      if (errors is Map) {
-        final first = errors.values.first;
-        if (first is List && first.isNotEmpty) return first.first.toString();
-      }
-    }
-    return e.message ?? 'Something went wrong';
-  }
-
   Future<void> logout() async {
     emit(AuthLoading());
-    try {
-      await logoutUseCase();
-    } catch (_) {}
-    emit(AuthLogoutSuccess());
+    await logoutUseCase().then((_) => emit(AuthLogoutSuccess()));
   }
 
   Future<void> getCurrentUser() async {
     emit(AuthLoading());
-    try {
-      final user = await getCurrentUserUseCase();
-      emit(AuthUserLoaded(user: user));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
+    final result = await getCurrentUserUseCase();
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (user) => emit(AuthUserLoaded(user: user)),
+    );
   }
 }
