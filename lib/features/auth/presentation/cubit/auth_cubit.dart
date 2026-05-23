@@ -1,7 +1,5 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/error/failures.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/is_logged_in_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -116,7 +114,11 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     emit(AuthLoading());
-    await logoutUseCase().then((_) => emit(AuthLogoutSuccess()));
+    final result = await logoutUseCase();
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (_) => emit(AuthLogoutSuccess()),
+    );
   }
 
   Future<void> getCurrentUser() async {

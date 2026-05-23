@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/is_logged_in_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import 'splash_state.dart';
+
 
 class SplashCubit extends Cubit<SplashState> {
   final IsLoggedInUseCase isLoggedInUseCase;

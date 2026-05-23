@@ -4,6 +4,10 @@ import '../../../../core/error/failures.dart';
 import '../entities/auth_action_result.dart';
 import '../repositories/forgot_password_repository.dart';
 
+/// Sets a new password using a validated [resetToken].
+///
+/// Returns [Right<AuthActionResult>] on success, [Left<Failure>] on failure.
+/// No exception handling here — that responsibility belongs to the repository.
 class SetNewPasswordUseCase {
   final ForgotPasswordRepository repository;
 
@@ -13,19 +17,10 @@ class SetNewPasswordUseCase {
     required String resetToken,
     required String password,
     required String passwordConfirmation,
-  }) async {
-    try {
-      final result = await repository.setNewPassword(
+  }) =>
+      repository.setNewPassword(
         resetToken: resetToken,
         password: password,
         passwordConfirmation: passwordConfirmation,
       );
-      if (result.success) {
-        return Right(result);
-      }
-      return Left(ServerFailure(result.message));
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
-  }
 }

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
 import '../../../../core/network/api_constants.dart';
+import '../../../../core/network/dio_error_mapper.dart';
 import '../../domain/entities/auth_action_result.dart';
 import '../models/user_model.dart';
 import '../models/auth_response_model.dart';
@@ -24,16 +26,6 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> getCurrentUser();
 }
 
-AuthActionResult _parseActionResponse(dynamic data) {
-  if (data is Map<String, dynamic>) {
-    return AuthActionResult(
-      success: data['success'] == true,
-      message: data['message'] as String? ?? '',
-    );
-  }
-  return const AuthActionResult(success: true, message: 'Success');
-}
-
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio dio;
   AuthRemoteDataSourceImpl({required this.dio});
@@ -44,12 +36,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String password,
   }) async {
     debugPrint('🔵 DataSource: Sending login request');
-    final response = await dio.post(
-      ApiConstants.login,
-      data: {'login': login, 'password': password},
-    );
-    debugPrint('✅ DataSource: Login success');
-    return AuthResponseModel.fromJson(response.data['data']);
+    try {
+      final response = await dio.post(
+        ApiConstants.login,
+        data: {'login': login, 'password': password},
+      );
+      debugPrint('✅ DataSource: Login success');
+      return AuthResponseModel.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      DioErrorMapper.map(e);
+    }
   }
 
   @override
@@ -64,25 +60,31 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String restaurantPhone,
     required String address,
   }) async {
-    final response = await dio.post(
-      ApiConstants.register,
-      data: FormData.fromMap({
-        'owner_name': ownerName,
-        'owner_email': ownerEmail,
-        'owner_phone': ownerPhone,
-        'owner_password': ownerPassword,
-        'owner_password_confirmation': ownerPasswordConfirmation,
-        'name[en]': restaurantNameEn,
-        'name[ar]': restaurantNameAr,
-        'phone': restaurantPhone,
-        'address': address,
-      }),
-    );
-    final data = response.data;
-    if (data is Map<String, dynamic>) {
-      return data['message'] as String? ?? 'Registration successful';
+    debugPrint('🔵 DataSource: Sending register request');
+    try {
+      final response = await dio.post(
+        ApiConstants.register,
+        data: FormData.fromMap({
+          'owner_name': ownerName,
+          'owner_email': ownerEmail,
+          'owner_phone': ownerPhone,
+          'owner_password': ownerPassword,
+          'owner_password_confirmation': ownerPasswordConfirmation,
+          'name[en]': restaurantNameEn,
+          'name[ar]': restaurantNameAr,
+          'phone': restaurantPhone,
+          'address': address,
+        }),
+      );
+      debugPrint('✅ DataSource: Register success');
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        return data['message'] as String? ?? 'Registration successful';
+      }
+      return 'Registration successful';
+    } on DioException catch (e) {
+      DioErrorMapper.map(e);
     }
-    return 'Registration successful';
   }
 
   @override
@@ -90,34 +92,68 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String phone,
     required String code,
   }) async {
-    final response = await dio.post(
-      ApiConstants.verifyPhone,
-      data: {'phone': phone, 'code': code},
-    );
-    return _parseActionResponse(response.data);
+    debugPrint('🔵 DataSource: Sending verify phone request');
+    try {
+      final response = await dio.post(
+        ApiConstants.verifyPhone,
+        data: {'phone': phone, 'code': code},
+      );
+      debugPrint('✅ DataSource: Verify phone success');
+      return _parseActionResponse(response.data);
+    } on DioException catch (e) {
+      DioErrorMapper.map(e);
+    }
   }
 
   @override
   Future<AuthActionResult> resendVerificationCode({required String email}) async {
-    final response = await dio.post(
-      ApiConstants.resendVerificationCode,
-      data: {'email': email},
-    );
-    return _parseActionResponse(response.data);
+    debugPrint('🔵 DataSource: Sending resend verification code request');
+    try {
+      final response = await dio.post(
+        ApiConstants.resendVerificationCode,
+        data: {'email': email},
+      );
+      debugPrint('✅ DataSource: Resend verification code success');
+      return _parseActionResponse(response.data);
+    } on DioException catch (e) {
+      DioErrorMapper.map(e);
+    }
   }
 
   @override
   Future<void> logout() async {
     debugPrint('🔵 DataSource: Sending logout request');
-    await dio.post(ApiConstants.logout);
-    debugPrint('✅ DataSource: Logout success');
+    try {
+      await dio.post(ApiConstants.logout);
+      debugPrint('✅ DataSource: Logout success');
+    } on DioException catch (e) {
+      DioErrorMapper.map(e);
+    }
   }
 
   @override
   Future<UserModel> getCurrentUser() async {
     debugPrint('🔵 DataSource: Fetching current user');
-    final response = await dio.get(ApiConstants.user);
-    debugPrint('✅ DataSource: Get user success');
-    return UserModel.fromJson(response.data['data']);
+    try {
+      final response = await dio.get(ApiConstants.user);
+      debugPrint('✅ DataSource: Get user success');
+      return UserModel.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      DioErrorMapper.map(e);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
+
+  AuthActionResult _parseActionResponse(dynamic data) {
+    if (data is Map<String, dynamic>) {
+      return AuthActionResult(
+        success: data['success'] == true,
+        message: data['message'] as String? ?? '',
+      );
+    }
+    return const AuthActionResult(success: true, message: 'Success');
   }
 }

@@ -33,3 +33,7 @@ class ValidationFailure extends Failure {
   List<Object?> get props => [message, errors];
 }
 
+/// Failure produced when reading/writing to local storage (cache) fails.
+class CacheFailure extends Failure {
+  const CacheFailure(super.message);
+}
