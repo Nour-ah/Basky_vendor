@@ -321,6 +321,7 @@ Future<void> initDependencies() async {
     () => RestaurantDetailsCubit(getVendorBranchUseCase: sl()),
   );
   sl.registerFactory(() => AddFoodCubit(
+        getCategoriesUseCase: sl(),
         addProductUseCase: sl(),
         updateProductUseCase: sl(),
       ));

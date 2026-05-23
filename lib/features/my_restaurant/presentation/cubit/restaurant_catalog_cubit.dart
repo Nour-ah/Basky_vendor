@@ -32,12 +32,16 @@ class RestaurantCatalogCubit extends Cubit<RestaurantCatalogState> {
     if (isClosed) return;
 
     List<CategoryEntity> categories = [];
+    var categoriesFailed = false;
     catResult.fold(
-      (failure) => _emitFailure(failure),
+      (failure) {
+        categoriesFailed = true;
+        _emitFailure(failure);
+      },
       (cats) => categories = cats,
     );
 
-    if (categories.isEmpty) return; // Error already emitted
+    if (categoriesFailed) return;
 
     // Fetch initial products
     final prodResult = await getProductsUseCase(page: 1, limit: _limit);

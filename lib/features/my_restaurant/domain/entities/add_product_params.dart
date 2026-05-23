@@ -3,8 +3,11 @@ import 'product_image_entity.dart';
 import 'product_status.dart';
 
 class AddProductParams extends Equatable {
-  final String name;
-  final String description;
+  final String nameEn;
+  final String nameAr;
+  final String descriptionEn;
+  final String descriptionAr;
+  final String productType;
   final double price;
   final double discountPercentage;
   final int categoryId;
@@ -16,8 +19,11 @@ class AddProductParams extends Equatable {
   final int? productId;
 
   const AddProductParams({
-    required this.name,
-    required this.description,
+    required this.nameEn,
+    required this.nameAr,
+    required this.descriptionEn,
+    required this.descriptionAr,
+    this.productType = 'food',
     required this.price,
     required this.discountPercentage,
     required this.categoryId,
@@ -31,8 +37,11 @@ class AddProductParams extends Equatable {
 
   @override
   List<Object?> get props => [
-        name,
-        description,
+        nameEn,
+        nameAr,
+        descriptionEn,
+        descriptionAr,
+        productType,
         price,
         discountPercentage,
         categoryId,

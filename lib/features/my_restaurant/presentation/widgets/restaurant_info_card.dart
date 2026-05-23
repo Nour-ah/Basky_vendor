@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/safe_network_image.dart';
 import '../models/restaurant_details_model.dart';
 
 class RestaurantInfoCard extends StatelessWidget {
@@ -12,20 +13,24 @@ class RestaurantInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deliveryTime = details.deliveryTime.isNotEmpty
+        ? details.deliveryTime
+        : LocaleKeys.notAvailable.tr();
+    final deliveryFee = details.deliveryFee.isNotEmpty
+        ? details.deliveryFee
+        : LocaleKeys.notAvailable.tr();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.border),
-              ),
-              child: ClipOval(
-                child: Image.network(details.logoUrl, fit: BoxFit.cover),
+            ClipOval(
+              child: SafeNetworkImage(
+                imageUrl: details.logoUrl,
+                width: 50,
+                height: 50,
+                placeholderIcon: Icons.restaurant,
               ),
             ),
             const SizedBox(width: 12),
@@ -80,7 +85,7 @@ class RestaurantInfoCard extends StatelessWidget {
               size: 16,
             ),
             const SizedBox(width: 4),
-            Text(details.deliveryTime, style: AppTextStyle.fontGrey12Regular),
+            Text(deliveryTime, style: AppTextStyle.fontGrey12Regular),
             Text(' • ', style: AppTextStyle.fontGrey12Regular),
             const Icon(
               Icons.pedal_bike_outlined,
@@ -88,7 +93,7 @@ class RestaurantInfoCard extends StatelessWidget {
               size: 16,
             ),
             const SizedBox(width: 4),
-            Text(details.deliveryFee, style: AppTextStyle.fontGrey12Regular),
+            Text(deliveryFee, style: AppTextStyle.fontGrey12Regular),
           ],
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/safe_network_image.dart';
 import '../models/menu_item_model.dart';
 
 class MenuItemCard extends StatelessWidget {
@@ -24,17 +25,12 @@ class MenuItemCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SafeNetworkImage(
+                imageUrl: item.imageUrl,
                 width: 76,
                 height: 76,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: AppColors.lightGrey,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(item.imageUrl, fit: BoxFit.cover),
-                ),
+                borderRadius: BorderRadius.circular(12),
+                placeholderIcon: Icons.fastfood_outlined,
               ),
               const SizedBox(width: 16),
               Expanded(

@@ -6,14 +6,12 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/di/injection_container.dart';
-import '../widgets/add_food_image_picker.dart';
-import '../widgets/add_food_text_field.dart';
+import '../../domain/entities/category_entity.dart';
+import '../widgets/add_food_form_body.dart';
 import '../cubit/add_food_cubit.dart';
 import '../cubit/add_food_state.dart';
-import '../../domain/entities/add_product_params.dart';
-import '../../domain/entities/product_status.dart';
 
-class AddFoodPage extends StatefulWidget {
+class AddFoodPage extends StatelessWidget {
   const AddFoodPage({
     super.key,
     this.productId,
@@ -32,58 +30,11 @@ class AddFoodPage extends StatefulWidget {
   bool get isEditMode => productId != null;
 
   @override
-  State<AddFoodPage> createState() => _AddFoodPageState();
-}
-
-class _AddFoodPageState extends State<AddFoodPage> {
-  late final TextEditingController _nameController;
-  late final TextEditingController _descController;
-  late final TextEditingController _priceController;
-  late final TextEditingController _discountController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.initialName ?? '');
-    _descController = TextEditingController(text: widget.initialDescription ?? '');
-    _priceController = TextEditingController(
-      text: widget.initialPrice?.toString() ?? '',
-    );
-    _discountController = TextEditingController(
-      text: widget.initialDiscount?.toString() ?? '',
-    );
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _descController.dispose();
-    _priceController.dispose();
-    _discountController.dispose();
-    super.dispose();
-  }
-
-  void _submitForm(BuildContext context) {
-    final params = AddProductParams(
-      name: _nameController.text,
-      description: _descController.text,
-      price: double.tryParse(_priceController.text) ?? 0.0,
-      discountPercentage: double.tryParse(_discountController.text) ?? 0.0,
-      categoryId: 1,
-      maxOrderQuantity: 10,
-      status: ProductStatus.active,
-      isEditMode: widget.isEditMode,
-      productId: widget.productId,
-    );
-    context.read<AddFoodCubit>().submitForm(params);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isAr = context.locale.languageCode == 'ar';
 
     return BlocProvider(
-      create: (_) => sl<AddFoodCubit>(),
+      create: (_) => sl<AddFoodCubit>()..loadForm(),
       child: BlocConsumer<AddFoodCubit, AddFoodState>(
         listener: (context, state) {
           if (state is AddFoodSuccess) {
@@ -104,8 +55,9 @@ class _AddFoodPageState extends State<AddFoodPage> {
           }
         },
         builder: (context, state) {
-          final isLoading = state is AddFoodSubmitting;
-          final validationErrors = (state is AddFoodValidationError)
+          final cubit = context.read<AddFoodCubit>();
+          final isSubmitting = state is AddFoodSubmitting;
+          final validationErrors = state is AddFoodValidationError
               ? state.validationErrors
               : <String, List<String>>{};
 
@@ -124,74 +76,69 @@ class _AddFoodPageState extends State<AddFoodPage> {
                 onPressed: () => Navigator.pop(context),
               ),
               title: Text(
-                widget.isEditMode ? LocaleKeys.editFood.tr() : LocaleKeys.addFood.tr(),
+                isEditMode ? LocaleKeys.editFood.tr() : LocaleKeys.addFood.tr(),
                 style: AppTextStyle.fontBlack16Bold,
               ),
             ),
             body: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    AddFoodImagePicker(title: LocaleKeys.mealImage.tr()),
-                    const SizedBox(height: 16),
-                    AddFoodTextField(
-                      hintText: LocaleKeys.mealName.tr(),
-                      controller: _nameController,
-                    ),
-                    if (validationErrors.containsKey('name'))
-                      Text(
-                        validationErrors['name']!.first,
-                        style: const TextStyle(color: AppColors.promoRed, fontSize: 12),
-                      ),
-                    const SizedBox(height: 16),
-                    AddFoodTextField(
-                      hintText: LocaleKeys.mealDescription.tr(),
-                      maxLines: 5,
-                      controller: _descController,
-                    ),
-                    const SizedBox(height: 16),
-                    AddFoodTextField(
-                      hintText: LocaleKeys.price.tr(),
-                      controller: _priceController,
-                    ),
-                    const SizedBox(height: 16),
-                    AddFoodTextField(
-                      hintText: LocaleKeys.discountPercentage.tr(),
-                      controller: _discountController,
-                    ),
-                    const SizedBox(height: 32),
-                    SizedBox(
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: isLoading ? null : () => _submitForm(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.promoRed,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: isLoading
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(color: AppColors.white),
-                              )
-                            : Text(
-                                widget.isEditMode ? LocaleKeys.save.tr() : LocaleKeys.add.tr(),
-                                style: AppTextStyle.fontWhite16Bold,
-                              ),
-                      ),
-                    ),
-                  ],
-                ),
+              child: _buildBody(
+                context,
+                state,
+                cubit.cachedCategories,
+                isSubmitting,
+                validationErrors,
               ),
             ),
           );
         },
       ),
     );
+  }
+
+  Widget _buildBody(
+    BuildContext context,
+    AddFoodState state,
+    List<CategoryEntity> categories,
+    bool isSubmitting,
+    Map<String, List<String>> validationErrors,
+  ) {
+    if (state is AddFoodLoadingForm || state is AddFoodInitial) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state is AddFoodError && categories.isEmpty) {
+      return Center(
+        child: Text(state.message, style: AppTextStyle.fontPrimary14Regular),
+      );
+    }
+
+    final canShowForm = categories.isNotEmpty &&
+        (state is AddFoodFormReady ||
+            state is AddFoodSubmitting ||
+            state is AddFoodValidationError);
+
+    if (canShowForm) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: AddFoodFormBody(
+          categories: categories,
+          isEditMode: isEditMode,
+          isLoading: isSubmitting,
+          validationErrors: validationErrors,
+          initialName: initialName,
+          initialDescription: initialDescription,
+          initialPrice: initialPrice,
+          initialDiscount: initialDiscount,
+          productId: productId,
+          onSubmit: (params) => context.read<AddFoodCubit>().submitForm(params),
+        ),
+      );
+    }
+
+    if (categories.isEmpty) {
+      return Center(child: Text(LocaleKeys.noProductsFound.tr()));
+    }
+
+    return const SizedBox.shrink();
   }
 }

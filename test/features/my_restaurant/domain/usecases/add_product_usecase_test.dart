@@ -31,8 +31,10 @@ void main() {
   });
 
   final tParams = AddProductParams(
-    name: 'Burger',
-    description: 'Tasty',
+    nameEn: 'Burger',
+    nameAr: 'برجر',
+    descriptionEn: 'Tasty',
+    descriptionAr: 'لذيذ',
     price: 10,
     discountPercentage: 0,
     categoryId: 1,

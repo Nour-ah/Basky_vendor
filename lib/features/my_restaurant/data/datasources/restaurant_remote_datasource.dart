@@ -4,6 +4,7 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/validation_errors_model.dart';
 import '../../../../core/network/api_constants.dart';
 import '../../domain/entities/add_product_params.dart';
+import '../../domain/entities/product_status.dart';
 import '../models/category_model.dart';
 import '../models/product_details_model.dart';
 import '../models/product_summary_model.dart';
@@ -67,8 +68,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
     try {
       final response = await dio.get(ApiConstants.vendorCategories);
       debugPrint('✅ RestaurantRemoteDataSource: Success fetching categories');
-      final List<dynamic> data = response.data['data'] ?? [];
-      return data.map((json) => CategoryModel.fromJson(json)).toList();
+      return _parseCategoriesResponse(response.data['data']);
     } on DioException catch (e) {
       _handleDioException(e);
     } catch (e) {
@@ -183,14 +183,21 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
 
   Future<void> _submitProductData(String path, AddProductParams params, {required bool isUpdate, CancelToken? cancelToken}) async {
     try {
+      final discountPrice = params.discountPercentage > 0
+          ? params.price - (params.price * (params.discountPercentage / 100))
+          : params.price;
+
       final Map<String, dynamic> data = {
-        'name': params.name,
-        'description': params.description,
+        'type': params.productType,
+        'name[en]': params.nameEn,
+        'name[ar]': params.nameAr,
+        'description[en]': params.descriptionEn,
+        'description[ar]': params.descriptionAr,
         'price': params.price,
-        'discount_price': params.price - (params.price * (params.discountPercentage / 100)), // mapped to discount_price
+        'discount_price': discountPrice,
         'category_id': params.categoryId,
         'max_order_quantity': params.maxOrderQuantity,
-        'status': params.status.toApiString(),
+        'status': params.status == ProductStatus.active ? 'active' : 'inactive',
         if (params.subcategoryId != null) 'subcategory_id': params.subcategoryId,
       };
 
@@ -214,7 +221,8 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
         data: formData,
         cancelToken: cancelToken,
         options: Options(
-          sendTimeout: const Duration(minutes: 2), // Generous timeout for uploads
+          contentType: 'multipart/form-data',
+          sendTimeout: const Duration(minutes: 2),
           receiveTimeout: const Duration(minutes: 2),
         ),
       );
@@ -230,6 +238,33 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       debugPrint('❌ RestaurantRemoteDataSource: Error submitting product $e');
       throw const ParsingException();
     }
+  }
+
+  List<CategoryModel> _parseCategoriesResponse(dynamic data) {
+    final List<CategoryModel> categories = [];
+
+    void walkTree(List<dynamic> nodes) {
+      for (final node in nodes) {
+        if (node is! Map<String, dynamic>) continue;
+        categories.add(CategoryModel.fromJson(node));
+        final children = node['children'];
+        if (children is List && children.isNotEmpty) {
+          walkTree(children);
+        }
+      }
+    }
+
+    if (data is Map<String, dynamic> && data['tree'] is List) {
+      walkTree(data['tree'] as List);
+    } else if (data is List) {
+      for (final item in data) {
+        if (item is Map<String, dynamic>) {
+          categories.add(CategoryModel.fromJson(item));
+        }
+      }
+    }
+
+    return categories;
   }
 
   void _handleDioException(DioException e) {

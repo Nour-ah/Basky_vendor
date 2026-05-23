@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../domain/entities/category_entity.dart';
 
 abstract class AddFoodState extends Equatable {
   const AddFoodState();
@@ -7,6 +8,17 @@ abstract class AddFoodState extends Equatable {
 }
 
 class AddFoodInitial extends AddFoodState {}
+
+class AddFoodLoadingForm extends AddFoodState {}
+
+class AddFoodFormReady extends AddFoodState {
+  final List<CategoryEntity> categories;
+
+  const AddFoodFormReady({required this.categories});
+
+  @override
+  List<Object?> get props => [categories];
+}
 
 class AddFoodSubmitting extends AddFoodState {}
 

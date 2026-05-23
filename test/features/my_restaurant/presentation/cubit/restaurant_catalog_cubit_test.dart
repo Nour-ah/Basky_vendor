@@ -13,10 +13,20 @@ import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_cat
 import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_products_usecase.dart';
 import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
 import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/restaurant_catalog_state.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_variant_entity.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
 
 class FakeRestaurantRepository implements RestaurantRepository {
   @override
+  Future<Either<Failure, VendorBranchEntity?>> getPrimaryBranch() async =>
+      const Right(null);
+
+  @override
   Future<Either<Failure, List<CategoryEntity>>> getCategories() async => const Right([]);
+
+  @override
+  Future<Either<Failure, List<ProductVariantEntity>>> getVariants() async =>
+      const Right([]);
   
   @override
   Future<Either<Failure, List<ProductSummaryEntity>>> getProducts({
@@ -37,6 +47,10 @@ class FakeRestaurantRepository implements RestaurantRepository {
 
   @override
   Future<Either<Failure, void>> deleteProduct(int productId) async => const Right(null);
+
+  @override
+  Future<Either<Failure, void>> toggleProductActive(int productId) async =>
+      const Right(null);
 }
 
 class MockGetCategoriesUseCase extends GetCategoriesUseCase {

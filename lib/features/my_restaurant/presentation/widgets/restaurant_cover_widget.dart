@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/safe_network_image.dart';
 
 class RestaurantCoverWidget extends StatelessWidget {
   final String coverImageUrl;
@@ -15,18 +16,13 @@ class RestaurantCoverWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Image
-        Container(
-          height: 250,
+        SafeNetworkImage(
+          imageUrl: coverImageUrl,
           width: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(coverImageUrl),
-              fit: BoxFit.cover,
-            ),
-          ),
+          height: 250,
+          fit: BoxFit.cover,
+          placeholderIcon: Icons.storefront_outlined,
         ),
-        // Dots (simulated page indicator)
         Positioned(
           bottom: 40,
           left: 0,
@@ -36,14 +32,17 @@ class RestaurantCoverWidget extends StatelessWidget {
             children: [_buildDot(true), _buildDot(false), _buildDot(false)],
           ),
         ),
-        // Back button
         Positioned(
-          top: 50, // SafeArea roughly
+          top: 50,
           left: 16,
           child: GestureDetector(
             onTap: onBackPressed,
             child: Container(
               padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.white.withValues(alpha: 0.9),
+                shape: BoxShape.circle,
+              ),
               child: const Icon(
                 Icons.arrow_back_ios,
                 color: AppColors.black,
@@ -62,7 +61,7 @@ class RestaurantCoverWidget extends StatelessWidget {
       width: isActive ? 16 : 6,
       height: 6,
       decoration: BoxDecoration(
-        color: isActive ? AppColors.red : AppColors.white.withOpacity(0.8),
+        color: isActive ? AppColors.red : AppColors.white.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(3),
       ),
     );

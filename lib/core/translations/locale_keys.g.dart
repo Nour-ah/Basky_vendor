@@ -66,6 +66,12 @@ abstract class  LocaleKeys {
   static const mealImage = 'mealImage';
   static const mealName = 'mealName';
   static const mealDescription = 'mealDescription';
+  static const nameEnglish = 'nameEnglish';
+  static const nameArabic = 'nameArabic';
+  static const descriptionEnglish = 'descriptionEnglish';
+  static const descriptionArabic = 'descriptionArabic';
+  static const selectCategory = 'selectCategory';
+  static const pickMealImage = 'pickMealImage';
   static const price = 'price';
   static const percentage = 'percentage';
   static const discountPercentage = 'discountPercentage';
