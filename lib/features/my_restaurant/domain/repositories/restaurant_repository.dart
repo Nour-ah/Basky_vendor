@@ -4,8 +4,11 @@ import '../entities/add_product_params.dart';
 import '../entities/category_entity.dart';
 import '../entities/product_details_entity.dart';
 import '../entities/product_summary_entity.dart';
+import '../entities/vendor_branch_entity.dart';
 
 abstract class RestaurantRepository {
+  Future<Either<Failure, VendorBranchEntity?>> getPrimaryBranch();
+
   Future<Either<Failure, List<CategoryEntity>>> getCategories();
   
   Future<Either<Failure, List<ProductSummaryEntity>>> getProducts({

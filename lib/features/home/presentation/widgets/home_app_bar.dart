@@ -4,12 +4,24 @@ import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key, required this.scaffoldKey});
+  const HomeAppBar({
+    super.key,
+    required this.scaffoldKey,
+    required this.userName,
+    required this.userAddress,
+    this.userImageUrl,
+  });
 
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final String userName;
+  final String userAddress;
+  final String? userImageUrl;
 
   @override
   Widget build(BuildContext context) {
+    final hasNetworkImage =
+        userImageUrl != null && userImageUrl!.trim().isNotEmpty;
+
     return AppBar(
       backgroundColor: AppColors.background,
       elevation: 0,
@@ -21,11 +33,22 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Row(
         children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage(
-              'assets/images/profile.png',
-            ), // Replace as needed
+          CircleAvatar(
             radius: 20,
+            backgroundColor: AppColors.greyLight,
+            backgroundImage: hasNetworkImage
+                ? null
+                : const AssetImage(AppImages.imageProfile),
+            child: hasNetworkImage
+                ? ClipOval(
+                    child: CustomImageView(
+                      imagePath: userImageUrl,
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -33,33 +56,34 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Heba Yasser',
+                Text(
+                  userName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, color: AppColors.red, size: 14),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        'Kattamya, Stone Residence',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: AppColors.grey.withValues(alpha: 0.8),
-                          fontSize: 12,
+                if (userAddress.isNotEmpty)
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, color: AppColors.red, size: 14),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          userAddress,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.grey.withValues(alpha: 0.8),
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),

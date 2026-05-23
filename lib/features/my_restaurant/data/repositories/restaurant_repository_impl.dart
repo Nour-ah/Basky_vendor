@@ -5,6 +5,7 @@ import '../../domain/entities/add_product_params.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/product_details_entity.dart';
 import '../../domain/entities/product_summary_entity.dart';
+import '../../domain/entities/vendor_branch_entity.dart';
 import '../../domain/repositories/restaurant_repository.dart';
 import '../datasources/restaurant_remote_datasource.dart';
 
@@ -12,6 +13,15 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   final RestaurantRemoteDataSource remoteDataSource;
 
   RestaurantRepositoryImpl({required this.remoteDataSource});
+
+  @override
+  Future<Either<Failure, VendorBranchEntity?>> getPrimaryBranch() async {
+    return _execute(() async {
+      final branches = await remoteDataSource.getBranches();
+      if (branches.isEmpty) return null;
+      return branches.first;
+    });
+  }
 
   @override
   Future<Either<Failure, List<CategoryEntity>>> getCategories() async {

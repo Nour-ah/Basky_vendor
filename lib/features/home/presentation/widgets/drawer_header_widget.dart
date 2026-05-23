@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_image_view.dart';
 
 class DrawerHeaderWidget extends StatelessWidget {
   const DrawerHeaderWidget({
@@ -18,6 +19,8 @@ class DrawerHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isNetworkImage = userImage.startsWith('http');
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0),
       child: Row(
@@ -31,7 +34,19 @@ class DrawerHeaderWidget extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 24,
-              backgroundImage: NetworkImage(userImage), // placeholder
+              backgroundColor: AppColors.greyLight,
+              backgroundImage:
+                  isNetworkImage ? null : AssetImage(userImage),
+              child: isNetworkImage
+                  ? ClipOval(
+                      child: CustomImageView(
+                        imagePath: userImage,
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : null,
             ),
           ),
           const SizedBox(width: 12),

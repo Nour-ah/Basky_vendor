@@ -24,21 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late HomeCubit _homeCubit;
-
   int selectedTabIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _homeCubit = sl<HomeCubit>()..fetchHomeStats();
-  }
-
-  @override
-  void dispose() {
-    _homeCubit.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,104 +35,141 @@ class _HomePageState extends State<HomePage> {
       LocaleKeys.onTheWayCount.tr(namedArgs: {'count': '5'}),
     ];
 
-    return BlocProvider.value(
-      value: _homeCubit,
-      child: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: AppColors.background,
-        appBar: HomeAppBar(scaffoldKey: _scaffoldKey),
-        drawer: const HomeDrawer(),
-        body: BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            if (state is HomeLoading || state is HomeInitial) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is HomeError) {
-              return Center(
-                child: Text(
-                  '${LocaleKeys.unknown.tr()}: ${state.message}',
-                  style: AppTextStyle.fontPrimary14Regular,
-                ),
-              );
-            } else if (state is HomeLoaded) {
-              final stats = state.stats;
-              final recentOrders = stats.recentOrders;
-
-              return CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 16),
-                        const FadeInSlide(
-                          delay: 100,
-                          child: RestaurantStatusSwitch(),
-                        ),
-                        const SizedBox(height: 16),
-                        FadeInSlide(
-                          delay: 200,
-                          child: StatisticsCards(
-                            totalOrders: stats.totalOrders,
-                            totalEarnings: stats.totalEarnings,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        FadeInSlide(
-                          delay: 300,
-                          child: OrderStatusTabs(
-                            tabs: orderTabs,
-                            selectedIndex: selectedTabIndex,
-                            onTabSelected: (index) {
-                              setState(() {
-                                selectedTabIndex = index;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                  recentOrders.isEmpty
-                      ? SliverToBoxAdapter(
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: Text(
-                                LocaleKeys.noRecentOrders.tr(),
-                                style: AppTextStyle.fontBlack14Regular,
-                              ),
-                            ),
-                          ),
-                        )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final order = recentOrders[index];
-                              return FadeInSlide(
-                                delay: 400 + (index * 50),
-                                child: OrderCardWidget(
-                                  orderCode: order.orderCode,
-                                  date: order.dateTime,
-                                  time: '', // Parse time from dateTime if needed
-                                  deliveryType: order.orderType,
-                                  itemsCount: order.itemCount,
-                                  onDetailsPressed: () {
-                                    // Navigate to details
-                                  },
-                                ),
-                              );
-                            },
-                            childCount: recentOrders.length,
-                          ),
-                        ),
-                ],
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
+    return BlocProvider(
+      create: (_) => sl<HomeCubit>()..fetchHomeData(),
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          return Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: AppColors.background,
+            appBar: _buildAppBar(state),
+            drawer: _buildDrawer(state),
+            body: _buildBody(context, state, orderTabs),
+          );
+        },
       ),
     );
+  }
+
+  PreferredSizeWidget? _buildAppBar(HomeState state) {
+    if (state is HomeLoaded) {
+      return HomeAppBar(
+        scaffoldKey: _scaffoldKey,
+        userName: state.user.name,
+        userAddress: state.branch?.address ?? '',
+        userImageUrl: state.user.image,
+      );
+    }
+    return HomeAppBar(
+      scaffoldKey: _scaffoldKey,
+      userName: '',
+      userAddress: '',
+    );
+  }
+
+  Widget? _buildDrawer(HomeState state) {
+    if (state is! HomeLoaded) return null;
+
+    final rating = state.branch?.rating ?? 0.0;
+    final image = state.user.image ?? state.branch?.logoUrl ?? '';
+
+    return HomeDrawer(
+      userName: state.user.name,
+      userRating: rating,
+      userImage: image,
+    );
+  }
+
+  Widget _buildBody(
+    BuildContext context,
+    HomeState state,
+    List<String> orderTabs,
+  ) {
+    if (state is HomeLoading || state is HomeInitial) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state is HomeError) {
+      return Center(
+        child: Text(
+          '${LocaleKeys.unknown.tr()}: ${state.message}',
+          style: AppTextStyle.fontPrimary14Regular,
+        ),
+      );
+    }
+    if (state is HomeLoaded) {
+      final stats = state.stats;
+      final recentOrders = stats.recentOrders;
+
+      return CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const FadeInSlide(
+                  delay: 100,
+                  child: RestaurantStatusSwitch(),
+                ),
+                const SizedBox(height: 16),
+                FadeInSlide(
+                  delay: 200,
+                  child: StatisticsCards(
+                    totalOrders: stats.totalOrders,
+                    totalEarnings: stats.totalEarnings,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                FadeInSlide(
+                  delay: 300,
+                  child: OrderStatusTabs(
+                    tabs: orderTabs,
+                    selectedIndex: selectedTabIndex,
+                    onTabSelected: (index) {
+                      setState(() {
+                        selectedTabIndex = index;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+          recentOrders.isEmpty
+              ? SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Text(
+                        LocaleKeys.noRecentOrders.tr(),
+                        style: AppTextStyle.fontBlack14Regular,
+                      ),
+                    ),
+                  ),
+                )
+              : SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final order = recentOrders[index];
+                      return FadeInSlide(
+                        delay: 400 + (index * 50),
+                        child: OrderCardWidget(
+                          orderCode: order.orderCode,
+                          date: order.dateTime,
+                          time: '',
+                          deliveryType: order.orderType,
+                          itemsCount: order.itemCount,
+                          onDetailsPressed: () {},
+                        ),
+                      );
+                    },
+                    childCount: recentOrders.length,
+                  ),
+                ),
+        ],
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

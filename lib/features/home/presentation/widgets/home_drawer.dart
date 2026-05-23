@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_images.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/localization/cubit/locale_cubit.dart';
@@ -15,9 +16,9 @@ import 'drawer_item_widget.dart';
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({
     super.key,
-    this.userName = 'Heba yasser',
-    this.userRating = 5.0,
-    this.userImage = 'https://randomuser.me/api/portraits/women/44.jpg',
+    required this.userName,
+    required this.userRating,
+    required this.userImage,
   });
 
   final String userName;
@@ -26,7 +27,6 @@ class HomeDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List of drawer items
     final List<DrawerItemModel> drawerItems = [
       DrawerItemModel(
         icon: Icons.person_outline,
@@ -74,7 +74,7 @@ class HomeDrawer extends StatelessWidget {
         onTap: () {
           final newLangCode = context.locale.languageCode == 'ar' ? 'en' : 'ar';
           context.read<LocaleCubit>().changeLocale(newLangCode);
-          Navigator.pop(context); // Close the drawer
+          Navigator.pop(context);
         },
       ),
       DrawerItemModel(
@@ -108,7 +108,7 @@ class HomeDrawer extends StatelessWidget {
             DrawerHeaderWidget(
               userName: userName,
               userRating: userRating,
-              userImage: userImage,
+              userImage: userImage.isNotEmpty ? userImage : AppImages.imageProfile,
               onClosePressed: () => Navigator.pop(context),
             ),
             const SizedBox(height: 8),

@@ -7,8 +7,11 @@ import '../../domain/entities/add_product_params.dart';
 import '../models/category_model.dart';
 import '../models/product_details_model.dart';
 import '../models/product_summary_model.dart';
+import '../models/vendor_branch_model.dart';
 
 abstract class RestaurantRemoteDataSource {
+  Future<List<VendorBranchModel>> getBranches();
+
   Future<List<CategoryModel>> getCategories();
   
   Future<List<ProductSummaryModel>> getProducts({
@@ -31,6 +34,27 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
   final Dio dio;
 
   RestaurantRemoteDataSourceImpl({required this.dio});
+
+  @override
+  Future<List<VendorBranchModel>> getBranches() async {
+    debugPrint(
+      '🔵 RestaurantRemoteDataSource: Sending GET ${ApiConstants.vendorBranches}',
+    );
+    try {
+      final response = await dio.get(ApiConstants.vendorBranches);
+      debugPrint('✅ RestaurantRemoteDataSource: Success fetching branches');
+      final List<dynamic> data = response.data['data'] ?? [];
+      return data
+          .map((json) => VendorBranchModel.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      debugPrint('❌ RestaurantRemoteDataSource: Error $e');
+      throw const ParsingException();
+    }
+    throw const ServerException();
+  }
 
   @override
   Future<List<CategoryModel>> getCategories() async {

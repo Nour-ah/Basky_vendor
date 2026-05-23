@@ -48,9 +48,11 @@ import '../../features/my_restaurant/domain/usecases/add_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/delete_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_categories_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_products_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/get_vendor_branch_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/update_product_usecase.dart';
 import '../../features/my_restaurant/presentation/cubit/add_food_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
+import '../../features/my_restaurant/presentation/cubit/restaurant_details_cubit.dart';
 
 // Wallet Feature
 import '../../features/wallet/data/datasources/wallet_remote_datasource.dart';
@@ -168,7 +170,13 @@ Future<void> initDependencies() async {
   // ============================================================
   // Home Feature - Cubits
   // ============================================================
-  sl.registerFactory(() => HomeCubit(getHomeStatsUseCase: sl()));
+  sl.registerFactory(
+    () => HomeCubit(
+      getHomeStatsUseCase: sl(),
+      getCurrentUserUseCase: sl(),
+      getVendorBranchUseCase: sl(),
+    ),
+  );
 
   // ============================================================
   // Orders Feature
@@ -209,6 +217,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));
 
   // Restaurant Catalog Feature
+  sl.registerLazySingleton(() => GetVendorBranchUseCase(sl()));
   sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
   sl.registerLazySingleton(() => GetProductsUseCase(sl()));
   sl.registerLazySingleton(() => AddProductUseCase(sl()));
@@ -234,6 +243,9 @@ Future<void> initDependencies() async {
         getProductsUseCase: sl(),
         deleteProductUseCase: sl(),
       ));
+  sl.registerFactory(
+    () => RestaurantDetailsCubit(getVendorBranchUseCase: sl()),
+  );
   sl.registerFactory(() => AddFoodCubit(
         addProductUseCase: sl(),
         updateProductUseCase: sl(),

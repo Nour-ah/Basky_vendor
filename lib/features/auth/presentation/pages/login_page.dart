@@ -158,9 +158,9 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       );
                                     },
-                                    child: const Text(
-                                      'Forgot Password?',
-                                      style: TextStyle(
+                                    child: Text(
+                                      LocaleKeys.forgotPassword.tr(),
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
