@@ -37,8 +37,8 @@ class _LoginPageState extends State<LoginPage> {
   void _goToHome(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
-      (route) => false,
+      MaterialPageRoute(builder: (_) =>   HomePage()),
+          (route) => false,
     );
   }
 
@@ -60,17 +60,20 @@ class _LoginPageState extends State<LoginPage> {
           if (state is AuthLoginSuccess) {
             if (state.user.isVerified) {
               _goToHome(context);
-            } else if (state.user.emailVerifiedAt == null || state.user.emailVerifiedAt!.isEmpty) {
+            } else if (state.user.emailVerifiedAt == null ||
+                state.user.emailVerifiedAt!.isEmpty) {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => VerifyEmailScreen(email: state.user.email)),
+                MaterialPageRoute(
+                    builder: (_) => VerifyEmailScreen(email: state.user.email)),
               );
             } else {
               _goToHome(context);
             }
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: AppColors.promoRed),
+              SnackBar(content: Text(state.message),
+                  backgroundColor: AppColors.promoRed),
             );
           }
         },
@@ -90,7 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: AlignmentDirectional.centerStart,
                           child: IconButton(
                             icon: Icon(
-                              isAr ? Icons.arrow_back_ios_new : Icons.arrow_back_ios,
+                              isAr ? Icons.arrow_back_ios_new : Icons
+                                  .arrow_back_ios,
                               color: Colors.white,
                             ),
                             onPressed: () => Navigator.pop(context),
@@ -105,14 +109,19 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   Text(
                                     LocaleKeys.login.tr(),
-                                    style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(color: Colors.white,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 24),
                                   AuthTextField(
                                     hintText: LocaleKeys.email.tr(),
                                     prefixIcon: Icons.email_outlined,
                                     controller: _emailController,
-                                    validator: (value) => (value == null || value.isEmpty) ? LocaleKeys.emailRequired.tr() : null,
+                                    validator: (value) =>
+                                    (value == null || value.isEmpty)
+                                        ? LocaleKeys.emailRequired.tr()
+                                        : null,
                                   ),
                                   const SizedBox(height: 16),
                                   AuthTextField(
@@ -121,8 +130,11 @@ class _LoginPageState extends State<LoginPage> {
                                     obscureText: true,
                                     controller: _passwordController,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) return LocaleKeys.passwordRequired.tr();
-                                      if (value.length < 6) return LocaleKeys.passwordLengthError.tr();
+                                      if (value == null || value.isEmpty)
+                                        return LocaleKeys.passwordRequired.tr();
+                                      if (value.length < 6)
+                                        return LocaleKeys.passwordLengthError
+                                            .tr();
                                       return null;
                                     },
                                   ),
@@ -142,10 +154,16 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   const SizedBox(height: 8),
                                   TextButton(
-                                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForgotPasswordPage())),
+                                    onPressed: () =>
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder: (
+                                                _) => const ForgotPasswordPage())),
                                     child: Text(
                                       LocaleKeys.forgotPassword.tr(),
-                                      style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -153,7 +171,8 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: () => _goToRegister(context),
                                     child: Text(
                                       LocaleKeys.dontHaveAccount.tr(),
-                                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 13),
                                     ),
                                   ),
                                 ],

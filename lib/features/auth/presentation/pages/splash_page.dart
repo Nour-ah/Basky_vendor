@@ -20,7 +20,7 @@ class SplashPage extends StatelessWidget {
           if (state.status == SplashStatus.authenticated) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const HomePage()),
+              MaterialPageRoute(builder: (_) =>   HomePage()),
               (route) => false,
             );
           } else if (state.status == SplashStatus.unauthenticated) {
