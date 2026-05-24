@@ -1,201 +1,175 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTextStyle {
   AppTextStyle._();
 
-  // Headings
-  static TextStyle heading32Bold = const TextStyle(
+  // Headings - Outfit
+  static TextStyle heading32Bold = GoogleFonts.outfit(
     fontSize: 32,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle heading24Bold = const TextStyle(
+  static TextStyle heading24Bold = GoogleFonts.outfit(
     fontSize: 24,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle heading20Bold = const TextStyle(
+  static TextStyle heading20Bold = GoogleFonts.outfit(
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle heading18Bold = const TextStyle(
+  static TextStyle heading18Bold = GoogleFonts.outfit(
     fontSize: 18,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
-    fontFamily: 'CoHeadline',
   );
 
-  // Black Text Styles
-  static TextStyle fontBlack16Bold = const TextStyle(
+  // Black Text Styles - Inter
+  static TextStyle fontBlack16Bold = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontBlack16Regular = const TextStyle(
+  static TextStyle fontBlack16Regular = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontBlack14Bold = const TextStyle(
+  static TextStyle fontBlack14Bold = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontBlack14Regular = const TextStyle(
+  static TextStyle fontBlack14Regular = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontBlack18Medium = const TextStyle(
+  static TextStyle fontBlack18Medium = GoogleFonts.inter(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontBlack24Bold = const TextStyle(
+  static TextStyle fontBlack24Bold = GoogleFonts.inter(
     fontSize: 24,
     fontWeight: FontWeight.bold,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontBlack12Bold = const TextStyle(
+  static TextStyle fontBlack12Bold = GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.bold,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontBlack12Regular = const TextStyle(
+  static TextStyle fontBlack12Regular = GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
-    fontFamily: 'CoHeadline',
   );
 
-  // Grey Text Styles
-  static TextStyle fontGrey16Regular = const TextStyle(
+  // Grey Text Styles - Inter
+  static TextStyle fontGrey16Regular = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.textSecondary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontGrey14Regular = const TextStyle(
+  static TextStyle fontGrey14Regular = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.textSecondary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontGrey14Medium = const TextStyle(
+  static TextStyle fontGrey14Medium = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontGrey12Regular = const TextStyle(
+  static TextStyle fontGrey12Regular = GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.grey,
-    fontFamily: 'CoHeadline',
   );
 
-  // White Text Styles
-  static TextStyle fontWhite16Bold = const TextStyle(
+  // White Text Styles - Inter
+  static TextStyle fontWhite16Bold = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.white,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontWhite16Regular = const TextStyle(
+  static TextStyle fontWhite16Regular = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.white,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontWhite14Regular = const TextStyle(
+  static TextStyle fontWhite14Regular = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.white,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontWhite12Regular = const TextStyle(
+  static TextStyle fontWhite12Regular = GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.white,
-    fontFamily: 'CoHeadline',
   );
 
-  // Primary Color Text Styles
-  static TextStyle fontPrimary18Bold = const TextStyle(
+  // Primary Color Text Styles - Inter
+  static TextStyle fontPrimary18Bold = GoogleFonts.inter(
     fontSize: 18,
     fontWeight: FontWeight.bold,
     color: AppColors.primary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontPrimary16Bold = const TextStyle(
+  static TextStyle fontPrimary16Bold = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.primary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontPrimary16Regular = const TextStyle(
+  static TextStyle fontPrimary16Regular = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.primary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontPrimary14Regular = const TextStyle(
+  static TextStyle fontPrimary14Regular = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.primary,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontPrimary12Regular = const TextStyle(
+  static TextStyle fontPrimary12Regular = GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.primary,
-    fontFamily: 'CoHeadline',
   );
 
-  // Special Styles
-  static TextStyle fontRed14Bold = const TextStyle(
+  // Special Styles - Inter
+  static TextStyle fontRed14Bold = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: AppColors.red,
-    fontFamily: 'CoHeadline',
   );
 
-  static TextStyle fontGreen14Bold = const TextStyle(
+  static TextStyle fontGreen14Bold = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: AppColors.green,
-    fontFamily: 'CoHeadline',
   );
 }

@@ -67,11 +67,11 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             _goToLogin(context, message: state.message);
           } else if (state is AuthResendCodeSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.green),
+              SnackBar(content: Text(state.message), backgroundColor: AppColors.success),
             );
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+              SnackBar(content: Text(state.message), backgroundColor: AppColors.promoRed),
             );
           }
         },

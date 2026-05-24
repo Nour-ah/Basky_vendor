@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spider_restaurant/core/theme/app_images.dart';
+import 'package:spider_restaurant/core/theme/app_text_styles.dart';
 import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -20,73 +22,80 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final imageUrl = userImageUrl?.trim() ?? '';
-    final hasNetworkImage =
-        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
+    final now = DateTime.now();
+    final dateString = DateFormat('EEEE, d MMM', context.locale.languageCode).format(now);
 
     return AppBar(
-      backgroundColor: AppColors.background,
       elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.85)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+      ),
       leading: IconButton(
-        icon: const Icon(Icons.menu, color: AppColors.black),
+        icon: const Icon(Icons.menu, color: AppColors.white),
         onPressed: () {
           scaffoldKey.currentState?.openDrawer();
         },
       ),
       title: Row(
         children: [
-          _ProfileAvatar(imageUrl: imageUrl, radius: 20),
-          const SizedBox(width: 8),
+          _ProfileAvatar(imageUrl: imageUrl, radius: 22),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  userName,
+                  'مرحبا, $userName',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                  style: AppTextStyle.fontWhite16Bold,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  dateString,
+                  style: AppTextStyle.fontWhite12Regular.copyWith(
+                    color: AppColors.white.withValues(alpha: 0.8),
                   ),
                 ),
-                if (userAddress.isNotEmpty)
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on, color: AppColors.red, size: 14),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          userAddress,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppColors.grey.withValues(alpha: 0.8),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
               ],
             ),
           ),
         ],
       ),
       actions: [
-        CustomImageView(
-          imagePath: AppImages.notification,
-          width: 24,
-          fit: BoxFit.scaleDown,
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.white.withValues(alpha: 0.2),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.notifications_outlined, color: AppColors.white, size: 22),
+            onPressed: () {},
+            constraints: const BoxConstraints(),
+            padding: const EdgeInsets.all(8),
+          ),
         ),
-        const SizedBox(width: 16),
       ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 16);
 }
 
 class _ProfileAvatar extends StatelessWidget {
@@ -101,19 +110,26 @@ class _ProfileAvatar extends StatelessWidget {
     final hasNetworkImage =
         imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
 
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: AppColors.greyLight,
-      child: hasNetworkImage
-          ? ClipOval(
-              child: CustomImageView(
-                imagePath: imageUrl,
-                width: size,
-                height: size,
-                fit: BoxFit.cover,
-              ),
-            )
-          : Icon(Icons.person, size: radius * 0.95, color: AppColors.grey),
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: AppColors.white.withValues(alpha: 0.5), width: 2),
+      ),
+      child: CircleAvatar(
+        radius: radius,
+        backgroundColor: AppColors.white.withValues(alpha: 0.2),
+        child: hasNetworkImage
+            ? ClipOval(
+                child: CustomImageView(
+                  imagePath: imageUrl,
+                  width: size,
+                  height: size,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : Icon(Icons.person, size: radius * 0.95, color: AppColors.white),
+      ),
     );
   }
 }
+
