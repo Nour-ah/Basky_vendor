@@ -1,19 +1,30 @@
 import 'package:equatable/equatable.dart';
 import 'product_image_entity.dart';
 import 'product_status.dart';
+import 'product_type.dart';
 
 class AddProductParams extends Equatable {
   final String nameEn;
   final String nameAr;
   final String descriptionEn;
   final String descriptionAr;
-  final String productType;
+
+  /// Product type — only 'simple' or 'variable' are accepted by the API.
+  final ProductType productType;
+
   final double price;
   final double discountPercentage;
+
+  /// Always 'percentage' by default; extend if backend supports 'fixed'.
+  final String discountType;
+
   final int categoryId;
-  final int? subcategoryId;
-  final int maxOrderQuantity;
   final ProductStatus status;
+  final bool isFeatured;
+  final bool isNew;
+  final bool isBookable;
+  final String? sku;
+  final String? slug;
   final ProductImageEntity? image;
   final bool isEditMode;
   final int? productId;
@@ -21,15 +32,19 @@ class AddProductParams extends Equatable {
   const AddProductParams({
     required this.nameEn,
     required this.nameAr,
-    required this.descriptionEn,
-    required this.descriptionAr,
-    this.productType = 'food',
+    this.descriptionEn = '',
+    this.descriptionAr = '',
+    this.productType = ProductType.simple,
     required this.price,
-    required this.discountPercentage,
+    this.discountPercentage = 0,
+    this.discountType = 'percentage',
     required this.categoryId,
-    this.subcategoryId,
-    required this.maxOrderQuantity,
-    required this.status,
+    this.status = ProductStatus.active,
+    this.isFeatured = false,
+    this.isNew = false,
+    this.isBookable = false,
+    this.sku,
+    this.slug,
     this.image,
     this.isEditMode = false,
     this.productId,
@@ -44,10 +59,14 @@ class AddProductParams extends Equatable {
         productType,
         price,
         discountPercentage,
+        discountType,
         categoryId,
-        subcategoryId,
-        maxOrderQuantity,
         status,
+        isFeatured,
+        isNew,
+        isBookable,
+        sku,
+        slug,
         image,
         isEditMode,
         productId,

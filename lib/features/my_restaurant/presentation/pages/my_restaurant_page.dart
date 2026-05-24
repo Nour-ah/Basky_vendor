@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -170,13 +171,15 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                                           categories: catModels,
                                           selectedCategory: state is CatalogLoaded &&
                                                   state.selectedCategoryId != null
+                                              // ✅ firstWhereOrNull: avoids orElse
+                                              // type mismatch between List<CategoryEntity>
+                                              // (declared) and List<CategoryModel> (runtime).
                                               ? state.categories
-                                                  .firstWhere(
-                                                    (c) =>
-                                                        c.id ==
-                                                        state.selectedCategoryId,
-                                                  )
-                                                  .name
+                                                      .firstWhereOrNull(
+                                                        (c) => c.id == state.selectedCategoryId,
+                                                      )
+                                                      ?.name ??
+                                                  LocaleKeys.all.tr()
                                               : LocaleKeys.all.tr(),
                                           onCategorySelected: (categoryName) async {
                                             if (categoryName == '+') {
@@ -192,11 +195,13 @@ class _MyRestaurantPageState extends State<MyRestaurantPage> {
                                                 _catalogCubit.initCatalog();
                                               }
                                             } else {
+                                              // ✅ firstWhereOrNull eliminates the orElse
+                                              // callback that caused the runtime type crash:
+                                              // '() => CategoryEntity' is not a subtype
+                                              // of '() => CategoryModel'.
                                               final cat = state is CatalogLoaded
-                                                  ? state.categories.firstWhere(
+                                                  ? state.categories.firstWhereOrNull(
                                                       (c) => c.name == categoryName,
-                                                      orElse: () =>
-                                                          state.categories.first,
                                                     )
                                                   : null;
                                               _catalogCubit.filterProducts(

@@ -108,7 +108,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       final queryParams = {
         'page': page,
         'limit': limit,
-        if (categoryId != null) 'category_id': categoryId,
+        'category_id': categoryId,
         if (searchQuery != null && searchQuery.isNotEmpty) 'search': searchQuery,
       };
 
@@ -183,38 +183,45 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
 
   Future<void> _submitProductData(String path, AddProductParams params, {required bool isUpdate, CancelToken? cancelToken}) async {
     try {
-      final discountPrice = params.discountPercentage > 0
-          ? params.price - (params.price * (params.discountPercentage / 100))
-          : params.price;
-
       final Map<String, dynamic> data = {
-        'type': params.productType,
+        // ✅ type: only 'simple' or 'variable' — serialized via enum.name
+        'type': params.productType.toApiString(),
         'name[en]': params.nameEn,
         'name[ar]': params.nameAr,
         'description[en]': params.descriptionEn,
         'description[ar]': params.descriptionAr,
+        'sku': params.sku ?? '',
+        'slug': params.slug ?? '',
         'price': params.price,
-        'discount_price': discountPrice,
-        'category_id': params.categoryId,
-        'max_order_quantity': params.maxOrderQuantity,
-        'status': params.status == ProductStatus.active ? 'active' : 'inactive',
-        if (params.subcategoryId != null) 'subcategory_id': params.subcategoryId,
+        // ✅ API expects 'discount' + 'discount_type', NOT 'discount_price'
+        'discount': params.discountPercentage,
+        'discount_type': params.discountType,
+        // ✅ API uses is_active/is_featured/is_new/is_bookable as '1'/'0'
+        'is_active': params.status == ProductStatus.active ? '1' : '0',
+        'is_featured': params.isFeatured ? '1' : '0',
+        'is_new': params.isNew ? '1' : '0',
+        'is_bookable': params.isBookable ? '1' : '0',
+        // ✅ API expects 'categories[0]' array-key format, NOT 'category_id'
+        'categories[0]': params.categoryId,
       };
 
-      // Workaround for PHP/Laravel not supporting PUT with FormData: Add _method field.
+      // Workaround for PHP/Laravel not supporting PUT with multipart/form-data:
+      // Add _method field so Laravel routes it correctly.
       if (isUpdate) {
         data['_method'] = 'PUT';
       }
 
       if (params.image != null) {
-        // Prepare MultipartFile
-        data['image'] = await MultipartFile.fromFile(
+        // ✅ API key is 'thumbnail', not 'image'
+        data['thumbnail'] = await MultipartFile.fromFile(
           params.image!.path,
           filename: params.image!.path.split('/').last,
         );
       }
 
       final formData = FormData.fromMap(data);
+
+      debugPrint('🔵 RestaurantRemoteDataSource: FormData fields → ${data.keys.toList()}');
 
       await dio.post(
         path,

@@ -55,6 +55,7 @@ dependencies:
 
   # Functional Programming
   dartz: ^0.10.1
+  collection: ^1.18.0
 
   # Image Handling
   cached_network_image: ^3.3.0
