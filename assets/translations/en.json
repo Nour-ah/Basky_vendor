@@ -92,7 +92,7 @@
   "wallet_submitting": "Submitting...",
   "wallet_deposit": "Deposit",
   "wallet_withdrawal": "Withdrawal ({type})",
-  "login": "Maghwary",
+  "login": "login",
   "signIn": "Sign In",
   "email": "Email",
   "password": "Password",
