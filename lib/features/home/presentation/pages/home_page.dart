@@ -8,6 +8,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/translations/locale_keys.g.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
+import '../cubit/toggle_status_cubit.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/home_drawer.dart';
 import '../../../orders/presentation/pages/order_details_page.dart';
@@ -108,9 +109,14 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                const FadeInSlide(
+                FadeInSlide(
                   delay: 100,
-                  child: RestaurantStatusSwitch(),
+                  child: BlocProvider(
+                    create: (_) => sl<ToggleStatusCubit>(),
+                    child: RestaurantStatusSwitch(
+                      initialIsOpen: state.branch?.isOpen ?? false,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 FadeInSlide(

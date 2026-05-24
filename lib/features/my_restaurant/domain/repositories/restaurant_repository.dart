@@ -30,4 +30,6 @@ abstract class RestaurantRepository {
   Future<Either<Failure, void>> deleteProduct(int productId);
 
   Future<Either<Failure, void>> toggleProductActive(int productId);
+
+  Future<Either<Failure, bool>> toggleStatus();
 }

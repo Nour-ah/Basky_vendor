@@ -31,6 +31,7 @@ import '../../features/home/data/repositories/home_repository_impl.dart';
 import '../../features/home/domain/repositories/home_repository.dart';
 import '../../features/home/domain/usecases/get_home_stats_usecase.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/home/presentation/cubit/toggle_status_cubit.dart';
 
 import '../../features/auth/presentation/cubit/splash_cubit.dart';
 
@@ -55,6 +56,7 @@ import '../../features/my_restaurant/domain/usecases/get_products_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_variants_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_vendor_branch_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/update_product_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/toggle_restaurant_status_usecase.dart';
 import '../../features/my_restaurant/presentation/cubit/add_food_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/restaurant_details_cubit.dart';
@@ -202,6 +204,11 @@ Future<void> initDependencies() async {
       getVendorBranchUseCase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => ToggleStatusCubit(
+      toggleRestaurantStatusUseCase: sl(),
+    ),
+  );
 
   // ============================================================
   // Orders Feature
@@ -250,6 +257,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => UpdateProductUseCase(sl()));
   sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
   sl.registerLazySingleton(() => GetVariantsUseCase(sl()));
+  sl.registerLazySingleton(() => ToggleRestaurantStatusUseCase(sl()));
 
   // Wallet Feature
   sl.registerLazySingleton(() => GetWalletDetailsUseCase(sl()));

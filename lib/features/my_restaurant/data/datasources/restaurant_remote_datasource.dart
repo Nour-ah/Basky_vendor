@@ -34,6 +34,8 @@ abstract class RestaurantRemoteDataSource {
   Future<void> deleteProduct(int productId);
 
   Future<void> toggleProductActive(int productId);
+
+  Future<bool> toggleStatus();
 }
 
 class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
@@ -178,6 +180,31 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       await dio.post('${ApiConstants.vendorProducts}/$productId/toggle-active');
     } on DioException catch (e) {
       _handleDioException(e);
+    }
+  }
+
+  @override
+  Future<bool> toggleStatus() async {
+    debugPrint('🔵 RestaurantRemoteDataSource: Sending POST ${ApiConstants.toggleBranchStatus}');
+    try {
+      final response = await dio.post(ApiConstants.toggleBranchStatus);
+      debugPrint('✅ RestaurantRemoteDataSource: Success toggling branch status');
+      final data = response.data;
+      if (data != null && data['data'] != null) {
+        final branchData = data['data'];
+        if (branchData['is_open'] != null) {
+          return branchData['is_open'] == true ||
+              branchData['is_open'] == 1 ||
+              branchData['is_open'] == '1';
+        }
+      }
+      return true;
+    } on DioException catch (e) {
+      _handleDioException(e);
+      rethrow;
+    } catch (e) {
+      debugPrint('❌ RestaurantRemoteDataSource: Error toggling branch status $e');
+      throw const ParsingException();
     }
   }
 

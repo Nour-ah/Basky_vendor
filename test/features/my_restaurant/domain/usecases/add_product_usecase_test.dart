@@ -38,7 +38,6 @@ void main() {
     price: 10,
     discountPercentage: 0,
     categoryId: 1,
-    maxOrderQuantity: 5,
     status: ProductStatus.active,
   );
 

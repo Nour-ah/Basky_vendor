@@ -27,6 +27,7 @@ class ApiConstants {
   // Vendor Endpoints
   static const String vendorHome = '/vendor/home';
   static const String vendorBranches = '/vendor/branches';
+  static const String toggleBranchStatus = '/vendor/branch/toggle-status';
   static const String vendorProducts = '/vendor/products';
   static const String vendorCategories = '/vendor/categories';
   static const String vendorVariants = '/vendor/variants';

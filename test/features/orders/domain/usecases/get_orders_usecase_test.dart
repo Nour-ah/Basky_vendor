@@ -4,6 +4,7 @@ import 'package:spider_restaurant/core/error/failures.dart';
 import 'package:spider_restaurant/features/orders/domain/entities/order_status.dart';
 import 'package:spider_restaurant/features/orders/domain/entities/order_summary_entity.dart';
 import 'package:spider_restaurant/features/orders/domain/entities/order_details_entity.dart';
+import 'package:spider_restaurant/features/orders/domain/entities/order_invoice_entity.dart';
 import 'package:spider_restaurant/features/orders/domain/repositories/orders_repository.dart';
 import 'package:spider_restaurant/features/orders/domain/usecases/get_orders_usecase.dart';
 
@@ -33,6 +34,11 @@ class MockOrdersRepository implements OrdersRepository {
 
   @override
   Future<Either<Failure, void>> updateOrderStatus({required int orderId, required OrderStatus newStatus}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, OrderInvoiceEntity>> getOrderInvoice(int orderId) {
     throw UnimplementedError();
   }
 }

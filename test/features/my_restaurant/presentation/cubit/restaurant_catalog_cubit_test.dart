@@ -51,6 +51,9 @@ class FakeRestaurantRepository implements RestaurantRepository {
   @override
   Future<Either<Failure, void>> toggleProductActive(int productId) async =>
       const Right(null);
+
+  @override
+  Future<Either<Failure, bool>> toggleStatus() async => const Right(true);
 }
 
 class MockGetCategoriesUseCase extends GetCategoriesUseCase {

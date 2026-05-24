@@ -74,6 +74,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
     return _execute(() => remoteDataSource.toggleProductActive(productId));
   }
 
+  @override
+  Future<Either<Failure, bool>> toggleStatus() async {
+    return _execute(() => remoteDataSource.toggleStatus());
+  }
+
   Future<Either<Failure, T>> _execute<T>(Future<T> Function() action) async {
     try {
       final result = await action();
