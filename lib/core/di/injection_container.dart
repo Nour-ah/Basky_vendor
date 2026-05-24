@@ -32,6 +32,7 @@ import '../../features/home/data/repositories/home_repository_impl.dart';
 import '../../features/home/domain/repositories/home_repository.dart';
 import '../../features/home/domain/usecases/get_home_stats_usecase.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/home/presentation/cubit/home_orders_cubit.dart';
 import '../../features/home/presentation/cubit/toggle_status_cubit.dart';
 
 import '../../features/auth/presentation/cubit/splash_cubit.dart';
@@ -39,6 +40,7 @@ import '../../features/auth/presentation/cubit/splash_cubit.dart';
 import '../../features/orders/data/datasources/orders_remote_datasource.dart';
 import '../../features/orders/data/repositories/orders_repository_impl.dart';
 import '../../features/orders/domain/repositories/orders_repository.dart';
+import '../../features/orders/domain/usecases/get_filtered_orders_usecase.dart';
 import '../../features/orders/domain/usecases/get_order_details_usecase.dart';
 import '../../features/orders/domain/usecases/get_order_invoice_usecase.dart';
 import '../../features/orders/domain/usecases/get_orders_usecase.dart';
@@ -220,6 +222,9 @@ Future<void> initDependencies() async {
       toggleRestaurantStatusUseCase: sl(),
     ),
   );
+  sl.registerFactory(
+    () => HomeOrdersCubit(getFilteredOrdersUseCase: sl()),
+  );
 
   // ============================================================
   // Orders Feature
@@ -256,6 +261,7 @@ Future<void> initDependencies() async {
 
   // Use Cases
   sl.registerLazySingleton(() => GetOrdersUseCase(sl()));
+  sl.registerLazySingleton(() => GetFilteredOrdersUseCase(sl()));
   sl.registerLazySingleton(() => GetOrderDetailsUseCase(sl()));
   sl.registerLazySingleton(() => GetOrderInvoiceUseCase(sl()));
   sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));

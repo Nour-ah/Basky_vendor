@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spider_restaurant/core/di/injection_container.dart';
 import 'package:spider_restaurant/core/theme/app_colors.dart';
 import 'package:spider_restaurant/core/localization/cubit/locale_cubit.dart';
+import 'package:spider_restaurant/core/widgets/restart_widget.dart';
 import 'package:spider_restaurant/features/auth/presentation/pages/splash_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,12 +21,23 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
       startLocale: const Locale('ar'),
-      child: BlocProvider<LocaleCubit>(
-        create: (context) => sl<LocaleCubit>()..getSavedLocale(),
-        child: const SpiderRestaurantApp(),
+      child: const RestartWidget(
+        child: _AppRoot(),
       ),
     ),
   );
+}
+
+class _AppRoot extends StatelessWidget {
+  const _AppRoot();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<LocaleCubit>(
+      create: (context) => sl<LocaleCubit>()..getSavedLocale(),
+      child: const SpiderRestaurantApp(),
+    );
+  }
 }
 
 class SpiderRestaurantApp extends StatelessWidget {
@@ -34,9 +46,12 @@ class SpiderRestaurantApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LocaleCubit, LocaleState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (context.locale != state.locale) {
-          context.setLocale(state.locale);
+          await context.setLocale(state.locale);
+          if (context.mounted) {
+            RestartWidget.restartApp(context);
+          }
         }
       },
       child: BlocBuilder<LocaleCubit, LocaleState>(

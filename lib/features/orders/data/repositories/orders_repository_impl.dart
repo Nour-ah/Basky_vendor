@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/order_details_entity.dart';
+import '../../domain/entities/order_filter_result_entity.dart';
 import '../../domain/entities/order_invoice_entity.dart';
 import '../../domain/entities/order_status.dart';
 import '../../domain/entities/order_summary_entity.dart';
@@ -20,6 +21,15 @@ class OrdersRepositoryImpl implements OrdersRepository {
     int limit = 15,
   }) async {
     return _execute(() => remoteDataSource.getOrders(status: status, page: page, limit: limit));
+  }
+
+  @override
+  Future<Either<Failure, OrderFilterResultEntity>> getFilteredOrders({
+    OrderStatus? status,
+    int page = 1,
+    int limit = 15,
+  }) async {
+    return _execute(() => remoteDataSource.getFilteredOrders(status: status, page: page, limit: limit));
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spider_restaurant/core/error/failures.dart';
+import 'package:spider_restaurant/features/orders/domain/entities/order_filter_result_entity.dart';
 import 'package:spider_restaurant/features/orders/domain/entities/order_status.dart';
 import 'package:spider_restaurant/features/orders/domain/entities/order_summary_entity.dart';
 import 'package:spider_restaurant/features/orders/domain/entities/order_details_entity.dart';
@@ -39,6 +40,15 @@ class MockOrdersRepository implements OrdersRepository {
 
   @override
   Future<Either<Failure, OrderInvoiceEntity>> getOrderInvoice(int orderId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, OrderFilterResultEntity>> getFilteredOrders({
+    OrderStatus? status,
+    int page = 1,
+    int limit = 15,
+  }) {
     throw UnimplementedError();
   }
 }

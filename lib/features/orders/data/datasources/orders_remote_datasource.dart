@@ -4,11 +4,13 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/api_constants.dart';
 import '../../domain/entities/order_status.dart';
 import '../models/order_details_model.dart';
+import '../models/order_filter_result_model.dart';
 import '../models/order_invoice_model.dart';
 import '../models/order_summary_model.dart';
 
 abstract class OrdersRemoteDataSource {
   Future<List<OrderSummaryModel>> getOrders({OrderStatus? status, int page = 1, int limit = 15});
+  Future<OrderFilterResultModel> getFilteredOrders({OrderStatus? status, int page = 1, int limit = 15});
   Future<OrderDetailsModel> getOrderDetails(int orderId);
   Future<OrderInvoiceModel> getOrderInvoice(int orderId);
   Future<void> updateOrderStatus({required int orderId, required OrderStatus newStatus});
@@ -48,7 +50,37 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
   }
 
   @override
+  Future<OrderFilterResultModel> getFilteredOrders({OrderStatus? status, int page = 1, int limit = 15}) async {
+    debugPrint('🔵 OrdersRemoteDataSource: Sending GET ${ApiConstants.vendorOrders} (filtered)');
+    try {
+      final queryParams = {
+        'page': page,
+        'limit': limit,
+        if (status != null && status != OrderStatus.unknown) 'status': status.toApiString(),
+      };
+
+      final response = await dio.get(
+        ApiConstants.vendorOrders,
+        queryParameters: queryParams,
+      );
+
+      debugPrint('✅ OrdersRemoteDataSource: Success fetching filtered orders');
+      return OrderFilterResultModel.fromJson(
+        response.data as Map<String, dynamic>,
+        appliedFilter: status ?? OrderStatus.unknown,
+      );
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      debugPrint('❌ OrdersRemoteDataSource: Error $e');
+      throw const ParsingException();
+    }
+    throw const ServerException();
+  }
+
+  @override
   Future<OrderDetailsModel> getOrderDetails(int orderId) async {
+
     debugPrint('🔵 OrdersRemoteDataSource: Sending GET ${ApiConstants.vendorOrders}/$orderId');
     try {
       final response = await dio.get('${ApiConstants.vendorOrders}/$orderId');

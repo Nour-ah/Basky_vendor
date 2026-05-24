@@ -59,7 +59,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'مرحبا, $userName',
+                  'greetUser'.tr(namedArgs: {'name': userName}),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.fontWhite16Bold,

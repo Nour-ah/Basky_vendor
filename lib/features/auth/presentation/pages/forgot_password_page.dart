@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,9 +43,9 @@ class _ForgotPasswordView extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            'Forgot Password',
-            style: TextStyle(color: Colors.white, fontSize: 18),
+          title: Text(
+            'forgotPasswordTitle'.tr(),
+            style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
           centerTitle: true,
         ),
@@ -146,9 +147,9 @@ class _ForgotPasswordView extends StatelessWidget {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         icon: const Icon(Icons.check_circle, color: Colors.green, size: 64),
-        title: const Text('Success!'),
-        content: const Text(
-          'Your password has been reset successfully.\nYou can now login with your new password.',
+        title: Text('success'.tr()),
+        content: Text(
+          'passwordResetSuccessMessage'.tr(),
           textAlign: TextAlign.center,
         ),
         actions: [
@@ -160,7 +161,7 @@ class _ForgotPasswordView extends StatelessWidget {
                 (route) => false,
               );
             },
-            child: const Text('Go to Login'),
+            child: Text('goToLogin'.tr()),
           ),
         ],
       ),
