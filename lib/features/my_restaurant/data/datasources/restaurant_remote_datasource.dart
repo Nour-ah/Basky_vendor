@@ -232,6 +232,12 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
         'categories[0]': params.categoryId,
       };
 
+      if (params.variantIds != null && params.variantIds!.isNotEmpty) {
+        for (int i = 0; i < params.variantIds!.length; i++) {
+          data['variants[$i]'] = params.variantIds![i];
+        }
+      }
+
       // Workaround for PHP/Laravel not supporting PUT with multipart/form-data:
       // Add _method field so Laravel routes it correctly.
       if (isUpdate) {

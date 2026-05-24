@@ -7,6 +7,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../domain/entities/category_entity.dart';
+import '../../domain/entities/product_variant_entity.dart';
 import '../widgets/add_food_form_body.dart';
 import '../cubit/add_food_cubit.dart';
 import '../cubit/add_food_state.dart';
@@ -85,6 +86,7 @@ class AddFoodPage extends StatelessWidget {
                 context,
                 state,
                 cubit.cachedCategories,
+                cubit.cachedVariants,
                 isSubmitting,
                 validationErrors,
               ),
@@ -99,6 +101,7 @@ class AddFoodPage extends StatelessWidget {
     BuildContext context,
     AddFoodState state,
     List<CategoryEntity> categories,
+    List<ProductVariantEntity> variants,
     bool isSubmitting,
     Map<String, List<String>> validationErrors,
   ) {
@@ -122,6 +125,7 @@ class AddFoodPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: AddFoodFormBody(
           categories: categories,
+          variants: variants,
           isEditMode: isEditMode,
           isLoading: isSubmitting,
           validationErrors: validationErrors,

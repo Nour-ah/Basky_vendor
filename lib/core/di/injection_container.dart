@@ -89,6 +89,16 @@ import '../../features/time_slots/domain/repositories/time_slots_repository.dart
 import '../../features/time_slots/domain/usecases/time_slots_usecases.dart';
 import '../../features/time_slots/presentation/cubit/time_slots_cubit.dart';
 
+// Variants Feature
+import '../../features/variants/data/datasources/variants_remote_datasource.dart';
+import '../../features/variants/data/repositories/variants_repository_impl.dart';
+import '../../features/variants/domain/repositories/variant_repository.dart';
+import '../../features/variants/domain/usecases/add_variant_usecase.dart';
+import '../../features/variants/domain/usecases/delete_variant_usecase.dart';
+import '../../features/variants/domain/usecases/get_variants_usecase.dart' as new_variants;
+import '../../features/variants/domain/usecases/update_variant_usecase.dart';
+import '../../features/variants/presentation/cubit/variants_cubit.dart';
+
  final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -333,6 +343,7 @@ Future<void> initDependencies() async {
         getCategoriesUseCase: sl(),
         addProductUseCase: sl(),
         updateProductUseCase: sl(),
+        getVariantsUseCase: sl(),
       ));
 
   // Wallet Feature
@@ -351,6 +362,28 @@ Future<void> initDependencies() async {
       isLoggedInUseCase: sl(),
       getCurrentUserUseCase: sl(),
       logoutUseCase: sl(),
+    ),
+  );
+
+  // ============================================================
+  // Variants Feature
+  // ============================================================
+  sl.registerLazySingleton<VariantsRemoteDataSource>(
+    () => VariantsRemoteDataSourceImpl(dio: sl()),
+  );
+  sl.registerLazySingleton<VariantRepository>(
+    () => VariantsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => AddVariantUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateVariantUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteVariantUseCase(sl()));
+  sl.registerLazySingleton(() => new_variants.GetVariantsUseCase(sl()));
+  sl.registerFactory(
+    () => VariantsCubit(
+      getVariantsUseCase: sl(),
+      addVariantUseCase: sl(),
+      updateVariantUseCase: sl(),
+      deleteVariantUseCase: sl(),
     ),
   );
 }

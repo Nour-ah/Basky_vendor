@@ -16,6 +16,8 @@ import 'package:spider_restaurant/features/my_restaurant/domain/entities/product
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_variant_entity.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
 
+import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_variants_usecase.dart';
+
 class FakeRestaurantRepository implements RestaurantRepository {
   @override
   Future<Either<Failure, VendorBranchEntity?>> getPrimaryBranch() async =>
@@ -27,7 +29,7 @@ class FakeRestaurantRepository implements RestaurantRepository {
 
   @override
   Future<Either<Failure, List<ProductVariantEntity>>> getVariants() async =>
-      const Right([]);
+      const Right([ProductVariantEntity(id: 1, name: 'Size', options: [])]);
 
   @override
   Future<Either<Failure, List<ProductSummaryEntity>>> getProducts({
@@ -93,6 +95,7 @@ void main() {
       getCategoriesUseCase: GetCategoriesUseCase(fakeRepo),
       addProductUseCase: mockAddProductUseCase,
       updateProductUseCase: mockUpdateProductUseCase,
+      getVariantsUseCase: GetVariantsUseCase(fakeRepo),
     );
   });
 
@@ -117,14 +120,19 @@ void main() {
     act: (cubit) => cubit.loadForm(),
     expect: () => [
       isA<AddFoodLoadingForm>(),
-      isA<AddFoodFormReady>().having((s) => s.categories.length, 'categories', 1),
+      isA<AddFoodFormReady>()
+          .having((s) => s.categories.length, 'categories', 1)
+          .having((s) => s.variants.length, 'variants', 1),
     ],
   );
 
   blocTest<AddFoodCubit, AddFoodState>(
     'emits [AddFoodSubmitting, AddFoodSuccess] on successful submission',
     build: () => cubit,
-    seed: () => const AddFoodFormReady(categories: [CategoryEntity(id: 1, name: 'Burgers')]),
+    seed: () => const AddFoodFormReady(
+      categories: [CategoryEntity(id: 1, name: 'Burgers')],
+      variants: [],
+    ),
     act: (cubit) => cubit.submitForm(tParams),
     expect: () => [
       isA<AddFoodSubmitting>(),
@@ -138,7 +146,10 @@ void main() {
       mockAddProductUseCase.shouldReturnError = true;
       return cubit;
     },
-    seed: () => const AddFoodFormReady(categories: [CategoryEntity(id: 1, name: 'Burgers')]),
+    seed: () => const AddFoodFormReady(
+      categories: [CategoryEntity(id: 1, name: 'Burgers')],
+      variants: [],
+    ),
     act: (cubit) => cubit.submitForm(tParams),
     expect: () => [
       isA<AddFoodSubmitting>(),

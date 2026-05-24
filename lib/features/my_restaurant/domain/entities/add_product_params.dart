@@ -27,6 +27,7 @@ class AddProductParams extends Equatable {
   final String? slug;
   final ProductImageEntity? image;
   final List<ProductImageEntity>? images;
+  final List<int>? variantIds;
   final bool isEditMode;
   final int? productId;
 
@@ -48,6 +49,7 @@ class AddProductParams extends Equatable {
     this.slug,
     this.image,
     this.images,
+    this.variantIds,
     this.isEditMode = false,
     this.productId,
   });
@@ -71,6 +73,7 @@ class AddProductParams extends Equatable {
         slug,
         image,
         images,
+        variantIds,
         isEditMode,
         productId,
       ];

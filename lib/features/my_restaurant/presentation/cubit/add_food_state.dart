@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/category_entity.dart';
+import '../../domain/entities/product_variant_entity.dart';
 
 abstract class AddFoodState extends Equatable {
   const AddFoodState();
@@ -13,11 +14,15 @@ class AddFoodLoadingForm extends AddFoodState {}
 
 class AddFoodFormReady extends AddFoodState {
   final List<CategoryEntity> categories;
+  final List<ProductVariantEntity> variants;
 
-  const AddFoodFormReady({required this.categories});
+  const AddFoodFormReady({
+    required this.categories,
+    required this.variants,
+  });
 
   @override
-  List<Object?> get props => [categories];
+  List<Object?> get props => [categories, variants];
 }
 
 class AddFoodSubmitting extends AddFoodState {}
