@@ -25,7 +25,7 @@ class DrawerItemWidget extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.05),
+            color: AppColors.primary.withValues(alpha: 0.05),
             shape: BoxShape.circle,
           ),
           child: Icon(item.icon, color: AppColors.primary, size: 20),

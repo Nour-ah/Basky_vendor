@@ -123,7 +123,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           itemCount: state.orders.length + (state.hasReachedMax ? 0 : 1),
-                          separatorBuilder: (_, __) => const SizedBox(height: 16),
+                          separatorBuilder: (context, index) => const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             if (index >= state.orders.length) {
                               return const Center(

@@ -63,7 +63,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
         playedColor: AppColors.primary,
         handleColor: AppColors.primary,
         backgroundColor: Colors.grey,
-        bufferedColor: Colors.white.withOpacity(0.5),
+        bufferedColor: Colors.white.withValues(alpha: 0.5),
       ),
       placeholder: Container(
         color: Colors.black,

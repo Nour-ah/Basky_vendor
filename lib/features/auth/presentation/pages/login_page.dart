@@ -130,11 +130,13 @@ class _LoginPageState extends State<LoginPage> {
                                     obscureText: true,
                                     controller: _passwordController,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty)
+                                      if (value == null || value.isEmpty) {
                                         return LocaleKeys.passwordRequired.tr();
-                                      if (value.length < 6)
+                                      }
+                                      if (value.length < 6) {
                                         return LocaleKeys.passwordLengthError
                                             .tr();
+                                      }
                                       return null;
                                     },
                                   ),

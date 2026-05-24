@@ -7,7 +7,7 @@ import '../cubit/reset_password_state.dart';
 import '../widgets/auth_background_widget.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/auth_card_widget.dart';
-import '../widgets/auth_text_field.dart';
+
 
 class SetNewPasswordScreen extends StatefulWidget {
   final String email;
