@@ -15,7 +15,7 @@ class OrderSummaryModel extends OrderSummaryEntity {
   factory OrderSummaryModel.fromJson(Map<String, dynamic> json) {
     return OrderSummaryModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
-      orderCode: json['order_code']?.toString() ?? json['code']?.toString() ?? '',
+      orderCode: json['order_code']?.toString() ?? json['code']?.toString() ?? json['order_id']?.toString() ?? '',
       status: OrderStatus.fromString(json['status']?.toString() ?? 'unknown'),
       dateTime: json['created_at']?.toString() ?? json['date']?.toString() ?? '',
       orderType: json['delivery_type']?.toString() ?? json['type']?.toString() ?? 'delivery',
