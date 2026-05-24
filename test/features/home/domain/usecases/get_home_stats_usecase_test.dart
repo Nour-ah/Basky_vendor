@@ -26,6 +26,10 @@ void main() {
     totalOrders: 33,
     totalEarnings: 600.0,
     recentOrders: [],
+    pendingOrders: 1,
+    preparingOrders: 2,
+    readyOrders: 3,
+    deliveredOrders: 4,
   );
 
   setUp(() {

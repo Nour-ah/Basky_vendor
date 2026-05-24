@@ -9,6 +9,8 @@ class HomeCubit extends Cubit<HomeState> {
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final GetVendorBranchUseCase getVendorBranchUseCase;
 
+  String _selectedStatus = 'ready_for_delivery';
+
   HomeCubit({
     required this.getHomeStatsUseCase,
     required this.getCurrentUserUseCase,
@@ -29,9 +31,27 @@ class HomeCubit extends Cubit<HomeState> {
       final branchResult = await getVendorBranchUseCase();
       final branch = branchResult.fold((_) => null, (branch) => branch);
 
-      emit(HomeLoaded(stats: stats, user: user, branch: branch));
+      emit(HomeLoaded(
+        stats: stats,
+        user: user,
+        branch: branch,
+        selectedStatus: _selectedStatus,
+      ));
     } catch (e) {
       emit(HomeError(message: e.toString()));
+    }
+  }
+
+  void filterByStatus(String status) {
+    _selectedStatus = status;
+    final currentState = state;
+    if (currentState is HomeLoaded) {
+      emit(HomeLoaded(
+        stats: currentState.stats,
+        user: currentState.user,
+        branch: currentState.branch,
+        selectedStatus: _selectedStatus,
+      ));
     }
   }
 }

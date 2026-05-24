@@ -74,6 +74,10 @@ void main() {
     totalOrders: 33,
     totalEarnings: 600.0,
     recentOrders: [],
+    pendingOrders: 1,
+    preparingOrders: 2,
+    readyOrders: 3,
+    deliveredOrders: 4,
   );
 
   const tUser = User(
@@ -121,12 +125,35 @@ void main() {
       () async {
     final expected = [
       HomeLoading(),
-      const HomeLoaded(stats: tHomeStats, user: tUser, branch: tBranch),
+      const HomeLoaded(
+        stats: tHomeStats,
+        user: tUser,
+        branch: tBranch,
+        selectedStatus: 'ready_for_delivery',
+      ),
     ];
 
     expectLater(cubit.stream, emitsInOrder(expected));
 
     await cubit.fetchHomeData();
+  });
+
+  test('should emit HomeLoaded with new selected status when filterByStatus is called', () async {
+    // Arrange
+    await cubit.fetchHomeData();
+
+    // Act & Assert
+    final expected = [
+      const HomeLoaded(
+        stats: tHomeStats,
+        user: tUser,
+        branch: tBranch,
+        selectedStatus: 'pending',
+      ),
+    ];
+
+    expectLater(cubit.stream, emitsInOrder(expected));
+    cubit.filterByStatus('pending');
   });
 
   test('should emit [HomeLoading, HomeError] when stats fetch fails', () async {

@@ -17,30 +17,31 @@ import '../widgets/order_status_tabs.dart';
 import '../widgets/restaurant_status_switch.dart';
 import '../widgets/statistics_cards.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int selectedTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    final orderTabs = [
-      LocaleKeys.readyForDelivery.tr(),
-      LocaleKeys.confirmedCount.tr(namedArgs: {'count': '1'}),
-      LocaleKeys.cookingCount.tr(namedArgs: {'count': '1'}),
-      LocaleKeys.onTheWayCount.tr(namedArgs: {'count': '5'}),
-    ];
-
     return BlocProvider(
       create: (_) => sl<HomeCubit>()..fetchHomeData(),
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
+          final orderTabs = state is HomeLoaded
+              ? [
+                  '${LocaleKeys.readyForDelivery.tr()} (${state.stats.readyOrders})',
+                  LocaleKeys.confirmedCount.tr(namedArgs: {'count': '${state.stats.pendingOrders}'}),
+                  LocaleKeys.cookingCount.tr(namedArgs: {'count': '${state.stats.preparingOrders}'}),
+                  LocaleKeys.onTheWayCount.tr(namedArgs: {'count': '${state.stats.deliveredOrders}'}),
+                ]
+              : [
+                  LocaleKeys.readyForDelivery.tr(),
+                  LocaleKeys.confirmedCount.tr(namedArgs: {'count': '0'}),
+                  LocaleKeys.cookingCount.tr(namedArgs: {'count': '0'}),
+                  LocaleKeys.onTheWayCount.tr(namedArgs: {'count': '0'}),
+                ];
+
           return Scaffold(
             key: _scaffoldKey,
             backgroundColor: AppColors.background,
@@ -100,7 +101,9 @@ class _HomePageState extends State<HomePage> {
     }
     if (state is HomeLoaded) {
       final stats = state.stats;
-      final recentOrders = stats.recentOrders;
+      final filteredOrders = state.filteredOrders;
+      final statuses = ['ready_for_delivery', 'pending', 'cooking', 'on_the_way'];
+      final selectedTabIndex = statuses.indexOf(state.selectedStatus);
 
       return CustomScrollView(
         slivers: [
@@ -131,11 +134,9 @@ class _HomePageState extends State<HomePage> {
                   delay: 300,
                   child: OrderStatusTabs(
                     tabs: orderTabs,
-                    selectedIndex: selectedTabIndex,
+                    selectedIndex: selectedTabIndex >= 0 ? selectedTabIndex : 0,
                     onTabSelected: (index) {
-                      setState(() {
-                        selectedTabIndex = index;
-                      });
+                      context.read<HomeCubit>().filterByStatus(statuses[index]);
                     },
                   ),
                 ),
@@ -143,7 +144,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          recentOrders.isEmpty
+          filteredOrders.isEmpty
               ? SliverToBoxAdapter(
                   child: Center(
                     child: Padding(
@@ -158,7 +159,7 @@ class _HomePageState extends State<HomePage> {
               : SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final order = recentOrders[index];
+                      final order = filteredOrders[index];
                       return FadeInSlide(
                         delay: 400 + (index * 50),
                         child: OrderCardWidget(
@@ -176,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     },
-                    childCount: recentOrders.length,
+                    childCount: filteredOrders.length,
                   ),
                 ),
         ],
