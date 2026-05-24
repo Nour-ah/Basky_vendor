@@ -246,6 +246,15 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
         );
       }
 
+      if (params.images != null && params.images!.isNotEmpty) {
+        for (int i = 0; i < params.images!.length; i++) {
+          data['images[$i]'] = await MultipartFile.fromFile(
+            params.images![i].path,
+            filename: params.images![i].path.split('/').last,
+          );
+        }
+      }
+
       final formData = FormData.fromMap(data);
 
       debugPrint('🔵 RestaurantRemoteDataSource: FormData fields → ${data.keys.toList()}');
