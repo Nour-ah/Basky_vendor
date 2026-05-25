@@ -10,13 +10,19 @@ class OrderDetailsModel extends OrderDetailsEntity {
     required super.dateTime,
     required super.orderType,
     required super.itemCount,
+    required super.subtotal,
+    required super.discount,
+    required super.shippingCost,
+    required super.commission,
     required super.totalAmount,
-    required super.deliveryFee,
-    required super.tax,
-    required super.customerName,
-    required super.customerPhone,
-    required super.deliveryAddress,
-    required super.paymentMethod,
+    super.notes,
+    required super.vendorName,
+    required super.vendorPhone,
+    required super.vendorAddress,
+    required super.vendorImage,
+    required super.branchName,
+    required super.branchPhone,
+    required super.branchAddress,
     required super.items,
   });
 
@@ -30,20 +36,28 @@ class OrderDetailsModel extends OrderDetailsEntity {
 
     return OrderDetailsModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
-      orderCode: json['order_code']?.toString() ?? json['code']?.toString() ?? '',
+      orderCode: json['order_id']?.toString() ?? json['order_code']?.toString() ?? json['code']?.toString() ?? '',
       status: OrderStatus.fromString(json['status']?.toString() ?? 'unknown'),
       dateTime: json['created_at']?.toString() ?? json['date']?.toString() ?? '',
       orderType: json['delivery_type']?.toString() ?? json['type']?.toString() ?? 'delivery',
       itemCount: json['items_count'] is int ? json['items_count'] : int.tryParse(json['items_count']?.toString() ?? '0') ?? parsedItems.length,
+      
+      subtotal: json['subtotal'] is num ? (json['subtotal'] as num).toDouble() : double.tryParse(json['subtotal']?.toString() ?? '0.0') ?? 0.0,
+      discount: json['discount'] is num ? (json['discount'] as num).toDouble() : double.tryParse(json['discount']?.toString() ?? '0.0') ?? 0.0,
+      shippingCost: json['shipping_cost'] is num ? (json['shipping_cost'] as num).toDouble() : double.tryParse(json['shipping_cost']?.toString() ?? '0.0') ?? 0.0,
+      commission: json['commission'] is num ? (json['commission'] as num).toDouble() : double.tryParse(json['commission']?.toString() ?? '0.0') ?? 0.0,
       totalAmount: json['total'] is num ? (json['total'] as num).toDouble() : double.tryParse(json['total']?.toString() ?? '0.0') ?? 0.0,
       
-      deliveryFee: json['delivery_fee'] is num ? (json['delivery_fee'] as num).toDouble() : double.tryParse(json['delivery_fee']?.toString() ?? '0.0') ?? 0.0,
-      tax: json['tax'] is num ? (json['tax'] as num).toDouble() : double.tryParse(json['tax']?.toString() ?? '0.0') ?? 0.0,
+      notes: json['notes']?.toString(),
       
-      customerName: json['customer_name']?.toString() ?? json['user']?['name']?.toString() ?? 'Unknown Customer',
-      customerPhone: json['customer_phone']?.toString() ?? json['user']?['phone']?.toString() ?? '',
-      deliveryAddress: json['delivery_address']?.toString() ?? json['address']?.toString() ?? '',
-      paymentMethod: json['payment_method']?.toString() ?? 'cash',
+      vendorName: json['vendor']?['name']?.toString() ?? 'Unknown Vendor',
+      vendorPhone: json['vendor']?['phone']?.toString() ?? '',
+      vendorAddress: json['vendor']?['address']?.toString() ?? '',
+      vendorImage: json['vendor']?['image']?.toString() ?? '',
+      
+      branchName: json['branch']?['name']?.toString() ?? 'Unknown Branch',
+      branchPhone: json['branch']?['phone']?.toString() ?? '',
+      branchAddress: json['branch']?['address']?.toString() ?? '',
       
       items: parsedItems,
     );
@@ -52,18 +66,28 @@ class OrderDetailsModel extends OrderDetailsEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'order_code': orderCode,
+      'order_id': orderCode,
       'status': status.toApiString(),
       'created_at': dateTime,
       'delivery_type': orderType,
       'items_count': itemCount,
+      'subtotal': subtotal,
+      'discount': discount,
+      'shipping_cost': shippingCost,
+      'commission': commission,
       'total': totalAmount,
-      'delivery_fee': deliveryFee,
-      'tax': tax,
-      'customer_name': customerName,
-      'customer_phone': customerPhone,
-      'delivery_address': deliveryAddress,
-      'payment_method': paymentMethod,
+      'notes': notes,
+      'vendor': {
+        'name': vendorName,
+        'phone': vendorPhone,
+        'address': vendorAddress,
+        'image': vendorImage,
+      },
+      'branch': {
+        'name': branchName,
+        'phone': branchPhone,
+        'address': branchAddress,
+      },
       'items': items.map((e) => (e as OrderItemModel).toJson()).toList(),
     };
   }

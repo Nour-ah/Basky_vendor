@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../../../../core/error/exceptions.dart';
@@ -99,9 +101,13 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
   Future<OrderInvoiceModel> getOrderInvoice(int orderId) async {
     debugPrint('🔵 OrdersRemoteDataSource: Sending GET ${ApiConstants.vendorOrders}/$orderId/invoice');
     try {
-      final response = await dio.get('${ApiConstants.vendorOrders}/$orderId/invoice');
-      debugPrint('✅ OrdersRemoteDataSource: Success fetching invoice');
-      return OrderInvoiceModel.fromJson(response.data['data'] as Map<String, dynamic>);
+      final response = await dio.get<List<int>>(
+        '${ApiConstants.vendorOrders}/$orderId/invoice',
+        options: Options(responseType: ResponseType.bytes),
+      );
+      debugPrint('✅ OrdersRemoteDataSource: Success fetching invoice PDF');
+      final bytes = Uint8List.fromList(response.data!);
+      return OrderInvoiceModel.fromBytes(orderId: orderId, bytes: bytes);
     } on DioException catch (e) {
       _handleDioException(e);
     } catch (e) {
@@ -137,6 +143,12 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
         e.type == DioExceptionType.connectionError) {
       throw const NetworkException();
     }
-    throw ServerException(message: e.message ?? 'Server Error');
+    // Extract user-friendly message from 422 or other error responses
+    final responseData = e.response?.data;
+    String errorMessage = e.message ?? 'Server Error';
+    if (responseData is Map<String, dynamic>) {
+      errorMessage = responseData['message']?.toString() ?? errorMessage;
+    }
+    throw ServerException(message: errorMessage);
   }
 }

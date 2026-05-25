@@ -75,7 +75,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                 filters: [
                   OrderStatus.unknown.toApiString(),
                   OrderStatus.delivered.toApiString(),
-                  OrderStatus.returned.toApiString(),
+                  OrderStatus.refunded.toApiString(),
                 ],
                 onFilterChanged: (filter) {
                   setState(() => _selectedFilter = OrderStatus.fromString(filter));

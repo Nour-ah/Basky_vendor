@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/widgets/custom_image_view.dart';
 import '../../../orders/domain/entities/order_status.dart';
 
 class OrderCardWidget extends StatelessWidget {
@@ -14,6 +15,12 @@ class OrderCardWidget extends StatelessWidget {
     required this.deliveryType,
     required this.itemsCount,
     this.totalAmount,
+    this.subtotal,
+    this.discount,
+    this.shippingCost,
+    this.branchName,
+    this.vendorName,
+    this.vendorImage,
     this.status,
     required this.onDetailsPressed,
   });
@@ -24,6 +31,12 @@ class OrderCardWidget extends StatelessWidget {
   final String deliveryType;
   final int itemsCount;
   final double? totalAmount;
+  final double? subtotal;
+  final double? discount;
+  final double? shippingCost;
+  final String? branchName;
+  final String? vendorName;
+  final String? vendorImage;
   final OrderStatus? status;
   final VoidCallback onDetailsPressed;
 
@@ -34,12 +47,12 @@ class OrderCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.greyLight.withValues(alpha: 0.5)),
+        border: Border.all(color: AppColors.greyLight.withValues(alpha: 0.8)),
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withValues(alpha: 0.05),
             blurRadius: 15,
-            offset: const Offset(0, 5),
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -54,78 +67,132 @@ class OrderCardWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ─── Row 1: Order code + Status + Delivery type ───
+                // ─── Header: Branch / Vendor & Status ───
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                       ),
-                      child: const Icon(Icons.receipt, size: 20, color: AppColors.primary),
+                      child: ClipOval(
+                        child: (vendorImage != null && vendorImage!.isNotEmpty)
+                            ? CustomImageView(
+                                imagePath: vendorImage!,
+                                fit: BoxFit.cover,
+                              )
+                            : const Icon(Icons.storefront, size: 22, color: AppColors.primary),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        '#$orderCode',
-                        style: AppTextStyle.fontBlack16Bold,
-                        overflow: TextOverflow.ellipsis,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            (vendorName?.isNotEmpty == true)
+                                ? vendorName!
+                                : ((branchName?.isNotEmpty == true) ? branchName! : 'orderCode'.tr(args: [orderCode])),
+                            style: AppTextStyle.fontBlack16Bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            (branchName?.isNotEmpty == true && vendorName?.isNotEmpty == true)
+                                ? '$branchName  •  #$orderCode'
+                                : '#$orderCode',
+                            style: AppTextStyle.fontGrey12Regular,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
                     if (status != null) _buildStatusBadge(status!),
-                    const SizedBox(width: 8),
-                    _buildDeliveryBadge(deliveryType),
                   ],
                 ),
                 const SizedBox(height: 16),
-                const Divider(height: 1, color: AppColors.greyLight),
+                const _DashedDivider(),
                 const SizedBox(height: 16),
 
-                // ─── Row 2: Date/Time + Items Count ───
+                // ─── Row 2: Date/Time + Items Count + Delivery Type ───
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time, size: 18, color: AppColors.grey),
-                        const SizedBox(width: 6),
-                        Text(
-                          date.isNotEmpty ? '$date $time' : '',
-                          style: AppTextStyle.fontGrey14Regular,
-                        ),
-                      ],
-                    ),
-                    if (itemsCount > 0)
-                      Row(
+                    Expanded(
+                      child: Row(
                         children: [
-                          const Icon(Icons.restaurant, size: 18, color: AppColors.primary),
+                          const Icon(Icons.calendar_today, size: 16, color: AppColors.grey),
                           const SizedBox(width: 6),
-                          Text(
-                            LocaleKeys.itemsCount.tr(namedArgs: {'count': itemsCount.toString()}),
-                            style: AppTextStyle.fontPrimary14Regular.copyWith(fontWeight: FontWeight.bold),
+                          Expanded(
+                            child: Text(
+                              date.isNotEmpty ? '$date $time'.trim() : '',
+                              style: AppTextStyle.fontGrey12Regular,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
-                  ],
-                ),
-
-                // ─── Row 3: Total amount ───
-                if (totalAmount != null && totalAmount! > 0) ...[
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        '${LocaleKeys.total.tr()}: ',
-                        style: AppTextStyle.fontGrey14Regular,
-                      ),
-                      Text(
-                        '${totalAmount!.toStringAsFixed(2)} EGP',
-                        style: AppTextStyle.fontBlack16Bold.copyWith(color: AppColors.primary),
+                    ),
+                    if (itemsCount > 0) ...[
+                      Container(width: 1, height: 12, color: AppColors.greyLight, margin: const EdgeInsets.symmetric(horizontal: 10)),
+                      Row(
+                        children: [
+                          const Icon(Icons.shopping_bag_outlined, size: 16, color: AppColors.primary),
+                          const SizedBox(width: 6),
+                          Text(
+                            LocaleKeys.itemsCount.tr(namedArgs: {'count': itemsCount.toString()}),
+                            style: AppTextStyle.fontPrimary16Regular.copyWith(fontSize: 12),
+                          ),
+                        ],
                       ),
                     ],
+                  ],
+                ),
+                
+                const SizedBox(height: 16),
+
+                // ─── Financial Breakdown ───
+                if (totalAmount != null && totalAmount! > 0) ...[
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.greyLight.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        if (subtotal != null && subtotal! > 0)
+                          _buildPriceRow(LocaleKeys.subtotal.tr(), subtotal!),
+                        if (shippingCost != null && shippingCost! > 0) ...[
+                          const SizedBox(height: 6),
+                          _buildPriceRow(LocaleKeys.deliveryFee.tr(), shippingCost!),
+                        ],
+                        if (discount != null && discount! > 0) ...[
+                          const SizedBox(height: 6),
+                          _buildPriceRow(LocaleKeys.discount.tr(), -discount!, isDiscount: true),
+                        ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: Divider(height: 1, color: AppColors.greyLight),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              LocaleKeys.total.tr(),
+                              style: AppTextStyle.fontBlack14Bold,
+                            ),
+                            Text(
+                              '${totalAmount!.toStringAsFixed(2)} ${LocaleKeys.currency.tr()}',
+                              style: AppTextStyle.fontPrimary16Bold,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ],
@@ -136,35 +203,39 @@ class OrderCardWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildPriceRow(String label, double amount, {bool isDiscount = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: AppTextStyle.fontGrey12Regular,
+        ),
+        Text(
+          '${amount > 0 ? '' : ''}${amount.toStringAsFixed(2)} ${LocaleKeys.currency.tr()}',
+          style: AppTextStyle.fontBlack12Bold.copyWith(
+            color: isDiscount ? AppColors.promoRed : AppColors.black,
+            fontWeight: isDiscount ? FontWeight.bold : FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildStatusBadge(OrderStatus status) {
     final (Color bgColor, Color textColor) = _statusColors(status);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         status.toApiString().tr(),
         style: AppTextStyle.fontRed14Bold.copyWith(
           color: textColor,
-          fontSize: 11,
+          fontSize: 12,
         ),
-      ),
-    );
-  }
-
-  Widget _buildDeliveryBadge(String deliveryType) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.green.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.green.withValues(alpha: 0.2)),
-      ),
-      child: Text(
-        deliveryType,
-        style: AppTextStyle.fontGreen14Bold.copyWith(fontSize: 11),
       ),
     );
   }
@@ -189,6 +260,35 @@ class OrderCardWidget extends StatelessWidget {
       case OrderStatus.unknown:
         return (AppColors.grey.withValues(alpha: 0.15), AppColors.grey);
     }
+  }
+}
+
+class _DashedDivider extends StatelessWidget {
+  const _DashedDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boxWidth = constraints.constrainWidth();
+        const dashWidth = 5.0;
+        const dashHeight = 1.0;
+        final dashCount = (boxWidth / (2 * dashWidth)).floor();
+        return Flex(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          direction: Axis.horizontal,
+          children: List.generate(dashCount, (_) {
+            return SizedBox(
+              width: dashWidth,
+              height: dashHeight,
+              child: const DecoratedBox(
+                decoration: BoxDecoration(color: AppColors.greyLight),
+              ),
+            );
+          }),
+        );
+      },
+    );
   }
 }
 

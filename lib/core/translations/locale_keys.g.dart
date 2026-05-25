@@ -224,5 +224,14 @@ abstract class  LocaleKeys {
   static const ready_for_pickup = 'ready_for_pickup';
   static const shipped = 'shipped';
   static const refunded = 'refunded';
+  static const roles = 'roles';
+  static const accountStatus = 'accountStatus';
+  static const activeStatus = 'activeStatus';
+  static const active = 'active';
+  static const inactive = 'inactive';
+  static const download = 'download';
+  static const share = 'share';
+  static const downloadedSuccessfully = 'downloadedSuccessfully';
+  static const error = 'error';
 
 }

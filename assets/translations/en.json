@@ -251,5 +251,14 @@
   "optionHint": "Option (e.g., Small)",
   "create": "Create",
   "update": "Update",
-  "forgotPasswordTitle": "Forgot Password"
+  "forgotPasswordTitle": "Forgot Password",
+  "roles": "Roles",
+  "accountStatus": "Account Status",
+  "activeStatus": "Active Status",
+  "active": "Active",
+  "inactive": "Inactive",
+  "download": "Download",
+  "share": "Share",
+  "downloadedSuccessfully": "Downloaded Successfully",
+  "error": "Error"
 }

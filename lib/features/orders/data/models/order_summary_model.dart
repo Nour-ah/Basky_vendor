@@ -10,6 +10,12 @@ class OrderSummaryModel extends OrderSummaryEntity {
     required super.orderType,
     required super.itemCount,
     required super.totalAmount,
+    super.subtotal,
+    super.discount,
+    super.shippingCost,
+    super.branchName,
+    super.vendorName,
+    super.vendorImage,
   });
 
   factory OrderSummaryModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +27,12 @@ class OrderSummaryModel extends OrderSummaryEntity {
       orderType: json['delivery_type']?.toString() ?? json['type']?.toString() ?? 'delivery',
       itemCount: json['items_count'] is int ? json['items_count'] : int.tryParse(json['items_count']?.toString() ?? '0') ?? 0,
       totalAmount: json['total'] is num ? (json['total'] as num).toDouble() : double.tryParse(json['total']?.toString() ?? '0.0') ?? 0.0,
+      subtotal: json['subtotal'] is num ? (json['subtotal'] as num).toDouble() : double.tryParse(json['subtotal']?.toString() ?? '0.0') ?? 0.0,
+      discount: json['discount'] is num ? (json['discount'] as num).toDouble() : double.tryParse(json['discount']?.toString() ?? '0.0') ?? 0.0,
+      shippingCost: json['shipping_cost'] is num ? (json['shipping_cost'] as num).toDouble() : double.tryParse(json['shipping_cost']?.toString() ?? '0.0') ?? 0.0,
+      branchName: json['branch']?['name']?.toString() ?? '',
+      vendorName: json['vendor']?['name']?.toString() ?? '',
+      vendorImage: json['vendor']?['image']?.toString() ?? '',
     );
   }
 
@@ -33,6 +45,11 @@ class OrderSummaryModel extends OrderSummaryEntity {
       'delivery_type': orderType,
       'items_count': itemCount,
       'total': totalAmount,
+      'subtotal': subtotal,
+      'discount': discount,
+      'shipping_cost': shippingCost,
+      'branch': {'name': branchName},
+      'vendor': {'name': vendorName, 'image': vendorImage},
     };
   }
 }

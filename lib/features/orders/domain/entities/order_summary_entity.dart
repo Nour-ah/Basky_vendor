@@ -9,6 +9,12 @@ class OrderSummaryEntity extends Equatable {
   final String orderType;
   final int itemCount;
   final double totalAmount;
+  final double subtotal;
+  final double discount;
+  final double shippingCost;
+  final String branchName;
+  final String vendorName;
+  final String vendorImage;
 
   const OrderSummaryEntity({
     required this.id,
@@ -18,6 +24,12 @@ class OrderSummaryEntity extends Equatable {
     required this.orderType,
     required this.itemCount,
     required this.totalAmount,
+    this.subtotal = 0.0,
+    this.discount = 0.0,
+    this.shippingCost = 0.0,
+    this.branchName = '',
+    this.vendorName = '',
+    this.vendorImage = '',
   });
 
   @override
@@ -29,5 +41,11 @@ class OrderSummaryEntity extends Equatable {
         orderType,
         itemCount,
         totalAmount,
+        subtotal,
+        discount,
+        shippingCost,
+        branchName,
+        vendorName,
+        vendorImage,
       ];
 }

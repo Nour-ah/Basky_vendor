@@ -9,15 +9,28 @@ class OrderDetailsEntity extends Equatable {
   final String dateTime;
   final String orderType;
   final int itemCount;
+  
+  // Financials
+  final double subtotal;
+  final double discount;
+  final double shippingCost;
+  final double commission;
   final double totalAmount;
   
-  // Extra detailed fields
-  final double deliveryFee;
-  final double tax;
-  final String customerName;
-  final String customerPhone;
-  final String deliveryAddress;
-  final String paymentMethod;
+  // Extra Info
+  final String? notes;
+  
+  // Vendor Info
+  final String vendorName;
+  final String vendorPhone;
+  final String vendorAddress;
+  final String vendorImage;
+  
+  // Branch Info
+  final String branchName;
+  final String branchPhone;
+  final String branchAddress;
+
   final List<OrderItemEntity> items;
 
   const OrderDetailsEntity({
@@ -27,13 +40,19 @@ class OrderDetailsEntity extends Equatable {
     required this.dateTime,
     required this.orderType,
     required this.itemCount,
+    required this.subtotal,
+    required this.discount,
+    required this.shippingCost,
+    required this.commission,
     required this.totalAmount,
-    required this.deliveryFee,
-    required this.tax,
-    required this.customerName,
-    required this.customerPhone,
-    required this.deliveryAddress,
-    required this.paymentMethod,
+    this.notes,
+    required this.vendorName,
+    required this.vendorPhone,
+    required this.vendorAddress,
+    required this.vendorImage,
+    required this.branchName,
+    required this.branchPhone,
+    required this.branchAddress,
     required this.items,
   });
 
@@ -45,13 +64,19 @@ class OrderDetailsEntity extends Equatable {
         dateTime,
         orderType,
         itemCount,
+        subtotal,
+        discount,
+        shippingCost,
+        commission,
         totalAmount,
-        deliveryFee,
-        tax,
-        customerName,
-        customerPhone,
-        deliveryAddress,
-        paymentMethod,
+        notes,
+        vendorName,
+        vendorPhone,
+        vendorAddress,
+        vendorImage,
+        branchName,
+        branchPhone,
+        branchAddress,
         items,
       ];
 }

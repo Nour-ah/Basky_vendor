@@ -32,6 +32,7 @@ class SplashCubit extends Cubit<SplashState> {
     if (!hasToken) {
       debugPrint('❌ Splash: No token found');
       await _waitMinDuration(stopwatch);
+      if (isClosed) return;
       emit(const SplashState.unauthenticated());
       return;
     }
@@ -45,6 +46,7 @@ class SplashCubit extends Cubit<SplashState> {
         // Treat any failure as unauthenticated (including 401)
         await logoutUseCase(); // Ignore result
         await _waitMinDuration(stopwatch);
+        if (isClosed) return;
         emit(
           const SplashState.unauthenticated(
             message: 'Session expired. Please login again.',
@@ -54,6 +56,7 @@ class SplashCubit extends Cubit<SplashState> {
       (user) async {
         debugPrint('✅ Splash: Session valid — welcome ${user.name}');
         await _waitMinDuration(stopwatch);
+        if (isClosed) return;
         emit(SplashState.authenticated(user: user));
       },
     );

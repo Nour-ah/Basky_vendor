@@ -251,5 +251,14 @@
   "optionHint": "خيار (مثال: صغير)",
   "create": "إنشاء",
   "update": "تحديث",
-  "forgotPasswordTitle": "نسيت كلمة المرور"
+  "forgotPasswordTitle": "نسيت كلمة المرور",
+  "roles": "الأدوار",
+  "accountStatus": "حالة الحساب",
+  "activeStatus": "حالة النشاط",
+  "active": "نشط",
+  "inactive": "غير نشط",
+  "download": "تحميل",
+  "share": "مشاركة",
+  "downloadedSuccessfully": "تم التحميل بنجاح",
+  "error": "خطأ"
 }
