@@ -26,11 +26,11 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     final result = await sendResetCodeUseCase(email: email);
 
     result.fold(
-          (failure) {
+      (failure) {
         _email = email;
         emit(ResetPasswordError(message: failure.message, email: email));
       },
-          (actionResult) {
+      (actionResult) {
         _email = email;
         emit(ResetPasswordCodeSent(email: email));
       },
@@ -46,24 +46,20 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
 
     emit(ResetPasswordVerifyingCode(email: _email!));
 
-    final result = await verifyResetCodeUseCase(
-      code: code,
-      email: _email!,
-    );
+    final result = await verifyResetCodeUseCase(code: code, email: _email!);
 
     result.fold(
-          (failure) {
-        emit(ResetPasswordError(
-          message: failure.message,
-          email: _email,
-        ));
+      (failure) {
+        emit(ResetPasswordError(message: failure.message, email: _email));
       },
-          (tokenResult) {
+      (tokenResult) {
         _resetToken = tokenResult.resetToken;
-        emit(ResetPasswordCodeVerified(
-          email: _email!,
-          resetToken: _resetToken ?? '',
-        ));
+        emit(
+          ResetPasswordCodeVerified(
+            email: _email!,
+            resetToken: _resetToken ?? '',
+          ),
+        );
       },
     );
   }
@@ -74,15 +70,17 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     required String passwordConfirmation,
   }) async {
     if (_email == null || _resetToken == null) {
-      emit(const ResetPasswordError(
-          message: 'Session expired. Please start over.'));
+      emit(
+        const ResetPasswordError(
+          message: 'Session expired. Please start over.',
+        ),
+      );
       return;
     }
 
-    emit(ResetPasswordSettingPassword(
-      email: _email!,
-      resetToken: _resetToken!,
-    ));
+    emit(
+      ResetPasswordSettingPassword(email: _email!, resetToken: _resetToken!),
+    );
 
     final result = await setNewPasswordUseCase(
       resetToken: _resetToken!,
@@ -91,14 +89,16 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     );
 
     result.fold(
-          (failure) {
-        emit(ResetPasswordError(
-          message: failure.message,
-          email: _email,
-          resetToken: _resetToken,
-        ));
+      (failure) {
+        emit(
+          ResetPasswordError(
+            message: failure.message,
+            email: _email,
+            resetToken: _resetToken,
+          ),
+        );
       },
-          (_) {
+      (_) {
         emit(ResetPasswordSuccess());
       },
     );

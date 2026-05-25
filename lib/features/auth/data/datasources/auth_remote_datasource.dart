@@ -156,7 +156,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final response = await dio.get(ApiConstants.user);
       debugPrint('✅ DataSource: Get user success');
-      return UserModel.fromJson(response.data['data']);
+      return UserModel.fromJson(response.data['data']['user']);
     } on DioException catch (e) {
       DioErrorMapper.map(e);
     }

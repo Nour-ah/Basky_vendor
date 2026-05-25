@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:spider_restaurant/core/theme/app_text_styles.dart';
 import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
+import 'package:spider_restaurant/core/widgets/marquee_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -49,32 +50,44 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           scaffoldKey.currentState?.openDrawer();
         },
       ),
-      title: Row(
-        children: [
-          _ProfileAvatar(imageUrl: imageUrl, radius: 22),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'greetUser'.tr(namedArgs: {'name': userName}),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.fontWhite16Bold,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  dateString,
-                  style: AppTextStyle.fontWhite12Regular.copyWith(
-                    color: AppColors.white.withValues(alpha: 0.8),
+      title: GestureDetector(
+        onTap: () {
+          scaffoldKey.currentState?.openDrawer();
+        },
+        child: Row(
+          children: [
+            _ProfileAvatar(imageUrl: imageUrl, radius: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'welcomeBack'.tr(),
+                    style: AppTextStyle.fontWhite12Regular.copyWith(
+                      color: AppColors.white.withValues(alpha: 0.8),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 2),
+                  MarqueeWidget(
+                    child: Text(
+                      userName,
+                      style: AppTextStyle.fontWhite16Bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    dateString,
+                    style: AppTextStyle.fontWhite12Regular.copyWith(
+                      color: AppColors.white.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       actions: [
         Container(

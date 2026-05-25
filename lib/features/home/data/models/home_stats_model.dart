@@ -20,10 +20,13 @@ class HomeStatsModel extends HomeStatsEntity {
       recentOrders: recentOrdersJson
           .map((e) => RecentOrderModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      pendingOrders: json['pending_orders'] as int? ?? json['pending'] as int? ?? 0,
-      preparingOrders: json['preparing_orders'] as int? ?? json['preparing'] as int? ?? 0,
+      pendingOrders:
+          json['pending_orders'] as int? ?? json['pending'] as int? ?? 0,
+      preparingOrders:
+          json['preparing_orders'] as int? ?? json['preparing'] as int? ?? 0,
       readyOrders: json['ready_orders'] as int? ?? json['ready'] as int? ?? 0,
-      deliveredOrders: json['delivered_orders'] as int? ?? json['delivered'] as int? ?? 0,
+      deliveredOrders:
+          json['delivered_orders'] as int? ?? json['delivered'] as int? ?? 0,
     );
   }
 
