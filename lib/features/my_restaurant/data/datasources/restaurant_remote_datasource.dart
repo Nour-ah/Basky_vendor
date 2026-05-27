@@ -5,6 +5,7 @@ import '../../../../core/error/validation_errors_model.dart';
 import '../../../../core/network/api_constants.dart';
 import '../../domain/entities/add_product_params.dart';
 import '../../domain/entities/product_status.dart';
+import '../models/branch_details_response_model.dart';
 import '../models/category_model.dart';
 import '../models/product_details_model.dart';
 import '../models/product_summary_model.dart';
@@ -13,6 +14,8 @@ import '../models/vendor_branch_model.dart';
 
 abstract class RestaurantRemoteDataSource {
   Future<List<VendorBranchModel>> getBranches();
+
+  Future<BranchDetailsResponseModel> getBranchDetails(int branchId, {int page = 1});
 
   Future<List<CategoryModel>> getCategories();
 
@@ -55,6 +58,25 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       return data
           .map((json) => VendorBranchModel.fromJson(json as Map<String, dynamic>))
           .toList();
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      debugPrint('❌ RestaurantRemoteDataSource: Error $e');
+      throw const ParsingException();
+    }
+    throw const ServerException();
+  }
+
+  @override
+  Future<BranchDetailsResponseModel> getBranchDetails(int branchId, {int page = 1}) async {
+    debugPrint('🔵 RestaurantRemoteDataSource: Sending GET ${ApiConstants.vendorBranches}/$branchId');
+    try {
+      final response = await dio.get(
+        '${ApiConstants.vendorBranches}/$branchId',
+        queryParameters: {'page': page},
+      );
+      debugPrint('✅ RestaurantRemoteDataSource: Success fetching branch details');
+      return BranchDetailsResponseModel.fromJson(response.data['data']);
     } on DioException catch (e) {
       _handleDioException(e);
     } catch (e) {

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/add_product_params.dart';
+import '../../domain/entities/branch_details_response_entity.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/product_details_entity.dart';
 import '../../domain/entities/product_summary_entity.dart';
@@ -22,6 +23,16 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
       if (branches.isEmpty) return null;
       return branches.first;
     });
+  }
+
+  @override
+  Future<Either<Failure, List<VendorBranchEntity>>> getBranches() async {
+    return _execute(() => remoteDataSource.getBranches());
+  }
+
+  @override
+  Future<Either<Failure, BranchDetailsResponseEntity>> getBranchDetails(int branchId, {int page = 1}) async {
+    return _execute(() => remoteDataSource.getBranchDetails(branchId, page: page));
   }
 
   @override

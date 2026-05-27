@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/add_product_params.dart';
+import '../entities/branch_details_response_entity.dart';
 import '../entities/category_entity.dart';
 import '../entities/product_details_entity.dart';
 import '../entities/product_summary_entity.dart';
@@ -9,6 +10,10 @@ import '../entities/vendor_branch_entity.dart';
 
 abstract class RestaurantRepository {
   Future<Either<Failure, VendorBranchEntity?>> getPrimaryBranch();
+
+  Future<Either<Failure, List<VendorBranchEntity>>> getBranches();
+
+  Future<Either<Failure, BranchDetailsResponseEntity>> getBranchDetails(int branchId, {int page = 1});
 
   Future<Either<Failure, List<CategoryEntity>>> getCategories();
 

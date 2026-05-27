@@ -54,13 +54,16 @@ import '../../features/my_restaurant/data/repositories/restaurant_repository_imp
 import '../../features/my_restaurant/domain/repositories/restaurant_repository.dart';
 import '../../features/my_restaurant/domain/usecases/add_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/delete_product_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/get_branch_details_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_categories_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_products_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_variants_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_vendor_branch_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/get_vendor_branches_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/update_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/toggle_restaurant_status_usecase.dart';
 import '../../features/my_restaurant/presentation/cubit/add_food_cubit.dart';
+import '../../features/my_restaurant/presentation/cubit/branches_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/restaurant_details_cubit.dart';
 
@@ -268,6 +271,8 @@ Future<void> initDependencies() async {
 
   // Restaurant Catalog Feature
   sl.registerLazySingleton(() => GetVendorBranchUseCase(sl()));
+  sl.registerLazySingleton(() => GetVendorBranchesUseCase(sl()));
+  sl.registerLazySingleton(() => GetBranchDetailsUseCase(sl()));
   sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
   sl.registerLazySingleton(() => GetProductsUseCase(sl()));
   sl.registerLazySingleton(() => AddProductUseCase(sl()));
@@ -337,13 +342,14 @@ Future<void> initDependencies() async {
   );
 
   // Restaurant Catalog Feature
+  sl.registerFactory(() => BranchesCubit(getVendorBranchesUseCase: sl()));
   sl.registerFactory(() => RestaurantCatalogCubit(
         getCategoriesUseCase: sl(),
         getProductsUseCase: sl(),
         deleteProductUseCase: sl(),
       ));
   sl.registerFactory(
-    () => RestaurantDetailsCubit(getVendorBranchUseCase: sl()),
+    () => RestaurantDetailsCubit(getBranchDetailsUseCase: sl()),
   );
   sl.registerFactory(() => AddFoodCubit(
         getCategoriesUseCase: sl(),
