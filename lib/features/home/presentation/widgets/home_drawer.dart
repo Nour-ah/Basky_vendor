@@ -9,7 +9,8 @@ import '../../../../core/localization/cubit/locale_cubit.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
 import '../../../auth/presentation/pages/auth_options_page.dart';
-import '../../../my_restaurant/presentation/pages/my_restaurant_page.dart';
+import '../../../my_restaurant/presentation/pages/my_branches_page.dart';
+import '../../../my_restaurant/presentation/pages/my_products_page.dart';
 import '../../../orders/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
@@ -84,9 +85,14 @@ class HomeDrawer extends StatelessWidget {
         onTap: () => _navigate(context, const MyOrdersPage()),
       ),
       DrawerItemModel(
-        icon: Icons.restaurant_outlined,
-        title: LocaleKeys.myRestaurant.tr(),
-        onTap: () => _navigate(context, const MyRestaurantPage()),
+        icon: Icons.storefront_outlined,
+        title: LocaleKeys.myBranches.tr(),
+        onTap: () => _navigate(context, const MyBranchesPage()),
+      ),
+      DrawerItemModel(
+        icon: Icons.inventory_2_outlined,
+        title: LocaleKeys.myProducts.tr(),
+        onTap: () => _navigate(context, const MyProductsPage()),
       ),
       DrawerItemModel(
         icon: Icons.account_balance_wallet_outlined,

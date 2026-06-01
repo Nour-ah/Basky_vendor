@@ -39,6 +39,15 @@ abstract class  LocaleKeys {
   static const personalInformation = 'personalInformation';
   static const myOrders = 'myOrders';
   static const myRestaurant = 'myRestaurant';
+  static const myBranches = 'myBranches';
+  static const myBranchesSubtitle = 'myBranchesSubtitle';
+  static const myProducts = 'myProducts';
+  static const myProductsSubtitle = 'myProductsSubtitle';
+  static const manageProductsByBranch = 'manageProductsByBranch';
+  static const allProducts = 'allProducts';
+  static const noBranchesFound = 'noBranchesFound';
+  static const callBranch = 'callBranch';
+  static const openMap = 'openMap';
   static const wallet = 'wallet';
   static const savedCards = 'savedCards';
   static const language = 'language';
@@ -233,5 +242,18 @@ abstract class  LocaleKeys {
   static const share = 'share';
   static const downloadedSuccessfully = 'downloadedSuccessfully';
   static const error = 'error';
+  static const productType = 'productType';
+  static const productTypeSimple = 'productTypeSimple';
+  static const productTypeVariable = 'productTypeVariable';
+  static const skuOptional = 'skuOptional';
+  static const slugOptional = 'slugOptional';
+  static const additionalImages = 'additionalImages';
+  static const pickMultipleGalleryImages = 'pickMultipleGalleryImages';
+  static const featuredProduct = 'featuredProduct';
+  static const newProduct = 'newProduct';
+  static const bookableProduct = 'bookableProduct';
+  static const attachVariants = 'attachVariants';
+  static const manageVariants = 'manageVariants';
+  static const noVariantsAvailable = 'noVariantsAvailable';
 
 }

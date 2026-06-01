@@ -1,3 +1,4 @@
+import '../../../../core/utils/api_image_url.dart';
 import '../../../../core/utils/localized_json_parser.dart';
 import '../../domain/entities/product_status.dart';
 import '../../domain/entities/product_summary_entity.dart';
@@ -25,7 +26,11 @@ class ProductSummaryModel extends ProductSummaryEntity {
       discountPrice: json['discount_price'] is num ? (json['discount_price'] as num).toDouble() : double.tryParse(json['discount_price']?.toString() ?? '0.0') ?? 0.0,
       categoryId: _parseCategoryId(json),
       categoryName: _parseCategoryName(json),
-      imageUrl: json['thumb_image']?.toString() ?? json['image_url']?.toString() ?? json['image']?.toString(),
+      imageUrl: resolveApiImageUrl(
+        json['thumb_image']?.toString() ??
+            json['image_url']?.toString() ??
+            json['image']?.toString(),
+      ),
       status: ProductStatus.fromString(json['status']?.toString() ?? 'active'),
     );
   }

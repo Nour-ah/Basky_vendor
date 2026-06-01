@@ -1,3 +1,4 @@
+import '../../../../core/utils/api_image_url.dart';
 import '../../domain/entities/product_details_entity.dart';
 import '../../domain/entities/product_status.dart';
 
@@ -37,7 +38,9 @@ class ProductDetailsModel extends ProductDetailsEntity {
       discountPrice: json['discount_price'] is num ? (json['discount_price'] as num).toDouble() : double.tryParse(json['discount_price']?.toString() ?? '0.0') ?? 0.0,
       categoryId: json['category_id'] is int ? json['category_id'] : int.tryParse(json['category_id']?.toString() ?? '0') ?? 0,
       categoryName: json['category_name']?.toString() ?? json['category']?['name']?.toString() ?? '',
-      imageUrl: json['image_url']?.toString() ?? json['image']?.toString(),
+      imageUrl: resolveApiImageUrl(
+        json['image_url']?.toString() ?? json['image']?.toString(),
+      ),
       status: ProductStatus.fromString(json['status']?.toString() ?? 'active'),
       subcategoryId: json['subcategory_id'] is int ? json['subcategory_id'] : int.tryParse(json['subcategory_id']?.toString() ?? ''),
       subcategoryName: json['subcategory_name']?.toString() ?? json['subcategory']?['name']?.toString(),
