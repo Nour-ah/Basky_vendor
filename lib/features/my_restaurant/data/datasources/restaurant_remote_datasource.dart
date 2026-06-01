@@ -254,7 +254,20 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
         'categories[0]': params.categoryId,
       };
 
-      if (params.variantIds != null && params.variantIds!.isNotEmpty) {
+      if (params.variations != null && params.variations!.isNotEmpty) {
+        for (var i = 0; i < params.variations!.length; i++) {
+          final variation = params.variations![i];
+          data['variations[$i][name][en]'] = variation.nameEn;
+          data['variations[$i][name][ar]'] = variation.nameAr;
+          data['variations[$i][sku]'] = variation.sku;
+          data['variations[$i][price]'] = variation.price;
+          for (var j = 0; j < variation.values.length; j++) {
+            final value = variation.values[j];
+            data['variations[$i][values][$j][variant_id]'] = value.variantId;
+            data['variations[$i][values][$j][option_id]'] = value.optionId;
+          }
+        }
+      } else if (params.variantIds != null && params.variantIds!.isNotEmpty) {
         for (int i = 0; i < params.variantIds!.length; i++) {
           data['variants[$i]'] = params.variantIds![i];
         }

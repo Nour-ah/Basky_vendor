@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'product_image_entity.dart';
 import 'product_status.dart';
 import 'product_type.dart';
+import 'product_variation_params.dart';
 
 class AddProductParams extends Equatable {
   final String nameEn;
@@ -28,6 +29,7 @@ class AddProductParams extends Equatable {
   final ProductImageEntity? image;
   final List<ProductImageEntity>? images;
   final List<int>? variantIds;
+  final List<ProductVariationParams>? variations;
   final bool isEditMode;
   final int? productId;
 
@@ -50,6 +52,7 @@ class AddProductParams extends Equatable {
     this.image,
     this.images,
     this.variantIds,
+    this.variations,
     this.isEditMode = false,
     this.productId,
   });
@@ -74,6 +77,7 @@ class AddProductParams extends Equatable {
         image,
         images,
         variantIds,
+        variations,
         isEditMode,
         productId,
       ];

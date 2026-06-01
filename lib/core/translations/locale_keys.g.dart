@@ -252,6 +252,10 @@ abstract class  LocaleKeys {
   static const featuredProduct = 'featuredProduct';
   static const newProduct = 'newProduct';
   static const bookableProduct = 'bookableProduct';
+  static const selectVariantOptions = 'selectVariantOptions';
+  static const selectAtLeastOneVariant = 'selectAtLeastOneVariant';
+  static const selectAtLeastOneVariantOption = 'selectAtLeastOneVariantOption';
+  static const variationsWillBeCreated = 'variationsWillBeCreated';
   static const attachVariants = 'attachVariants';
   static const manageVariants = 'manageVariants';
   static const noVariantsAvailable = 'noVariantsAvailable';
