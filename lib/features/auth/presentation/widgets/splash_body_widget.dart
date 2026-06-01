@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spider_restaurant/core/theme/app_images.dart';
+import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class SplashBodyWidget extends StatelessWidget {
@@ -19,19 +21,9 @@ class SplashBodyWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
+
               ),
-              child: const Icon(
-                Icons.restaurant,
-                size: 60,
-                color: AppColors.primary,
-              ),
+              child: CustomImageView(imagePath: AppImages.logo,fit: BoxFit.scaleDown,),
             ),
             const SizedBox(height: 32),
             const Text(

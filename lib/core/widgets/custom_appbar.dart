@@ -25,7 +25,7 @@ class CustomAppbar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CustomImageView(imagePath: AppImages.logo,width: 50,height: 50,),
-            CustomImageView(imagePath: AppImages.notification,width: 24,height: 24,),
+            CustomImageView(imagePath: AppImages.logo,width: 24,height: 24,),
           ]
       ),
     );

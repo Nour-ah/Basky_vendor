@@ -2045,7 +2045,7 @@
               "name": "variants",
               "protocolProfileBehavior": {
                 "strictSSL": false,
-                "followRedirects"z: true
+                "followRedirects": true
               },
               "request": {
                 "auth": {

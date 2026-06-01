@@ -150,7 +150,7 @@ class AppImages {
 
 
   //spider
-  static const String logo = 'assets/images/spiderLogo.png';
+  static const String logo = 'assets/images/logo.svg';
   static const String location = 'assets/images/location.png';
   static const String bag = 'assets/images/bag.png';
   static const String home = 'assets/images/home.png';

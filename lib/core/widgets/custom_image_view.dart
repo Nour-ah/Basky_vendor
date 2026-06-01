@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -104,11 +103,25 @@ class CustomImageView extends StatelessWidget {
           color: color,
         );
       case ImageType.network:
+        String networkUrl = imagePath!;
+        if (networkUrl.startsWith('http://localhost:8002')) {
+          networkUrl = networkUrl.replaceFirst(
+            'http://localhost:8002',
+            'https://shike.developteam.site',
+          );
+        } else if (networkUrl.startsWith('http://localhost')) {
+          networkUrl = networkUrl.replaceFirst(
+            'http://localhost',
+            'https://shike.developteam.site',
+          );
+        } else if (networkUrl.startsWith('/uploads')) {
+          networkUrl = 'https://shike.developteam.site$networkUrl';
+        }
         return CachedNetworkImage(
           height: height,
           width: width,
           fit: fit,
-          imageUrl: imagePath!,
+          imageUrl: networkUrl,
           color: color,
           placeholder: (context, url) => Container(
             height: height,
@@ -133,11 +146,11 @@ class CustomImageView extends StatelessWidget {
           ),
           errorWidget: (context, url, error) => placeHolder != null
               ? Image.asset(
-                  placeHolder!,
-                  height: height,
-                  width: width,
-                  fit: fit ?? BoxFit.cover,
-                )
+            placeHolder!,
+            height: height,
+            width: width,
+            fit: fit ?? BoxFit.cover,
+          )
               : _buildPlaceholderWidget(),
         );
       case ImageType.png:
@@ -180,7 +193,7 @@ class CustomImageView extends StatelessWidget {
               height: 80,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.1),
+                color: Colors.white.withOpacity(0.1),
               ),
             ),
           ),
@@ -192,7 +205,7 @@ class CustomImageView extends StatelessWidget {
               height: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.05),
+                color: Colors.white.withOpacity(0.05),
               ),
             ),
           ),
@@ -206,7 +219,7 @@ class CustomImageView extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: Colors.white.withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -217,7 +230,7 @@ class CustomImageView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'noImageAvailable'.tr(),
+                    'لا توجد صورة',
                     style: TextStyle(
                       fontFamily: 'Cairo',
                       fontSize: 10,
@@ -239,9 +252,12 @@ extension ImageTypeExtension on String {
   ImageType get imageType {
     if (startsWith('http') || startsWith('https')) {
       return ImageType.network;
+    } else if (startsWith('/uploads')) {
+      // Backend returns relative uploaded paths like /uploads/images/abc.webp
+      return ImageType.network;
     } else if (endsWith('.svg')) {
       return ImageType.svg;
-    } else if (startsWith('file:') || contains('com.inlighty.app.inlighty')) {
+    } else if (startsWith('file:') || contains('com.example')) {
       return ImageType.file;
     } else {
       return ImageType.png;

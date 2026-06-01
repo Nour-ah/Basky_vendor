@@ -5,6 +5,7 @@ import 'package:spider_restaurant/core/theme/app_text_styles.dart';
 import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
 import 'package:spider_restaurant/core/widgets/marquee_widget.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_images.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({
@@ -97,7 +98,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: AppColors.white, size: 22),
+            icon: CustomImageView(imagePath: AppImages.logo, width: 22, height: 22),
             onPressed: () {},
             constraints: const BoxConstraints(),
             padding: const EdgeInsets.all(8),
