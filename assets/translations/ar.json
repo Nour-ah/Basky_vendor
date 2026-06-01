@@ -283,5 +283,10 @@
   "download": "تحميل",
   "share": "مشاركة",
   "downloadedSuccessfully": "تم التحميل بنجاح",
-  "error": "خطأ"
+  "error": "خطأ",
+  "vendorDetails": "تفاصيل المتجر",
+  "branchDetails": "تفاصيل الفرع",
+  "notes": "الملاحظات",
+  "paymentSummary": "ملخص الدفع",
+  "commission": "العمولة"
 }

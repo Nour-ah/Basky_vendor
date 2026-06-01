@@ -44,6 +44,7 @@ class RestaurantCoverWidget extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
+
                 Icons.arrow_back_ios,
                 color: AppColors.black,
                 size: 20,

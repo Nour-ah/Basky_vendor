@@ -283,5 +283,10 @@
   "download": "Download",
   "share": "Share",
   "downloadedSuccessfully": "Downloaded Successfully",
-  "error": "Error"
+  "error": "Error",
+  "vendorDetails": "Vendor Details",
+  "branchDetails": "Branch Details",
+  "notes": "Notes",
+  "paymentSummary": "Payment Summary",
+  "commission": "Commission"
 }
