@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spider_restaurant/core/error/failures.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/add_product_params.dart';
+import 'package:spider_restaurant/features/my_restaurant/domain/entities/branch_details_response_entity.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/category_entity.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_details_entity.dart';
 import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_summary_entity.dart';
@@ -20,6 +21,28 @@ class FakeRestaurantRepository implements RestaurantRepository {
   @override
   Future<Either<Failure, VendorBranchEntity?>> getPrimaryBranch() async =>
       const Right(null);
+
+  @override
+  Future<Either<Failure, List<VendorBranchEntity>>> getBranches() async =>
+      const Right([]);
+
+  @override
+  Future<Either<Failure, BranchDetailsResponseEntity>> getBranchDetails(
+    int branchId, {
+    int page = 1,
+  }) async =>
+      const Right(
+        BranchDetailsResponseEntity(
+          branch: VendorBranchEntity(
+            id: 0,
+            name: '',
+            address: '',
+            isOpen: false,
+            rating: 0,
+          ),
+          products: [],
+        ),
+      );
 
   @override
   Future<Either<Failure, List<CategoryEntity>>> getCategories() async => const Right([]);

@@ -12,7 +12,7 @@ class AppTheme {
       fontFamily: 'Cairo',
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.primary,
-        elevation: 0,
+        elevation:1,
         iconTheme: IconThemeData(color: AppColors.white),
       ),
       colorScheme: ColorScheme.fromSwatch().copyWith(

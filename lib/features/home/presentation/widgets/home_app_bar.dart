@@ -25,14 +25,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final imageUrl = userImageUrl?.trim() ?? '';
     final now = DateTime.now();
-    final dateString = DateFormat('EEEE, d MMM', context.locale.languageCode).format(now);
+    final dateString = DateFormat(
+      'EEEE, d MMM',
+      context.locale.languageCode,
+    ).format(now);
 
     return AppBar(
       elevation: 0,
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.85)],
+            colors: [
+              AppColors.primary,
+              AppColors.primary.withValues(alpha: 0.85),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -72,10 +78,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   const SizedBox(height: 2),
                   MarqueeWidget(
-                    child: Text(
-                      userName,
-                      style: AppTextStyle.fontWhite16Bold,
-                    ),
+                    child: Text(userName, style: AppTextStyle.fontWhite16Bold),
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -94,11 +97,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: AppColors.white.withValues(alpha: 0.2),
+            color: AppColors.white,
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: CustomImageView(imagePath: AppImages.logo, width: 22, height: 22),
+            icon: CustomImageView(
+              imagePath: AppImages.logo,
+              fit: BoxFit.scaleDown,
+              width: 22,
+              height: 22,
+            ),
             onPressed: () {},
             constraints: const BoxConstraints(),
             padding: const EdgeInsets.all(8),
@@ -127,7 +135,10 @@ class _ProfileAvatar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.white.withValues(alpha: 0.5), width: 2),
+        border: Border.all(
+          color: AppColors.white.withValues(alpha: 0.5),
+          width: 2,
+        ),
       ),
       child: CircleAvatar(
         radius: radius,
@@ -146,4 +157,3 @@ class _ProfileAvatar extends StatelessWidget {
     );
   }
 }
-

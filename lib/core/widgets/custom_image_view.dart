@@ -91,7 +91,11 @@ class CustomImageView extends StatelessWidget {
             height: height,
             width: width,
             fit: fit ?? BoxFit.contain,
-            color: color,
+            // Only tint SVGs when a color is explicitly provided.
+            // Otherwise keep the original multi-color fills from the asset.
+            colorFilter: color == null
+                ? null
+                : ColorFilter.mode(color!, BlendMode.srcIn),
           ),
         );
       case ImageType.file:

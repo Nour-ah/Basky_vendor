@@ -32,26 +32,26 @@ class RestaurantCoverWidget extends StatelessWidget {
             children: [_buildDot(true), _buildDot(false), _buildDot(false)],
           ),
         ),
-        Positioned(
-          top: 50,
-          left: 16,
-          child: GestureDetector(
-            onTap: onBackPressed,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.white.withValues(alpha: 0.9),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-
-                Icons.arrow_back_ios,
-                color: AppColors.black,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
+        // Positioned(
+        //   top: 50,
+        //   left: 16,
+        //   child: GestureDetector(
+        //     onTap: onBackPressed,
+        //     child: Container(
+        //       padding: const EdgeInsets.all(8),
+        //       decoration: BoxDecoration(
+        //         color: AppColors.white.withValues(alpha: 0.9),
+        //         shape: BoxShape.circle,
+        //       ),
+        //       child: const Icon(
+        //
+        //         Icons.arrow_back_ios,
+        //         color: AppColors.black,
+        //         size: 20,
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
