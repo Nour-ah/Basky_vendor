@@ -42,7 +42,8 @@ class AuthOptionsPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             const Text(
-                              'Sign in or create an account to manage\nyour restaurant and orders.',
+                            //  'Sign in or create an account to manage\nyour restaurant and orders.',
+                              'Sign in account to manage\nyour restaurant and orders.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
@@ -64,18 +65,18 @@ class AuthOptionsPage extends StatelessWidget {
                               },
                             ),
                             const SizedBox(height: 16),
-                            AuthButton(
-                              text: 'Sign Up',
-                              backgroundColor: AppColors.promoRed,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const RegisterPage(),
-                                  ),
-                                );
-                              },
-                            ),
+                            // AuthButton(
+                            //   text: 'Sign Up',
+                            //   backgroundColor: AppColors.promoRed,
+                            //   onPressed: () {
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) => const RegisterPage(),
+                            //       ),
+                            //     );
+                            //   },
+                            // ),
                           ],
                         ),
                         SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),

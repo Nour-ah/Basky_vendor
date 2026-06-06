@@ -169,14 +169,14 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  TextButton(
-                                    onPressed: () => _goToRegister(context),
-                                    child: Text(
-                                      LocaleKeys.dontHaveAccount.tr(),
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 13),
-                                    ),
-                                  ),
+                                  // TextButton(
+                                  //   onPressed: () => _goToRegister(context),
+                                  //   child: Text(
+                                  //     LocaleKeys.dontHaveAccount.tr(),
+                                  //     style: const TextStyle(
+                                  //         color: Colors.white, fontSize: 13),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

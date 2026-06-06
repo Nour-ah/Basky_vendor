@@ -27,9 +27,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> removeToken() async {
-    debugPrint('🗑️ AuthLocalDataSource: Removing token...');
-    await LocalStorage.clearAuthToken();
-    debugPrint('✅ AuthLocalDataSource: Token removed');
+    debugPrint('🗑️ AuthLocalDataSource: Clearing auth data (token + user cache)...');
+    await LocalStorage.clearAuthData();
+    debugPrint('✅ AuthLocalDataSource: Auth data cleared');
   }
 
   @override
