@@ -174,57 +174,57 @@ class _BranchDetailsPageState extends State<BranchDetailsPage> {
                                   return Column(
                                     children: [
                                       if (catModels.isNotEmpty)
-                                        RestaurantCategoriesTabs(
-                                          categories: catModels,
-                                          selectedCategory:
-                                              state is CatalogLoaded &&
-                                                  state.selectedCategoryId !=
-                                                      null
-                                              // ✅ firstWhereOrNull: avoids orElse
-                                              // type mismatch between List<CategoryEntity>
-                                              // (declared) and List<CategoryModel> (runtime).
-                                              ? state.categories
-                                                        .firstWhereOrNull(
-                                                          (c) =>
-                                                              c.id ==
-                                                              state
-                                                                  .selectedCategoryId,
-                                                        )
-                                                        ?.name ??
-                                                    LocaleKeys.all.tr()
-                                              : LocaleKeys.all.tr(),
-                                          onCategorySelected: (categoryName) async {
-                                            if (categoryName == '+') {
-                                              final didChange =
-                                                  await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const AddFoodPage(),
-                                                    ),
-                                                  );
-                                              if (didChange == true) {
-                                                _catalogCubit.initCatalog();
-                                              }
-                                            } else {
-                                              // ✅ firstWhereOrNull eliminates the orElse
-                                              // callback that caused the runtime type crash:
-                                              // '() => CategoryEntity' is not a subtype
-                                              // of '() => CategoryModel'.
-                                              final cat = state is CatalogLoaded
-                                                  ? state.categories
-                                                        .firstWhereOrNull(
-                                                          (c) =>
-                                                              c.name ==
-                                                              categoryName,
-                                                        )
-                                                  : null;
-                                              _catalogCubit.filterProducts(
-                                                categoryId: cat?.id,
-                                              );
-                                            }
-                                          },
-                                        ),
+                                        // RestaurantCategoriesTabs(
+                                        //   categories: catModels,
+                                        //   selectedCategory:
+                                        //       state is CatalogLoaded &&
+                                        //           state.selectedCategoryId !=
+                                        //               null
+                                        //       // ✅ firstWhereOrNull: avoids orElse
+                                        //       // type mismatch between List<CategoryEntity>
+                                        //       // (declared) and List<CategoryModel> (runtime).
+                                        //       ? state.categories
+                                        //                 .firstWhereOrNull(
+                                        //                   (c) =>
+                                        //                       c.id ==
+                                        //                       state
+                                        //                           .selectedCategoryId,
+                                        //                 )
+                                        //                 ?.name ??
+                                        //             LocaleKeys.all.tr()
+                                        //       : LocaleKeys.all.tr(),
+                                        //   onCategorySelected: (categoryName) async {
+                                        //     if (categoryName == '+') {
+                                        //       final didChange =
+                                        //           await Navigator.push(
+                                        //             context,
+                                        //             MaterialPageRoute(
+                                        //               builder: (context) =>
+                                        //                   const AddFoodPage(),
+                                        //             ),
+                                        //           );
+                                        //       if (didChange == true) {
+                                        //         _catalogCubit.initCatalog();
+                                        //       }
+                                        //     } else {
+                                        //       // ✅ firstWhereOrNull eliminates the orElse
+                                        //       // callback that caused the runtime type crash:
+                                        //       // '() => CategoryEntity' is not a subtype
+                                        //       // of '() => CategoryModel'.
+                                        //       final cat = state is CatalogLoaded
+                                        //           ? state.categories
+                                        //                 .firstWhereOrNull(
+                                        //                   (c) =>
+                                        //                       c.name ==
+                                        //                       categoryName,
+                                        //                 )
+                                        //           : null;
+                                        //       _catalogCubit.filterProducts(
+                                        //         categoryId: cat?.id,
+                                        //       );
+                                        //     }
+                                        //   },
+                                        // ),
                                       const SizedBox(height: 24),
                                       if (state is CatalogEmpty)
                                         Center(

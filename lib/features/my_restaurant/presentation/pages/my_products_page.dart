@@ -181,34 +181,34 @@ class _MyProductsPageState extends State<MyProductsPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        if (catModels.isNotEmpty)
-                          RestaurantCategoriesTabs(
-                            categories: catModels,
-                            selectedCategory: state is CatalogLoaded &&
-                                    state.selectedCategoryId != null
-                                ? state.categories
-                                          .firstWhereOrNull(
-                                            (c) =>
-                                                c.id == state.selectedCategoryId,
-                                          )
-                                          ?.name ??
-                                      LocaleKeys.all.tr()
-                                : LocaleKeys.all.tr(),
-                            onCategorySelected: (categoryName) async {
-                              if (categoryName == '+') {
-                                await _openAddProduct();
-                                return;
-                              }
-                              final cat = state is CatalogLoaded
-                                  ? state.categories.firstWhereOrNull(
-                                      (c) => c.name == categoryName,
-                                    )
-                                  : null;
-                              await _catalogCubit.filterProducts(
-                                categoryId: cat?.id,
-                              );
-                            },
-                          ),
+                        // if (catModels.isNotEmpty)
+                        //   RestaurantCategoriesTabs(
+                        //     categories: catModels,
+                        //     selectedCategory: state is CatalogLoaded &&
+                        //             state.selectedCategoryId != null
+                        //         ? state.categories
+                        //                   .firstWhereOrNull(
+                        //                     (c) =>
+                        //                         c.id == state.selectedCategoryId,
+                        //                   )
+                        //                   ?.name ??
+                        //               LocaleKeys.all.tr()
+                        //         : LocaleKeys.all.tr(),
+                        //     onCategorySelected: (categoryName) async {
+                        //       if (categoryName == '+') {
+                        //         await _openAddProduct();
+                        //         return;
+                        //       }
+                        //       final cat = state is CatalogLoaded
+                        //           ? state.categories.firstWhereOrNull(
+                        //               (c) => c.name == categoryName,
+                        //             )
+                        //           : null;
+                        //       await _catalogCubit.filterProducts(
+                        //         categoryId: cat?.id,
+                        //       );
+                        //     },
+                        //   ),
                         const SizedBox(height: 16),
                         if (state is CatalogEmpty)
                           Padding(
