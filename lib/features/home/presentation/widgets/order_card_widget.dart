@@ -76,7 +76,9 @@ class OrderCardWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                        ),
                       ),
                       child: ClipOval(
                         child: (vendorImage != null && vendorImage!.isNotEmpty)
@@ -84,7 +86,11 @@ class OrderCardWidget extends StatelessWidget {
                                 imagePath: vendorImage!,
                                 fit: BoxFit.cover,
                               )
-                            : const Icon(Icons.storefront, size: 22, color: AppColors.primary),
+                            : const Icon(
+                                Icons.storefront,
+                                size: 22,
+                                color: AppColors.primary,
+                              ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -95,13 +101,16 @@ class OrderCardWidget extends StatelessWidget {
                           Text(
                             (vendorName?.isNotEmpty == true)
                                 ? vendorName!
-                                : ((branchName?.isNotEmpty == true) ? branchName! : 'orderCode'.tr(args: [orderCode])),
+                                : ((branchName?.isNotEmpty == true)
+                                      ? branchName!
+                                      : 'orderCode'.tr(args: [orderCode])),
                             style: AppTextStyle.fontBlack16Bold,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            (branchName?.isNotEmpty == true && vendorName?.isNotEmpty == true)
+                            (branchName?.isNotEmpty == true &&
+                                    vendorName?.isNotEmpty == true)
                                 ? '$branchName  •  #$orderCode'
                                 : '#$orderCode',
                             style: AppTextStyle.fontGrey12Regular,
@@ -124,7 +133,11 @@ class OrderCardWidget extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          const Icon(Icons.calendar_today, size: 16, color: AppColors.grey),
+                          const Icon(
+                            Icons.calendar_today,
+                            size: 16,
+                            color: AppColors.grey,
+                          ),
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
@@ -137,21 +150,34 @@ class OrderCardWidget extends StatelessWidget {
                       ),
                     ),
                     if (itemsCount > 0) ...[
-                      Container(width: 1, height: 12, color: AppColors.greyLight, margin: const EdgeInsets.symmetric(horizontal: 10)),
+                      Container(
+                        width: 1,
+                        height: 12,
+                        color: AppColors.greyLight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                      ),
                       Row(
                         children: [
-                          const Icon(Icons.shopping_bag_outlined, size: 16, color: AppColors.primary),
+                          const Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 16,
+                            color: AppColors.primary,
+                          ),
                           const SizedBox(width: 6),
                           Text(
-                            LocaleKeys.itemsCount.tr(namedArgs: {'count': itemsCount.toString()}),
-                            style: AppTextStyle.fontPrimary16Regular.copyWith(fontSize: 12),
+                            LocaleKeys.itemsCount.tr(
+                              namedArgs: {'count': itemsCount.toString()},
+                            ),
+                            style: AppTextStyle.fontPrimary16Regular.copyWith(
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
 
                 // ─── Financial Breakdown ───
@@ -168,11 +194,18 @@ class OrderCardWidget extends StatelessWidget {
                           _buildPriceRow(LocaleKeys.subtotal.tr(), subtotal!),
                         if (shippingCost != null && shippingCost! > 0) ...[
                           const SizedBox(height: 6),
-                          _buildPriceRow(LocaleKeys.deliveryFee.tr(), shippingCost!),
+                          _buildPriceRow(
+                            LocaleKeys.deliveryFee.tr(),
+                            shippingCost!,
+                          ),
                         ],
                         if (discount != null && discount! > 0) ...[
                           const SizedBox(height: 6),
-                          _buildPriceRow(LocaleKeys.discount.tr(), -discount!, isDiscount: true),
+                          _buildPriceRow(
+                            LocaleKeys.discount.tr(),
+                            -discount!,
+                            isDiscount: true,
+                          ),
                         ],
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -203,14 +236,15 @@ class OrderCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceRow(String label, double amount, {bool isDiscount = false}) {
+  Widget _buildPriceRow(
+    String label,
+    double amount, {
+    bool isDiscount = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: AppTextStyle.fontGrey12Regular,
-        ),
+        Text(label, style: AppTextStyle.fontGrey12Regular),
         Text(
           '${amount > 0 ? '' : ''}${amount.toStringAsFixed(2)} ${LocaleKeys.currency.tr()}',
           style: AppTextStyle.fontBlack12Bold.copyWith(
@@ -291,4 +325,3 @@ class _DashedDivider extends StatelessWidget {
     );
   }
 }
-
