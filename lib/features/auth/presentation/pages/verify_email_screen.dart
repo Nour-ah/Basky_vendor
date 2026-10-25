@@ -1,17 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spider_restaurant/core/di/injection_container.dart';
-import 'package:spider_restaurant/core/theme/app_colors.dart';
-import 'package:spider_restaurant/core/translations/locale_keys.g.dart';
-import 'package:spider_restaurant/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:spider_restaurant/features/auth/presentation/cubit/auth_state.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/login_page.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_background_widget.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_button.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_card_widget.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_otp_field.dart';
-import 'package:spider_restaurant/features/home/presentation/pages/home_page.dart';
+import 'package:basky_vendor/core/di/injection_container.dart';
+import 'package:basky_vendor/core/theme/app_colors.dart';
+import 'package:basky_vendor/core/translations/locale_keys.g.dart';
+import 'package:basky_vendor/core/utils/navigation_utils.dart';
+import 'package:basky_vendor/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:basky_vendor/features/auth/presentation/cubit/auth_state.dart';
+import 'package:basky_vendor/features/auth/presentation/pages/login_page.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_background_widget.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_button.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_card_widget.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_otp_field.dart';
+import 'package:basky_vendor/features/home/presentation/pages/home_page.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   final String email;
@@ -45,10 +46,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthVerifyEmailSuccess) {
-            Navigator.pushAndRemoveUntil(
+            safeNavigate(
               context,
-              MaterialPageRoute(builder: (_) =>   HomePage()),
-              (route) => false,
+              () => Navigator.pushAndRemoveUntil(
+                context,
+                appRoute((_) => HomePage()),
+                (route) => false,
+              ),
             );
           } else if (state is AuthResendCodeSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -133,10 +137,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.pushAndRemoveUntil(
+                                safeNavigate(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const LoginPage()),
-                                  (route) => false,
+                                  () => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    appRoute((_) => const LoginPage()),
+                                    (route) => false,
+                                  ),
                                 );
                               },
                               child: Text(

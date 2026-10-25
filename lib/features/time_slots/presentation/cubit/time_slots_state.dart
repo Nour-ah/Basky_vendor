@@ -37,6 +37,17 @@ class TimeSlotsError extends TimeSlotsState {
   List<Object?> get props => [message, isNetworkError];
 }
 
+/// Action (add/update) failed while keeping the current list on screen.
+class TimeSlotsActionError extends TimeSlotsState {
+  final String message;
+  final List<TimeSlotEntity> slots;
+
+  const TimeSlotsActionError(this.message, this.slots);
+
+  @override
+  List<Object?> get props => [message, slots];
+}
+
 class TimeSlotsActionSuccess extends TimeSlotsState {
   final String message;
   final List<TimeSlotEntity> slots;

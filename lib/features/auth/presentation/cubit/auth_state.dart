@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
- import '../../domain/entities/user.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/entities/vendor_type.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -46,15 +47,24 @@ class AuthRegisterSuccess extends AuthState {
   final String message;
   final String phone;
   final String email;
+  final bool isActive;
 
   const AuthRegisterSuccess({
     required this.message,
     required this.phone,
     required this.email,
+    this.isActive = true,
   });
 
   @override
-  List<Object?> get props => [message, phone, email];
+  List<Object?> get props => [message, phone, email, isActive];
+}
+
+class AuthVendorTypesLoaded extends AuthState {
+  final List<VendorType> types;
+  const AuthVendorTypesLoaded({required this.types});
+  @override
+  List<Object?> get props => [types];
 }
 
 class AuthVerifyPhoneSuccess extends AuthState {

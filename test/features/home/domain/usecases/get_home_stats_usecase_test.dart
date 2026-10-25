@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/features/home/domain/entities/home_stats_entity.dart';
-import 'package:spider_restaurant/features/home/domain/repositories/home_repository.dart';
-import 'package:spider_restaurant/features/home/domain/usecases/get_home_stats_usecase.dart';
+import 'package:basky_vendor/features/home/domain/entities/home_stats_entity.dart';
+import 'package:basky_vendor/features/home/domain/repositories/home_repository.dart';
+import 'package:basky_vendor/features/home/domain/usecases/get_home_stats_usecase.dart';
 
 class MockHomeRepository implements HomeRepository {
   final HomeStatsEntity mockStats;
@@ -23,8 +23,8 @@ void main() {
   late MockHomeRepository mockRepository;
 
   const tHomeStats = HomeStatsEntity(
-    totalOrders: 33,
-    totalEarnings: 600.0,
+    todayOrders: 33,
+    todayEarnings: 600.0,
     recentOrders: [],
     pendingOrders: 1,
     preparingOrders: 2,
@@ -47,7 +47,10 @@ void main() {
 
   test('should throw exception when repository fails', () async {
     // Arrange
-    mockRepository = MockHomeRepository(mockStats: tHomeStats, shouldThrow: true);
+    mockRepository = MockHomeRepository(
+      mockStats: tHomeStats,
+      shouldThrow: true,
+    );
     usecase = GetHomeStatsUseCase(mockRepository);
 
     // Act

@@ -6,6 +6,9 @@ abstract class AuthLocalDataSource {
   Future<String?> getToken();
   Future<void> removeToken();
   Future<bool> isLoggedIn();
+  Future<void> cacheVendorTypeKey(String? vendorTypeKey);
+  Future<String?> getVendorTypeKey();
+  Future<void> cacheVendorId(int? vendorId);
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -36,5 +39,23 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<bool> isLoggedIn() async {
     final token = await getToken();
     return token != null && token.isNotEmpty;
+  }
+
+  @override
+  Future<void> cacheVendorTypeKey(String? vendorTypeKey) async {
+    final key = vendorTypeKey?.trim().toLowerCase();
+    if (key == null || key.isEmpty) return;
+    await LocalStorage.saveUserType(key);
+  }
+
+  @override
+  Future<String?> getVendorTypeKey() async {
+    return LocalStorage.getUserType();
+  }
+
+  @override
+  Future<void> cacheVendorId(int? vendorId) async {
+    if (vendorId == null || vendorId <= 0) return;
+    await LocalStorage.saveVendorId(vendorId);
   }
 }

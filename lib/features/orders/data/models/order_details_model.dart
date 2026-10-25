@@ -1,3 +1,4 @@
+import '../../../../core/utils/json_parsers.dart';
 import '../../domain/entities/order_details_entity.dart';
 import '../../domain/entities/order_status.dart';
 import 'order_item_model.dart';
@@ -5,6 +6,7 @@ import 'order_item_model.dart';
 class OrderDetailsModel extends OrderDetailsEntity {
   const OrderDetailsModel({
     required super.id,
+    super.platformOrderId,
     required super.orderCode,
     required super.status,
     required super.dateTime,
@@ -36,6 +38,7 @@ class OrderDetailsModel extends OrderDetailsEntity {
 
     return OrderDetailsModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+      platformOrderId: JsonParsers.asInt(json['order_id']),
       orderCode: json['order_id']?.toString() ?? json['order_code']?.toString() ?? json['code']?.toString() ?? '',
       status: OrderStatus.fromString(json['status']?.toString() ?? 'unknown'),
       dateTime: json['created_at']?.toString() ?? json['date']?.toString() ?? '',
@@ -47,9 +50,9 @@ class OrderDetailsModel extends OrderDetailsEntity {
       shippingCost: json['shipping_cost'] is num ? (json['shipping_cost'] as num).toDouble() : double.tryParse(json['shipping_cost']?.toString() ?? '0.0') ?? 0.0,
       commission: json['commission'] is num ? (json['commission'] as num).toDouble() : double.tryParse(json['commission']?.toString() ?? '0.0') ?? 0.0,
       totalAmount: json['total'] is num ? (json['total'] as num).toDouble() : double.tryParse(json['total']?.toString() ?? '0.0') ?? 0.0,
-      
-      notes: json['notes']?.toString(),
-      
+
+      notes: _parseNotes(json),
+
       vendorName: json['vendor']?['name']?.toString() ?? 'Unknown Vendor',
       vendorPhone: json['vendor']?['phone']?.toString() ?? '',
       vendorAddress: json['vendor']?['address']?.toString() ?? '',
@@ -61,6 +64,28 @@ class OrderDetailsModel extends OrderDetailsEntity {
       
       items: parsedItems,
     );
+  }
+
+  /// Client notes may arrive under several keys or nested on the platform order.
+  static String? _parseNotes(Map<String, dynamic> json) {
+    final candidates = <dynamic>[
+      json['notes'],
+      json['note'],
+      json['customer_notes'],
+      json['customer_note'],
+      json['client_notes'],
+      json['special_instructions'],
+      json['order_notes'],
+      if (json['order'] is Map) (json['order'] as Map)['notes'],
+      if (json['order'] is Map) (json['order'] as Map)['note'],
+      if (json['order'] is Map) (json['order'] as Map)['customer_notes'],
+      if (json['customer'] is Map) (json['customer'] as Map)['notes'],
+    ];
+    for (final value in candidates) {
+      final text = JsonParsers.asString(value);
+      if (text != null) return text;
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() {

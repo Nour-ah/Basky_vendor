@@ -8,12 +8,12 @@ import '../../../../../core/translations/locale_keys.g.dart';
 class StatisticsCards extends StatelessWidget {
   const StatisticsCards({
     super.key,
-    required this.totalOrders,
-    required this.totalEarnings,
+    required this.todayOrders,
+    required this.todayEarnings,
   });
 
-  final int totalOrders;
-  final double totalEarnings;
+  final int todayOrders;
+  final double todayEarnings;
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +23,17 @@ class StatisticsCards extends StatelessWidget {
         children: [
           Expanded(
             child: _StatCard(
-              title: LocaleKeys.totalOrders.tr(),
-              numericValue: totalOrders.toDouble(),
+              title: LocaleKeys.todayOrders.tr(),
+              numericValue: todayOrders.toDouble(),
               icon: Icons.receipt_long,
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: _StatCard(
-              title: LocaleKeys.yourEarnings.tr(),
-              numericValue: totalEarnings,
-              prefix: '\$',
+              title: LocaleKeys.todayEarnings.tr(),
+              numericValue: todayEarnings,
+              suffix: ' ${LocaleKeys.currency.tr()}',
               icon: Icons.account_balance_wallet,
             ),
           ),
@@ -48,12 +48,12 @@ class _StatCard extends StatelessWidget {
     required this.title,
     required this.numericValue,
     required this.icon,
-    this.prefix = '',
+    this.suffix = '',
   });
 
   final String title;
   final double numericValue;
-  final String prefix;
+  final String suffix;
   final IconData icon;
 
   @override
@@ -67,7 +67,10 @@ class _StatCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.white.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.white.withValues(alpha: 0.8), width: 1.5),
+            border: Border.all(
+              color: AppColors.white.withValues(alpha: 0.8),
+              width: 1.5,
+            ),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -87,7 +90,11 @@ class _StatCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: AppColors.primary.withValues(alpha: 0.8), size: 28),
+              Icon(
+                icon,
+                color: AppColors.primary.withValues(alpha: 0.8),
+                size: 28,
+              ),
               const SizedBox(height: 12),
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(begin: 0, end: numericValue),
@@ -95,7 +102,7 @@ class _StatCard extends StatelessWidget {
                 curve: Curves.easeOutCubic,
                 builder: (context, value, child) {
                   return Text(
-                    '$prefix${value.toInt()}',
+                    '${value.toInt()}$suffix',
                     style: AppTextStyle.heading24Bold,
                   );
                 },
@@ -113,4 +120,3 @@ class _StatCard extends StatelessWidget {
     );
   }
 }
-

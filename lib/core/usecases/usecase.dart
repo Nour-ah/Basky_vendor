@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
+import 'package:basky_vendor/core/error/failures.dart';
 
 /// Base UseCase class for all use cases in the application
 abstract class UseCase<Type, Params> {

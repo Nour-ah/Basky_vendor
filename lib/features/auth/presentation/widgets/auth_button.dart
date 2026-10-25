@@ -5,6 +5,7 @@ class AuthButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color backgroundColor;
   final bool isLoading;
+  final Color? textColor;
 
   const AuthButton({
     super.key,
@@ -12,6 +13,7 @@ class AuthButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     this.isLoading = false,
+     this.textColor,
   });
 
   @override
@@ -40,8 +42,8 @@ class AuthButton extends StatelessWidget {
               )
             : Text(
                 text,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: textColor ?? Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),

@@ -2,19 +2,19 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/core/usecases/usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/add_product_params.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/category_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_status.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_type.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_variant_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/add_product_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_categories_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_variants_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/update_product_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/add_food_cubit.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/add_food_state.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/core/usecases/usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/add_product_params.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/category_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_status.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_type.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_variant_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/add_product_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/get_categories_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/get_variants_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/update_product_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/add_food_cubit.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/add_food_state.dart';
 
 class MockGetCategoriesUseCase extends Mock implements GetCategoriesUseCase {}
 class MockAddProductUseCase extends Mock implements AddProductUseCase {}

@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
+import '../entities/add_branch_params.dart';
 import '../entities/add_product_params.dart';
 import '../entities/branch_details_response_entity.dart';
 import '../entities/category_entity.dart';
+import '../entities/country_entity.dart';
 import '../entities/product_details_entity.dart';
 import '../entities/product_summary_entity.dart';
 import '../entities/product_variant_entity.dart';
@@ -14,6 +16,14 @@ abstract class RestaurantRepository {
   Future<Either<Failure, List<VendorBranchEntity>>> getBranches();
 
   Future<Either<Failure, BranchDetailsResponseEntity>> getBranchDetails(int branchId, {int page = 1});
+
+  Future<Either<Failure, void>> addBranch(AddBranchParams params);
+
+  Future<Either<Failure, void>> updateBranch(int branchId, AddBranchParams params);
+
+  Future<Either<Failure, void>> deleteBranch(int branchId);
+
+  Future<Either<Failure, List<CountryEntity>>> getCountries();
 
   Future<Either<Failure, List<CategoryEntity>>> getCategories();
 

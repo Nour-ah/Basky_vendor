@@ -2,20 +2,21 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/features/auth/domain/entities/auth_response.dart';
-import 'package:spider_restaurant/features/auth/domain/entities/user.dart';
-import 'package:spider_restaurant/features/auth/domain/entities/auth_action_result.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/is_logged_in_usecase.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/login_usecase.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/logout_usecase.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/register_usecase.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/resend_verification_code_usecase.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/verify_email_usecase.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/verify_phone_usecase.dart';
-import 'package:spider_restaurant/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:spider_restaurant/features/auth/presentation/cubit/auth_state.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/features/auth/domain/entities/auth_response.dart';
+import 'package:basky_vendor/features/auth/domain/entities/user.dart';
+import 'package:basky_vendor/features/auth/domain/entities/auth_action_result.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/get_vendor_types_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/is_logged_in_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/login_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/register_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/resend_verification_code_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/verify_email_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/verify_phone_usecase.dart';
+import 'package:basky_vendor/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:basky_vendor/features/auth/presentation/cubit/auth_state.dart';
 
 class MockLoginUseCase extends Mock implements LoginUseCase {}
 class MockRegisterUseCase extends Mock implements RegisterUseCase {}
@@ -25,6 +26,7 @@ class MockResendVerificationCodeUseCase extends Mock implements ResendVerificati
 class MockLogoutUseCase extends Mock implements LogoutUseCase {}
 class MockGetCurrentUserUseCase extends Mock implements GetCurrentUserUseCase {}
 class MockIsLoggedInUseCase extends Mock implements IsLoggedInUseCase {}
+class MockGetVendorTypesUseCase extends Mock implements GetVendorTypesUseCase {}
 
 void main() {
   late AuthCubit cubit;
@@ -36,6 +38,7 @@ void main() {
   late MockLogoutUseCase mockLogoutUseCase;
   late MockGetCurrentUserUseCase mockGetCurrentUserUseCase;
   late MockIsLoggedInUseCase mockIsLoggedInUseCase;
+  late MockGetVendorTypesUseCase mockGetVendorTypesUseCase;
 
   setUp(() {
     mockLoginUseCase = MockLoginUseCase();
@@ -46,6 +49,7 @@ void main() {
     mockLogoutUseCase = MockLogoutUseCase();
     mockGetCurrentUserUseCase = MockGetCurrentUserUseCase();
     mockIsLoggedInUseCase = MockIsLoggedInUseCase();
+    mockGetVendorTypesUseCase = MockGetVendorTypesUseCase();
 
     cubit = AuthCubit(
       loginUseCase: mockLoginUseCase,
@@ -56,6 +60,7 @@ void main() {
       logoutUseCase: mockLogoutUseCase,
       getCurrentUserUseCase: mockGetCurrentUserUseCase,
       isLoggedInUseCase: mockIsLoggedInUseCase,
+      getVendorTypesUseCase: mockGetVendorTypesUseCase,
     );
   });
 

@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 class VendorBranchEntity extends Equatable {
   final int id;
   final String name;
+  final String? nameEn;
+  final String? nameAr;
   final String address;
   final bool isOpen;
   final double rating;
@@ -13,10 +15,13 @@ class VendorBranchEntity extends Equatable {
   final String? phone;
   final String? latitude;
   final String? longitude;
+  final int? countryId;
 
   const VendorBranchEntity({
     required this.id,
     required this.name,
+    this.nameEn,
+    this.nameAr,
     required this.address,
     required this.isOpen,
     required this.rating,
@@ -27,12 +32,15 @@ class VendorBranchEntity extends Equatable {
     this.phone,
     this.latitude,
     this.longitude,
+    this.countryId,
   });
 
   @override
   List<Object?> get props => [
         id,
         name,
+        nameEn,
+        nameAr,
         address,
         isOpen,
         rating,
@@ -43,5 +51,6 @@ class VendorBranchEntity extends Equatable {
         phone,
         latitude,
         longitude,
+        countryId,
       ];
 }

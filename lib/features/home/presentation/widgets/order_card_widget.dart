@@ -282,6 +282,7 @@ class OrderCardWidget extends StatelessWidget {
       case OrderStatus.readyForPickup:
       case OrderStatus.readyForDelivery:
         return (AppColors.blue.withValues(alpha: 0.15), AppColors.blue);
+      case OrderStatus.pickingUp:
       case OrderStatus.shipped:
       case OrderStatus.outForDelivery:
         return (AppColors.purple.withValues(alpha: 0.15), AppColors.purple);

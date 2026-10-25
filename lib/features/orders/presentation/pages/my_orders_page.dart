@@ -5,6 +5,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/widgets/app_skeleton_loading.dart';
 import '../../domain/entities/order_status.dart';
 import '../cubit/orders_cubit.dart';
 import '../cubit/orders_state.dart';
@@ -100,7 +101,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                       current is OrdersGenericError,
                   builder: (context, state) {
                     if (state is OrdersLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const OrdersListSkeleton();
                     } else if (state is OrdersNetworkError) {
                       return _buildErrorState(
                         context,
@@ -142,7 +143,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                                     orderId: state.orders[index].id,
                                   ),
                                 ),
-                              ),
+                              ).then((_) => _ordersCubit.refreshSilently()),
                               onStatusChange: (newStatus) {
                                 _ordersCubit.updateOrderStatus(state.orders[index].id, newStatus);
                               },

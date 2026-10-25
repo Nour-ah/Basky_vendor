@@ -4,15 +4,21 @@ import '../../../../core/error/failures.dart';
 import '../../domain/entities/order_details_entity.dart';
 import '../../domain/entities/order_filter_result_entity.dart';
 import '../../domain/entities/order_invoice_entity.dart';
+import '../../domain/entities/order_realtime_event.dart';
 import '../../domain/entities/order_status.dart';
 import '../../domain/entities/order_summary_entity.dart';
 import '../../domain/repositories/orders_repository.dart';
+import '../datasources/orders_realtime_datasource.dart';
 import '../datasources/orders_remote_datasource.dart';
 
 class OrdersRepositoryImpl implements OrdersRepository {
   final OrdersRemoteDataSource remoteDataSource;
+  final OrdersRealtimeDataSource realtimeDataSource;
 
-  OrdersRepositoryImpl({required this.remoteDataSource});
+  OrdersRepositoryImpl({
+    required this.remoteDataSource,
+    required this.realtimeDataSource,
+  });
 
   @override
   Future<Either<Failure, List<OrderSummaryEntity>>> getOrders({
@@ -49,6 +55,18 @@ class OrdersRepositoryImpl implements OrdersRepository {
   }) async {
     return _execute(() => remoteDataSource.updateOrderStatus(orderId: orderId, newStatus: newStatus));
   }
+
+  @override
+  Stream<OrderRealtimeEvent> watchNewVendorOrders() =>
+      realtimeDataSource.watchNewVendorOrders();
+
+  @override
+  Stream<OrderRealtimeEvent> watchOrderStatus(int platformOrderId) =>
+      realtimeDataSource.watchOrderStatus(platformOrderId);
+
+  @override
+  Stream<OrderRealtimeEvent> watchOrdersStatus(Iterable<int> platformOrderIds) =>
+      realtimeDataSource.watchOrdersStatus(platformOrderIds);
 
   Future<Either<Failure, T>> _execute<T>(Future<T> Function() action) async {
     try {

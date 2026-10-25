@@ -18,41 +18,71 @@ class DioErrorMapper {
     debugPrint('❌ DioErrorMapper: ${e.type} — status=${e.response?.statusCode}');
 
     switch (e.type) {
-      // ── No internet / timeout ──────────────────────────────────
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.sendTimeout:
-        throw const NetworkException(message: 'Request timed out. Please check your connection.');
+        throw const NetworkException(
+          message: 'Request timed out. Please check your connection.',
+        );
 
       case DioExceptionType.connectionError:
-        throw const NetworkException(message: 'No internet connection. Please try again.');
+        throw const NetworkException(
+          message: 'No internet connection. Please try again.',
+        );
 
-      // ── Server returned an HTTP error ──────────────────────────
       case DioExceptionType.badResponse:
         return _handleBadResponse(e);
 
-      // ── Request was cancelled ──────────────────────────────────
       case DioExceptionType.cancel:
         throw const NetworkException(message: 'Request was cancelled.');
 
-      // ── Anything else ─────────────────────────────────────────
       default:
-        throw ServerException(
-          message: e.message ?? 'An unexpected error occurred.',
-        );
+        throw ServerException(message: userFacingMessage(e));
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Private helpers
-  // ---------------------------------------------------------------------------
+  /// Short message safe for UI / snackbars / logs (never Dio boilerplate).
+  static String userFacingMessage(DioException e) {
+    final fromBody = _friendlyFromBody(e.response?.data);
+    if (fromBody != null) return fromBody;
+
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.receiveTimeout:
+      case DioExceptionType.sendTimeout:
+        return 'Request timed out. Please check your connection.';
+      case DioExceptionType.connectionError:
+        return 'No internet connection. Please try again.';
+      case DioExceptionType.cancel:
+        return 'Request was cancelled.';
+      case DioExceptionType.badResponse:
+        final code = e.response?.statusCode;
+        return switch (code) {
+          401 => 'Session expired. Please login again.',
+          403 => 'You do not have permission to perform this action.',
+          404 => 'The requested resource was not found.',
+          422 => 'Please check your input and try again.',
+          500 || 502 || 503 => 'Server error. Please try again later.',
+          _ => 'Something went wrong. Please try again.',
+        };
+      default:
+        return 'Something went wrong. Please try again.';
+    }
+  }
+
+  /// Strips Dio/HTTP boilerplate if it leaked into a failure string.
+  static String sanitize(String? message) {
+    final value = message?.trim() ?? '';
+    if (value.isEmpty || _isDioBoilerplate(value)) {
+      return 'Something went wrong. Please try again.';
+    }
+    return value;
+  }
 
   static Never _handleBadResponse(DioException e) {
     final statusCode = e.response?.statusCode ?? 0;
     final data = e.response?.data;
-
-    // Extract server message from response body
-    final serverMessage = _extractMessage(data);
+    final serverMessage = _friendlyFromBody(data);
 
     debugPrint('❌ DioErrorMapper: HTTP $statusCode — $serverMessage');
 
@@ -63,16 +93,16 @@ class DioErrorMapper {
         );
 
       case 422:
-        // Validation errors — extract field-level errors map
         final errors = _extractValidationErrors(data);
         throw ValidationException(
-          message: serverMessage ?? 'Validation failed.',
+          message: serverMessage ?? 'Please check your input and try again.',
           errors: errors,
         );
 
       case 403:
         throw UnauthorizedException(
-          message: serverMessage ?? 'You do not have permission to perform this action.',
+          message:
+              serverMessage ?? 'You do not have permission to perform this action.',
         );
 
       case 404:
@@ -89,36 +119,60 @@ class DioErrorMapper {
 
       default:
         throw ServerException(
-          message: serverMessage ?? 'Unexpected server error (HTTP $statusCode).',
+          message: serverMessage ?? 'Something went wrong. Please try again.',
         );
     }
   }
 
-  /// Extracts the `message` field from the API response body.
-  static String? _extractMessage(dynamic data) {
-    if (data is Map<String, dynamic>) {
-      final message = data['message'];
-      if (message is String && message.isNotEmpty) return message;
+  static String? _friendlyFromBody(dynamic data) {
+    final map = _asStringKeyedMap(data);
+    if (map == null) return null;
+
+    final errors = _extractValidationErrors(map);
+    if (errors.isNotEmpty) {
+      final lines = errors.values.expand((e) => e).where((e) => e.trim().isNotEmpty);
+      final joined = lines.join('\n');
+      if (joined.isNotEmpty) return joined;
+    }
+
+    final message = map['message']?.toString().trim();
+    if (message != null && message.isNotEmpty && !_isDioBoilerplate(message)) {
+      return message;
     }
     return null;
   }
 
-  /// Extracts field-level validation errors from a 422 response body.
-  /// Expects format: `{ "errors": { "field": ["msg1", "msg2"] } }`
-  static Map<String, List<String>> _extractValidationErrors(dynamic data) {
-    if (data is! Map<String, dynamic>) return {};
+  static Map<String, dynamic>? _asStringKeyedMap(dynamic data) {
+    if (data is Map<String, dynamic>) return data;
+    if (data is Map) {
+      return data.map((key, value) => MapEntry(key.toString(), value));
+    }
+    return null;
+  }
 
-    final rawErrors = data['errors'];
-    if (rawErrors is! Map<String, dynamic>) return {};
+  static Map<String, List<String>> _extractValidationErrors(dynamic data) {
+    final map = _asStringKeyedMap(data);
+    if (map == null) return {};
+
+    final rawErrors = map['errors'];
+    if (rawErrors is! Map) return {};
 
     final result = <String, List<String>>{};
     rawErrors.forEach((key, value) {
       if (value is List) {
-        result[key] = value.map((e) => e.toString()).toList();
+        result[key.toString()] = value.map((e) => e.toString()).toList();
       } else if (value is String) {
-        result[key] = [value];
+        result[key.toString()] = [value];
       }
     });
     return result;
+  }
+
+  static bool _isDioBoilerplate(String message) {
+    final lower = message.toLowerCase();
+    return lower.contains('validatestatus') ||
+        lower.contains('requestoptions') ||
+        lower.contains('this exception was thrown because the response has a status code') ||
+        lower.contains('read more about status codes at');
   }
 }

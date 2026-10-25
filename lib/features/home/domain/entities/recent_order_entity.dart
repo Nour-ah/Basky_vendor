@@ -19,11 +19,11 @@ class RecentOrderEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        orderCode,
-        status,
-        dateTime,
-        orderType,
-        itemCount,
-      ];
+    id,
+    orderCode,
+    status,
+    dateTime,
+    orderType,
+    itemCount,
+  ];
 }

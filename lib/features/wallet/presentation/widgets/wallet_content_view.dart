@@ -32,7 +32,7 @@ class WalletContentView extends StatelessWidget {
             WalletBalanceCard(
               title: LocaleKeys.wallet_availableBalance.tr(),
               amount: state.wallet.availableBalance,
-              currency: state.wallet.currency,
+              currency: LocaleKeys.currency.tr(),
               color: AppColors.primary,
             ),
             const SizedBox(height: 16),
@@ -42,7 +42,7 @@ class WalletContentView extends StatelessWidget {
                   child: WalletBalanceCard(
                     title: LocaleKeys.wallet_pending.tr(),
                     amount: state.wallet.pendingBalance,
-                    currency: state.wallet.currency,
+                    currency: LocaleKeys.currency.tr(),
                     color: Colors.orange,
                   ),
                 ),
@@ -51,7 +51,7 @@ class WalletContentView extends StatelessWidget {
                   child: WalletBalanceCard(
                     title: LocaleKeys.wallet_withdrawn.tr(),
                     amount: state.wallet.totalWithdrawn,
-                    currency: state.wallet.currency,
+                    currency: LocaleKeys.currency.tr(),
                     color: AppColors.success,
                   ),
                 ),

@@ -11,7 +11,8 @@ class AuthResponseModel extends AuthResponse {
 
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
     return AuthResponseModel(
-      user: UserModel.fromJson(json['user'] ?? {}),
+      // Prefer envelope parse so sibling `vendor_type` on login data is kept.
+      user: UserModel.fromApiData(json),
       token: json['token'] ?? '',
       tokenType: json['token_type'] ?? 'Bearer',
     );

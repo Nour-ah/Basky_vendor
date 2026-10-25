@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomImageView extends StatelessWidget {
   ///[imagePath] is required parameter for showing image
@@ -235,8 +236,7 @@ class CustomImageView extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     'لا توجد صورة',
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
+                    style: GoogleFonts.cairo(
                       fontSize: 10,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

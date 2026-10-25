@@ -1,9 +1,11 @@
+import '../../../../core/utils/json_parsers.dart';
 import '../../domain/entities/order_status.dart';
 import '../../domain/entities/order_summary_entity.dart';
 
 class OrderSummaryModel extends OrderSummaryEntity {
   const OrderSummaryModel({
     required super.id,
+    super.platformOrderId,
     required super.orderCode,
     required super.status,
     required super.dateTime,
@@ -21,6 +23,7 @@ class OrderSummaryModel extends OrderSummaryEntity {
   factory OrderSummaryModel.fromJson(Map<String, dynamic> json) {
     return OrderSummaryModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+      platformOrderId: JsonParsers.asInt(json['order_id']),
       orderCode: json['order_code']?.toString() ?? json['code']?.toString() ?? json['order_id']?.toString() ?? '',
       status: OrderStatus.fromString(json['status']?.toString() ?? 'unknown'),
       dateTime: json['created_at']?.toString() ?? json['date']?.toString() ?? '',
@@ -39,6 +42,7 @@ class OrderSummaryModel extends OrderSummaryEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'order_id': platformOrderId,
       'order_code': orderCode,
       'status': status.toApiString(),
       'created_at': dateTime,

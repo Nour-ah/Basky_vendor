@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/repositories/restaurant_repository.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_vendor_branches_usecase.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/repositories/restaurant_repository.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/get_vendor_branches_usecase.dart';
 
 class MockRestaurantRepository extends Mock implements RestaurantRepository {}
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/features/variants/domain/entities/variant_entity.dart';
-import 'package:spider_restaurant/features/variants/ui/widgets/variant_card.dart';
+import 'package:basky_vendor/features/variants/domain/entities/variant_entity.dart';
+import 'package:basky_vendor/features/variants/ui/widgets/variant_card.dart';
 
 void main() {
   const tVariant = VariantEntity(

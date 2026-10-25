@@ -16,6 +16,9 @@ mo5Learn.md
 .swiftpm/
 migrate_working_dir/
 
+# Environment
+.env
+
 # IntelliJ related
 *.iml
 *.ipr

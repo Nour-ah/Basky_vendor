@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../cache_helper/local_storage.dart';
 import '../network/api_constants.dart';
+import '../network/dio_error_mapper.dart';
 
 /// Singleton API Client with debug logging
 class ApiClient {
@@ -159,7 +160,7 @@ class LoggingInterceptor extends Interceptor {
     debugPrint(
       '❌ ERROR[${err.response?.statusCode ?? 'N/A'}] => ${err.requestOptions.uri}',
     );
-    debugPrint('Message: ${err.message}');
+    debugPrint('Message: ${DioErrorMapper.userFacingMessage(err)}');
     if (err.response?.data != null) {
       debugPrint('Response: ${err.response?.data}');
     }

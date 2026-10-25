@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/validation_errors_model.dart';
 import '../../../../core/network/api_constants.dart';
+import '../../domain/entities/add_branch_params.dart';
 import '../../domain/entities/add_product_params.dart';
 import '../../domain/entities/product_status.dart';
 import '../models/branch_details_response_model.dart';
 import '../models/category_model.dart';
+import '../models/country_model.dart';
 import '../models/product_details_model.dart';
 import '../models/product_summary_model.dart';
 import '../models/product_variant_model.dart';
@@ -16,6 +18,14 @@ abstract class RestaurantRemoteDataSource {
   Future<List<VendorBranchModel>> getBranches();
 
   Future<BranchDetailsResponseModel> getBranchDetails(int branchId, {int page = 1});
+
+  Future<void> addBranch(AddBranchParams params);
+
+  Future<void> updateBranch(int branchId, AddBranchParams params);
+
+  Future<void> deleteBranch(int branchId);
+
+  Future<List<CountryModel>> getCountries();
 
   Future<List<CategoryModel>> getCategories();
 
@@ -81,6 +91,105 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       _handleDioException(e);
     } catch (e) {
       debugPrint('❌ RestaurantRemoteDataSource: Error $e');
+      throw const ParsingException();
+    }
+    throw const ServerException();
+  }
+
+  @override
+  Future<void> addBranch(AddBranchParams params) async {
+    await _submitBranchData(ApiConstants.vendorBranches, params);
+  }
+
+  @override
+  Future<void> updateBranch(int branchId, AddBranchParams params) async {
+    await _submitBranchData(
+      '${ApiConstants.vendorBranches}/$branchId',
+      params,
+    );
+  }
+
+  @override
+  Future<void> deleteBranch(int branchId) async {
+    debugPrint(
+      '🔵 RestaurantRemoteDataSource: DELETE ${ApiConstants.vendorBranches}/$branchId',
+    );
+    try {
+      await dio.delete('${ApiConstants.vendorBranches}/$branchId');
+      debugPrint('✅ RestaurantRemoteDataSource: Success deleting branch');
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      debugPrint('❌ RestaurantRemoteDataSource: Error deleting branch $e');
+      throw const ParsingException();
+    }
+  }
+
+  Future<void> _submitBranchData(String path, AddBranchParams params) async {
+    debugPrint('🔵 RestaurantRemoteDataSource: POST $path (branch)');
+    try {
+      final Map<String, dynamic> data = {
+        'country_id': params.countryId,
+        'name[en]': params.nameEn,
+        'name[ar]': params.nameAr,
+        'address': params.address,
+        'phone': params.phone,
+        'is_active': params.isActive,
+      };
+
+      if (params.latitude != null && params.latitude!.trim().isNotEmpty) {
+        data['latitude'] = params.latitude!.trim();
+      }
+      if (params.longitude != null && params.longitude!.trim().isNotEmpty) {
+        data['longitude'] = params.longitude!.trim();
+      }
+
+      if (params.image != null) {
+        data['image'] = await MultipartFile.fromFile(
+          params.image!.path,
+          filename: params.image!.path.split('/').last,
+        );
+      }
+
+      await dio.post(
+        path,
+        data: FormData.fromMap(data),
+        options: Options(
+          contentType: 'multipart/form-data',
+          sendTimeout: const Duration(minutes: 2),
+          receiveTimeout: const Duration(minutes: 2),
+        ),
+      );
+      debugPrint('✅ RestaurantRemoteDataSource: Success submitting branch');
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      debugPrint('❌ RestaurantRemoteDataSource: Error submitting branch $e');
+      throw const ParsingException();
+    }
+  }
+
+  @override
+  Future<List<CountryModel>> getCountries() async {
+    debugPrint('🔵 RestaurantRemoteDataSource: GET ${ApiConstants.countries}');
+    try {
+      final response = await dio.get(ApiConstants.countries);
+      final raw = response.data;
+      List<dynamic> list = const [];
+      if (raw is Map && raw['data'] is List) {
+        list = raw['data'] as List;
+      } else if (raw is List) {
+        list = raw;
+      }
+      return list
+          .whereType<Map>()
+          .map((e) => CountryModel.fromJson(Map<String, dynamic>.from(e)))
+          .where((c) => c.id > 0 && c.name.isNotEmpty)
+          .toList();
+    } on DioException catch (e) {
+      _handleDioException(e);
+    } catch (e) {
+      debugPrint('❌ RestaurantRemoteDataSource: Error fetching countries $e');
       throw const ParsingException();
     }
     throw const ServerException();

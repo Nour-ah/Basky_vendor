@@ -47,7 +47,8 @@ class TimeSlotsCubit extends Cubit<TimeSlotsState> {
     if (isClosed) return;
 
     await result.fold(
-      (failure) async => emit(TimeSlotsError(failure.message)),
+      (failure) async =>
+          _emitActionFailure(_friendlyMessage(failure), currentSlots),
       (_) async => await fetchTimeSlots(),
     );
   }
@@ -61,15 +62,34 @@ class TimeSlotsCubit extends Cubit<TimeSlotsState> {
     if (isClosed) return;
 
     await result.fold(
-      (failure) async => emit(TimeSlotsError(failure.message)),
+      (failure) async =>
+          _emitActionFailure(_friendlyMessage(failure), currentSlots),
       (_) async => await fetchTimeSlots(),
     );
+  }
+
+  String _friendlyMessage(Failure failure) {
+    if (failure is ValidationFailure && failure.errors.isNotEmpty) {
+      final lines = failure.errors.values.expand((e) => e).toList();
+      if (lines.isNotEmpty) return lines.join('\n');
+    }
+    return failure.message;
+  }
+
+  void _emitActionFailure(String message, List<TimeSlotEntity> slots) {
+    emit(TimeSlotsActionError(message, slots));
+    if (slots.isEmpty) {
+      emit(TimeSlotsEmpty());
+    } else {
+      emit(TimeSlotsLoaded(slots));
+    }
   }
 
   List<TimeSlotEntity> _currentSlots() {
     final state = this.state;
     if (state is TimeSlotsLoaded) return state.slots;
     if (state is TimeSlotsSubmitting) return state.slots;
+    if (state is TimeSlotsActionError) return state.slots;
     return [];
   }
 }

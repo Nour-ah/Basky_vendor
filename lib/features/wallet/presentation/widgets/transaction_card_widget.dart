@@ -60,7 +60,7 @@ class TransactionCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${isDeposit ? '+' : '-'}${transaction.amount}',
+                '${isDeposit ? '+' : '-'}${transaction.amount} ${LocaleKeys.currency.tr()}',
                 style: AppTextStyle.fontBlack16Bold.copyWith(
                   color: isDeposit ? AppColors.success : AppColors.error,
                 ),

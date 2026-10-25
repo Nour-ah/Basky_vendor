@@ -3,6 +3,7 @@ enum OrderStatus {
   processing,
   readyForPickup,
   readyForDelivery,
+  pickingUp,
   shipped,
   outForDelivery,
   delivered,
@@ -24,6 +25,9 @@ enum OrderStatus {
       case 'ready_for_delivery':
       case 'ready':
         return OrderStatus.readyForDelivery;
+      case 'picking_up':
+      case 'pickingup':
+        return OrderStatus.pickingUp;
       case 'shipped':
         return OrderStatus.shipped;
       case 'out_for_delivery':
@@ -54,6 +58,8 @@ enum OrderStatus {
         return 'ready_for_pickup';
       case OrderStatus.readyForDelivery:
         return 'ready_for_delivery';
+      case OrderStatus.pickingUp:
+        return 'picking_up';
       case OrderStatus.shipped:
         return 'shipped';
       case OrderStatus.outForDelivery:

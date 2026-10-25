@@ -12,6 +12,7 @@ import '../../../auth/presentation/pages/auth_options_page.dart';
 import '../../../my_restaurant/presentation/pages/my_branches_page.dart';
 import '../../../my_restaurant/presentation/pages/my_products_page.dart';
 import '../../../orders/presentation/pages/my_orders_page.dart';
+import '../../../prescriptions/presentation/pages/vendor_prescription_requests_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
 import '../../../reviews/presentation/pages/reviews_page.dart';
@@ -27,11 +28,15 @@ class HomeDrawer extends StatelessWidget {
     required this.userName,
     required this.userRating,
     required this.userImage,
+    this.isPharmacyVendor = false,
+    this.pendingPrescriptionCount,
   });
 
   final String userName;
   final double userRating;
   final String userImage;
+  final bool isPharmacyVendor;
+  final int? pendingPrescriptionCount;
 
   void _navigate(BuildContext context, Widget page) {
     Navigator.pop(context);
@@ -69,9 +74,7 @@ class HomeDrawer extends StatelessWidget {
 
     // Try API logout — don't block the user
     try {
-      await sl<LogoutUseCase>().call().timeout(
-            const Duration(seconds: 5),
-          );
+      await sl<LogoutUseCase>().call().timeout(const Duration(seconds: 5));
     } catch (_) {}
 
     // Always clear cache and go to login
@@ -95,6 +98,15 @@ class HomeDrawer extends StatelessWidget {
         title: LocaleKeys.myOrders.tr(),
         onTap: () => _navigate(context, const MyOrdersPage()),
       ),
+      if (isPharmacyVendor)
+        DrawerItemModel(
+          icon: Icons.medication_outlined,
+          title: LocaleKeys.prescriptionRequests.tr(),
+          subtitle: LocaleKeys.prescriptionRequestsSubtitle.tr(),
+          badgeCount: pendingPrescriptionCount,
+          onTap: () =>
+              _navigate(context, const VendorPrescriptionRequestsPage()),
+        ),
       DrawerItemModel(
         icon: Icons.storefront_outlined,
         title: LocaleKeys.myBranches.tr(),

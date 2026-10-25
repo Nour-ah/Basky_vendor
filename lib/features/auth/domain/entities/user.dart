@@ -1,4 +1,6 @@
-class User {
+import 'package:equatable/equatable.dart';
+
+class User extends Equatable {
   final int id;
   final String name;
   final String email;
@@ -12,6 +14,11 @@ class User {
   final List<String> permissions;
   final String createdAt;
   final String updatedAt;
+  final int? vendorTypeId;
+  final String? vendorTypeKey;
+
+  /// Vendor this user owns/works for; differs from [id].
+  final int? vendorId;
 
   const User({
     required this.id,
@@ -27,5 +34,28 @@ class User {
     required this.permissions,
     required this.createdAt,
     required this.updatedAt,
+    this.vendorTypeId,
+    this.vendorTypeKey,
+    this.vendorId,
   });
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        phone,
+        image,
+        emailVerifiedAt,
+        phoneVerifiedAt,
+        isActive,
+        isVerified,
+        roles,
+        permissions,
+        createdAt,
+        updatedAt,
+        vendorTypeId,
+        vendorTypeKey,
+        vendorId,
+      ];
 }

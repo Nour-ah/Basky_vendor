@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spider_restaurant/core/theme/app_images.dart';
-import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
+import 'package:basky_vendor/core/theme/app_images.dart';
+import 'package:basky_vendor/core/widgets/custom_image_view.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class SplashBodyWidget extends StatelessWidget {
@@ -19,15 +19,19 @@ class SplashBodyWidget extends StatelessWidget {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: AppColors.white,
+                // color: AppColors.white,
                 borderRadius: BorderRadius.circular(30),
-
               ),
-              child: CustomImageView(imagePath: AppImages.logo,fit: BoxFit.scaleDown,),
+              child: CustomImageView(
+                imagePath: AppImages.logo,
+                fit: BoxFit.scaleDown,
+                width: 150,
+                height: 150,
+              ),
             ),
             const SizedBox(height: 32),
             const Text(
-              'Spider Restaurant',
+              'Basky Vendor',
               style: TextStyle(
                 color: AppColors.white,
                 fontSize: 28,
@@ -35,15 +39,15 @@ class SplashBodyWidget extends StatelessWidget {
                 letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Vendor Dashboard',
-              style: TextStyle(
-                color: AppColors.white.withValues(alpha: 0.7),
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            // const SizedBox(height: 8),
+            // Text(
+            //   'Vendor Dashboard',
+            //   style: TextStyle(
+            //     color: AppColors.white.withValues(alpha: 0.7),
+            //     fontSize: 14,
+            //     fontWeight: FontWeight.w400,
+            //   ),
+            // ),
             const SizedBox(height: 48),
             const SizedBox(
               width: 28,

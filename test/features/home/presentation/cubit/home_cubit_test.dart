@@ -1,20 +1,28 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/features/auth/domain/entities/user.dart';
-import 'package:spider_restaurant/features/auth/domain/repositories/auth_repository.dart';
-import 'package:spider_restaurant/features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:spider_restaurant/features/home/domain/entities/home_stats_entity.dart';
-import 'package:spider_restaurant/features/home/domain/repositories/home_repository.dart';
-import 'package:spider_restaurant/features/home/domain/usecases/get_home_stats_usecase.dart';
-import 'package:spider_restaurant/features/home/presentation/cubit/home_cubit.dart';
-import 'package:spider_restaurant/features/home/presentation/cubit/home_state.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/repositories/restaurant_repository.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_vendor_branch_usecase.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/core/realtime/realtime_refresh_mixin.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_realtime_event.dart';
+import 'package:basky_vendor/features/orders/domain/repositories/orders_repository.dart';
+import 'package:basky_vendor/features/orders/domain/usecases/watch_new_vendor_orders_usecase.dart';
+import 'package:basky_vendor/features/prescriptions/domain/repositories/prescriptions_repository.dart';
+import 'package:basky_vendor/features/prescriptions/domain/usecases/get_vendor_prescription_requests_usecase.dart';
+import 'package:basky_vendor/features/auth/domain/entities/user.dart';
+import 'package:basky_vendor/features/auth/domain/repositories/auth_repository.dart';
+import 'package:basky_vendor/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:basky_vendor/features/home/domain/entities/home_stats_entity.dart';
+import 'package:basky_vendor/features/home/domain/repositories/home_repository.dart';
+import 'package:basky_vendor/features/home/domain/usecases/get_home_stats_usecase.dart';
+import 'package:basky_vendor/features/home/presentation/cubit/home_cubit.dart';
+import 'package:basky_vendor/features/home/presentation/cubit/home_state.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/repositories/restaurant_repository.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/get_vendor_branch_usecase.dart';
 
 class MockHomeRepository implements HomeRepository {
-  final HomeStatsEntity mockStats;
+  HomeStatsEntity mockStats;
   final bool shouldThrow;
 
   MockHomeRepository({required this.mockStats, this.shouldThrow = false});
@@ -26,6 +34,21 @@ class MockHomeRepository implements HomeRepository {
     }
     return mockStats;
   }
+}
+
+class MockPrescriptionsRepository implements PrescriptionsRepository {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class MockOrdersRepository implements OrdersRepository {
+  final newOrders = StreamController<OrderRealtimeEvent>.broadcast();
+
+  @override
+  Stream<OrderRealtimeEvent> watchNewVendorOrders() => newOrders.stream;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class MockAuthRepository implements AuthRepository {
@@ -69,10 +92,23 @@ void main() {
   late MockHomeRepository mockHomeRepository;
   late MockAuthRepository mockAuthRepository;
   late MockRestaurantRepository mockRestaurantRepository;
+  late MockOrdersRepository mockOrdersRepository;
+
+  HomeCubit buildCubit() => HomeCubit(
+    getHomeStatsUseCase: GetHomeStatsUseCase(mockHomeRepository),
+    getCurrentUserUseCase: GetCurrentUserUseCase(mockAuthRepository),
+    getVendorBranchUseCase: GetVendorBranchUseCase(mockRestaurantRepository),
+    getVendorPrescriptionRequestsUseCase: GetVendorPrescriptionRequestsUseCase(
+      MockPrescriptionsRepository(),
+    ),
+    watchNewVendorOrdersUseCase: WatchNewVendorOrdersUseCase(
+      mockOrdersRepository,
+    ),
+  );
 
   const tHomeStats = HomeStatsEntity(
-    totalOrders: 33,
-    totalEarnings: 600.0,
+    todayOrders: 33,
+    todayEarnings: 600.0,
     recentOrders: [],
     pendingOrders: 1,
     preparingOrders: 2,
@@ -104,13 +140,9 @@ void main() {
   setUp(() {
     mockHomeRepository = MockHomeRepository(mockStats: tHomeStats);
     mockAuthRepository = MockAuthRepository(mockUser: tUser);
-    mockRestaurantRepository =
-        MockRestaurantRepository(mockBranch: tBranch);
-    cubit = HomeCubit(
-      getHomeStatsUseCase: GetHomeStatsUseCase(mockHomeRepository),
-      getCurrentUserUseCase: GetCurrentUserUseCase(mockAuthRepository),
-      getVendorBranchUseCase: GetVendorBranchUseCase(mockRestaurantRepository),
-    );
+    mockRestaurantRepository = MockRestaurantRepository(mockBranch: tBranch);
+    mockOrdersRepository = MockOrdersRepository();
+    cubit = buildCubit();
   });
 
   tearDown(() {
@@ -121,49 +153,52 @@ void main() {
     expect(cubit.state, equals(HomeInitial()));
   });
 
-  test('should emit [HomeLoading, HomeLoaded] when data is gotten successfully',
-      () async {
-    final expected = [
-      HomeLoading(),
-      const HomeLoaded(
-        stats: tHomeStats,
-        user: tUser,
-        branch: tBranch,
-        selectedStatus: 'ready_for_delivery',
-      ),
-    ];
+  test(
+    'should emit [HomeLoading, HomeLoaded] when data is gotten successfully',
+    () async {
+      final expected = [
+        HomeLoading(),
+        const HomeLoaded(
+          stats: tHomeStats,
+          user: tUser,
+          branch: tBranch,
+          selectedStatus: 'ready_for_delivery',
+        ),
+      ];
 
-    expectLater(cubit.stream, emitsInOrder(expected));
+      expectLater(cubit.stream, emitsInOrder(expected));
 
-    await cubit.fetchHomeData();
-  });
+      await cubit.fetchHomeData();
+    },
+  );
 
-  test('should emit HomeLoaded with new selected status when filterByStatus is called', () async {
-    // Arrange
-    await cubit.fetchHomeData();
+  test(
+    'should emit HomeLoaded with new selected status when filterByStatus is called',
+    () async {
+      // Arrange
+      await cubit.fetchHomeData();
 
-    // Act & Assert
-    final expected = [
-      const HomeLoaded(
-        stats: tHomeStats,
-        user: tUser,
-        branch: tBranch,
-        selectedStatus: 'pending',
-      ),
-    ];
+      // Act & Assert
+      final expected = [
+        const HomeLoaded(
+          stats: tHomeStats,
+          user: tUser,
+          branch: tBranch,
+          selectedStatus: 'pending',
+        ),
+      ];
 
-    expectLater(cubit.stream, emitsInOrder(expected));
-    cubit.filterByStatus('pending');
-  });
+      expectLater(cubit.stream, emitsInOrder(expected));
+      cubit.filterByStatus('pending');
+    },
+  );
 
   test('should emit [HomeLoading, HomeError] when stats fetch fails', () async {
-    mockHomeRepository =
-        MockHomeRepository(mockStats: tHomeStats, shouldThrow: true);
-    cubit = HomeCubit(
-      getHomeStatsUseCase: GetHomeStatsUseCase(mockHomeRepository),
-      getCurrentUserUseCase: GetCurrentUserUseCase(mockAuthRepository),
-      getVendorBranchUseCase: GetVendorBranchUseCase(mockRestaurantRepository),
+    mockHomeRepository = MockHomeRepository(
+      mockStats: tHomeStats,
+      shouldThrow: true,
     );
+    cubit = buildCubit();
 
     final expected = [
       HomeLoading(),
@@ -177,11 +212,7 @@ void main() {
 
   test('should emit [HomeLoading, HomeError] when user fetch fails', () async {
     mockAuthRepository = MockAuthRepository(mockUser: tUser, shouldFail: true);
-    cubit = HomeCubit(
-      getHomeStatsUseCase: GetHomeStatsUseCase(mockHomeRepository),
-      getCurrentUserUseCase: GetCurrentUserUseCase(mockAuthRepository),
-      getVendorBranchUseCase: GetVendorBranchUseCase(mockRestaurantRepository),
-    );
+    cubit = buildCubit();
 
     final expected = [
       HomeLoading(),
@@ -191,5 +222,38 @@ void main() {
     expectLater(cubit.stream, emitsInOrder(expected));
 
     await cubit.fetchHomeData();
+  });
+
+  test('new vendor order event refreshes stats without HomeLoading', () async {
+    await cubit.fetchHomeData();
+    const updatedStats = HomeStatsEntity(
+      todayOrders: 34,
+      todayEarnings: 700.0,
+      recentOrders: [],
+      pendingOrders: 2,
+      preparingOrders: 2,
+      readyOrders: 3,
+      deliveredOrders: 4,
+    );
+    mockHomeRepository.mockStats = updatedStats;
+    final emitted = <HomeState>[];
+    final sub = cubit.stream.listen(emitted.add);
+
+    mockOrdersRepository.newOrders.add(
+      const OrderRealtimeEvent(orderId: 41, vendorOrderId: 58),
+    );
+    await Future<void>.delayed(
+      RealtimeRefreshMixin.realtimeDebounce + const Duration(milliseconds: 100),
+    );
+
+    expect(emitted, [
+      const HomeLoaded(
+        stats: updatedStats,
+        user: tUser,
+        branch: tBranch,
+        selectedStatus: 'ready_for_delivery',
+      ),
+    ]);
+    await sub.cancel();
   });
 }

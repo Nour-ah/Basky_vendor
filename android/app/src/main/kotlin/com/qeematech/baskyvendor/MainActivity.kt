@@ -1,4 +1,4 @@
-package com.qeema.spdrestaurant
+package com.qeematech.baskyvendor
 
 import io.flutter.embedding.android.FlutterActivity
 

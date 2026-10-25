@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/utils/vendor_access.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
 import '../widgets/home_app_bar.dart';
@@ -24,9 +25,15 @@ class HomePage extends StatelessWidget {
           final orderTabs = state is HomeLoaded
               ? [
                   '${LocaleKeys.readyForDelivery.tr()} (${state.stats.readyOrders})',
-                  LocaleKeys.confirmedCount.tr(namedArgs: {'count': '${state.stats.pendingOrders}'}),
-                  LocaleKeys.cookingCount.tr(namedArgs: {'count': '${state.stats.preparingOrders}'}),
-                  LocaleKeys.onTheWayCount.tr(namedArgs: {'count': '${state.stats.deliveredOrders}'}),
+                  LocaleKeys.confirmedCount.tr(
+                    namedArgs: {'count': '${state.stats.pendingOrders}'},
+                  ),
+                  LocaleKeys.cookingCount.tr(
+                    namedArgs: {'count': '${state.stats.preparingOrders}'},
+                  ),
+                  LocaleKeys.onTheWayCount.tr(
+                    namedArgs: {'count': '${state.stats.deliveredOrders}'},
+                  ),
                 ]
               : [
                   LocaleKeys.readyForDelivery.tr(),
@@ -56,11 +63,7 @@ class HomePage extends StatelessWidget {
         userImageUrl: state.user.image,
       );
     }
-    return HomeAppBar(
-      scaffoldKey: _scaffoldKey,
-      userName: '',
-      userAddress: '',
-    );
+    return HomeAppBar(scaffoldKey: _scaffoldKey, userName: '', userAddress: '');
   }
 
   Widget? _buildDrawer(HomeState state) {
@@ -73,7 +76,8 @@ class HomePage extends StatelessWidget {
       userName: state.user.name,
       userRating: rating,
       userImage: image,
+      isPharmacyVendor: state.user.isPharmacyVendor,
+      pendingPrescriptionCount: state.pendingPrescriptionCount,
     );
   }
 }
-

@@ -11,11 +11,15 @@ import '../../domain/entities/vendor_branch_entity.dart';
 class BranchCard extends StatelessWidget {
   final VendorBranchEntity branch;
   final VoidCallback onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const BranchCard({
     super.key,
     required this.branch,
     required this.onTap,
+    this.onEdit,
+    this.onDelete,
   });
 
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -116,6 +120,45 @@ class BranchCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            if (onEdit != null) ...[
+                              const SizedBox(width: 8),
+                              Material(
+                                color: Colors.black45,
+                                shape: const CircleBorder(),
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: onEdit,
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.edit_outlined,
+                                      color: AppColors.white,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            if (onDelete != null) ...[
+                              const SizedBox(width: 8),
+                              Material(
+                                color: Colors.black45,
+                                shape: const CircleBorder(),
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: onDelete,
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.delete_outline,
+                                      color: AppColors.white,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            const SizedBox(width: 8),
                             const Icon(
                               Icons.arrow_forward_ios_rounded,
                               color: AppColors.white,

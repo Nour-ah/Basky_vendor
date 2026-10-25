@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/features/orders/data/models/order_model.dart';
-import 'package:spider_restaurant/features/orders/domain/entities/order_entity.dart';
+import 'package:basky_vendor/features/orders/data/models/order_model.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_entity.dart';
 
 void main() {
   const tOrderModel = OrderModel(

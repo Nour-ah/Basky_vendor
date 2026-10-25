@@ -10,7 +10,7 @@ class AuthCardWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFF6769A0).withValues(alpha: 0.8),
+        color: const Color(0xFFFFFFFF).withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(

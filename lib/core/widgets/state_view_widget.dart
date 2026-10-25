@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../network/dio_error_mapper.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../translations/locale_keys.g.dart';
@@ -22,10 +23,11 @@ class StateViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: const EdgeInsets.all(24),
@@ -44,7 +46,7 @@ class StateViewWidget extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              message,
+              DioErrorMapper.sanitize(message),
               style: AppTextStyle.fontBlack16Bold,
               textAlign: TextAlign.center,
             ),

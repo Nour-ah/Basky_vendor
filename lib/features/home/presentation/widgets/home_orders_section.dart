@@ -1,16 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/app_skeleton_loading.dart';
 import '../../../orders/domain/entities/order_status.dart';
 import '../../../orders/presentation/pages/order_details_page.dart';
+import '../cubit/home_cubit.dart';
 import '../cubit/home_orders_cubit.dart';
 import '../cubit/home_orders_state.dart';
 import 'home_order_filter_tabs.dart';
 import 'order_card_widget.dart';
-import 'order_shimmer_widgets.dart';
 
 /// The full Orders section in the Home screen:
 /// Filter tabs + Stats row + Orders list + Pull-to-refresh
@@ -72,7 +75,7 @@ class _HomeOrdersSectionState extends State<HomeOrdersSection> {
               ),
               const SizedBox(height: 16),
             ] else if (state is HomeOrdersLoading) ...[
-              const OrderStatsShimmer(),
+              const _HomeOrdersStatsSkeleton(),
               const SizedBox(height: 16),
             ],
 
@@ -85,19 +88,19 @@ class _HomeOrdersSectionState extends State<HomeOrdersSection> {
   }
 
   Widget _buildOrdersList(
-      BuildContext context, HomeOrdersState state, HomeOrdersCubit cubit) {
-    // Full screen loading (first load)
-    if (state is HomeOrdersLoading && !state.isTabSwitch) {
-      return const OrderListShimmer(count: 4);
-    }
-
-    // Tab-switch shimmer (lighter)
-    if (state is HomeOrdersLoading && state.isTabSwitch) {
-      return const OrderListShimmer(count: 3);
+    BuildContext context,
+    HomeOrdersState state,
+    HomeOrdersCubit cubit,
+  ) {
+    if (state is HomeOrdersLoading) {
+      return OrdersListSkeleton(count: state.isTabSwitch ? 3 : 4);
     }
 
     if (state is HomeOrdersError) {
-      return _ErrorView(message: state.message, onRetry: () => cubit.fetchOrders());
+      return _ErrorView(
+        message: state.message,
+        onRetry: () => cubit.fetchOrders(),
+      );
     }
 
     if (state is HomeOrdersLoaded) {
@@ -139,12 +142,7 @@ class _HomeOrdersSectionState extends State<HomeOrdersSection> {
               vendorName: order.vendorName,
               vendorImage: order.vendorImage,
               status: order.status,
-              onDetailsPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => OrderDetailsPage(orderId: order.id),
-                ),
-              ),
+              onDetailsPressed: () => _openDetails(context, order.id),
             );
           },
         ),
@@ -152,6 +150,20 @@ class _HomeOrdersSectionState extends State<HomeOrdersSection> {
     }
 
     return const SizedBox.shrink();
+  }
+
+  /// Status may change inside details, so the list and stats resync on return.
+  Future<void> _openDetails(BuildContext context, int orderId) async {
+    final ordersCubit = context.read<HomeOrdersCubit>();
+    final homeCubit = context.read<HomeCubit>();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => OrderDetailsPage(orderId: orderId)),
+    );
+    await Future.wait([
+      ordersCubit.fetchOrders(silent: true),
+      homeCubit.refreshStats(),
+    ]);
   }
 }
 
@@ -167,14 +179,21 @@ class _EmptyView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.receipt_long_outlined, size: 64, color: AppColors.grey.withValues(alpha: 0.5)),
+            Icon(
+              Icons.receipt_long_outlined,
+              size: 64,
+              color: AppColors.grey.withValues(alpha: 0.5),
+            ),
             const SizedBox(height: 16),
             Text('noRecentOrders'.tr(), style: AppTextStyle.fontBlack14Regular),
             const SizedBox(height: 12),
             TextButton.icon(
               onPressed: onRefresh,
               icon: const Icon(Icons.refresh, color: AppColors.primary),
-              label: Text('retry'.tr(), style: AppTextStyle.fontPrimary14Regular),
+              label: Text(
+                'retry'.tr(),
+                style: AppTextStyle.fontPrimary14Regular,
+              ),
             ),
           ],
         ),
@@ -196,16 +215,49 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline, size: 48, color: AppColors.promoRed.withValues(alpha: 0.7)),
+            Icon(
+              Icons.error_outline,
+              size: 48,
+              color: AppColors.promoRed.withValues(alpha: 0.7),
+            ),
             const SizedBox(height: 12),
-            Text(message, style: AppTextStyle.fontGrey14Regular, textAlign: TextAlign.center),
+            Text(
+              message,
+              style: AppTextStyle.fontGrey14Regular,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: Text('retry'.tr()),
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+              ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeOrdersStatsSkeleton extends StatelessWidget {
+  const _HomeOrdersStatsSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      enabled: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: const [
+            Expanded(child: Bone.button(height: 32)),
+            SizedBox(width: 12),
+            Expanded(child: Bone.button(height: 32)),
+            SizedBox(width: 12),
+            Expanded(child: Bone.button(height: 32)),
           ],
         ),
       ),

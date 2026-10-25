@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
@@ -9,7 +10,7 @@ class AppTheme {
     return ThemeData(
       primaryColor: AppColors.primary,
       // / scaffoldBackgroundColor: AppColors.primary.withValues(alpha: 0.001),
-      fontFamily: 'Cairo',
+      fontFamily: GoogleFonts.cairo().fontFamily,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.primary,
         elevation:1,

@@ -3,30 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/fade_in_slide.dart';
-import '../../../../core/widgets/state_view_widget.dart';
-import '../../../../core/di/injection_container.dart';
+import '../../../../core/widgets/app_skeleton_loading.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/utils/vendor_access.dart';
+import '../../../prescriptions/presentation/widgets/prescription_home_shortcut.dart';
 import '../cubit/home_cubit.dart';
 import '../cubit/home_state.dart';
-import '../cubit/toggle_status_cubit.dart';
 import 'home_orders_section.dart';
-import 'restaurant_status_switch.dart';
 import 'statistics_cards.dart';
 
 class HomeBodyView extends StatelessWidget {
   final HomeState state;
   final List<String> orderTabs;
 
-  const HomeBodyView({
-    super.key,
-    required this.state,
-    required this.orderTabs,
-  });
+  const HomeBodyView({super.key, required this.state, required this.orderTabs});
 
   @override
   Widget build(BuildContext context) {
     if (state is HomeLoading || state is HomeInitial) {
-      return const LoadingSkeletonList(itemCount: 4);
+      return const HomeSkeleton();
     }
     if (state is HomeError) {
       return Center(
@@ -70,10 +65,19 @@ class HomeBodyView extends StatelessWidget {
                   FadeInSlide(
                     delay: 200,
                     child: StatisticsCards(
-                      totalOrders: stats.totalOrders,
-                      totalEarnings: stats.totalEarnings,
+                      todayOrders: stats.todayOrders,
+                      todayEarnings: stats.todayEarnings,
                     ),
                   ),
+                  if (loadedState.user.isPharmacyVendor) ...[
+                    const SizedBox(height: 16),
+                    FadeInSlide(
+                      delay: 250,
+                      child: PrescriptionHomeShortcut(
+                        pendingCount: loadedState.pendingPrescriptionCount,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 24),
 
                   // ─── Orders Filter Tabs + Shimmer + List ──────────

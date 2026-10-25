@@ -5,14 +5,14 @@ import '../../../orders/domain/entities/order_summary_entity.dart';
 
 // All valid filter statuses shown as tabs in Home Screen
 const List<OrderStatus> kHomeOrderFilterStatuses = [
-  OrderStatus.unknown,     // "All" tab
+  OrderStatus.unknown, // "All" tab
   OrderStatus.pending,
   OrderStatus.processing,
   OrderStatus.readyForPickup,
+  OrderStatus.pickingUp,
   OrderStatus.shipped,
   OrderStatus.delivered,
   OrderStatus.cancelled,
-  OrderStatus.refunded,
 ];
 
 abstract class HomeOrdersState extends Equatable {

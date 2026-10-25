@@ -20,8 +20,8 @@ class DrawerHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageUrl = userImage.trim();
-    final isNetworkImage = imageUrl.startsWith('http://') ||
-        imageUrl.startsWith('https://');
+    final isNetworkImage =
+        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0),
@@ -46,11 +46,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     )
-                  : Icon(
-                      Icons.person,
-                      size: 28,
-                      color: AppColors.grey,
-                    ),
+                  : Icon(Icons.person, size: 28, color: AppColors.grey),
             ),
           ),
           const SizedBox(width: 12),

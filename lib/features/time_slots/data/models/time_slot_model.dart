@@ -1,4 +1,5 @@
 import '../../domain/entities/time_slot_entity.dart';
+import '../../domain/utils/time_slot_time_format.dart';
 
 class TimeSlotModel extends TimeSlotEntity {
   const TimeSlotModel({
@@ -14,8 +15,8 @@ class TimeSlotModel extends TimeSlotEntity {
       dayOfWeek: json['day_of_week'] is int
           ? json['day_of_week']
           : int.tryParse(json['day_of_week']?.toString() ?? '0') ?? 0,
-      opensAt: json['opens_at']?.toString().trim() ?? '',
-      closesAt: json['closes_at']?.toString().trim() ?? '',
+      opensAt: toApiTimeHi(json['opens_at']?.toString() ?? ''),
+      closesAt: toApiTimeHi(json['closes_at']?.toString() ?? ''),
     );
   }
 }

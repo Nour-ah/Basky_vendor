@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_variation_params.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_variant_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/utils/product_variations_builder.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_variation_params.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_variant_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/utils/product_variations_builder.dart';
 
 void main() {
   const colorVariant = ProductVariantEntity(

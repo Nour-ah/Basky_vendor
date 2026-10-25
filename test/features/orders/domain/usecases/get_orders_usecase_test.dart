@@ -1,13 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/features/orders/domain/entities/order_filter_result_entity.dart';
-import 'package:spider_restaurant/features/orders/domain/entities/order_status.dart';
-import 'package:spider_restaurant/features/orders/domain/entities/order_summary_entity.dart';
-import 'package:spider_restaurant/features/orders/domain/entities/order_details_entity.dart';
-import 'package:spider_restaurant/features/orders/domain/entities/order_invoice_entity.dart';
-import 'package:spider_restaurant/features/orders/domain/repositories/orders_repository.dart';
-import 'package:spider_restaurant/features/orders/domain/usecases/get_orders_usecase.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_filter_result_entity.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_status.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_summary_entity.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_details_entity.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_invoice_entity.dart';
+import 'package:basky_vendor/features/orders/domain/entities/order_realtime_event.dart';
+import 'package:basky_vendor/features/orders/domain/repositories/orders_repository.dart';
+import 'package:basky_vendor/features/orders/domain/usecases/get_orders_usecase.dart';
 
 class MockOrdersRepository implements OrdersRepository {
   @override
@@ -49,6 +50,21 @@ class MockOrdersRepository implements OrdersRepository {
     int page = 1,
     int limit = 15,
   }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<OrderRealtimeEvent> watchNewVendorOrders() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<OrderRealtimeEvent> watchOrderStatus(int platformOrderId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<OrderRealtimeEvent> watchOrdersStatus(Iterable<int> platformOrderIds) {
     throw UnimplementedError();
   }
 }

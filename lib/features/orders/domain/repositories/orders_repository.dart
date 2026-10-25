@@ -3,6 +3,7 @@ import '../../../../core/error/failures.dart';
 import '../entities/order_details_entity.dart';
 import '../entities/order_filter_result_entity.dart';
 import '../entities/order_invoice_entity.dart';
+import '../entities/order_realtime_event.dart';
 import '../entities/order_status.dart';
 import '../entities/order_summary_entity.dart';
 
@@ -27,4 +28,10 @@ abstract class OrdersRepository {
     required int orderId,
     required OrderStatus newStatus,
   });
+
+  Stream<OrderRealtimeEvent> watchNewVendorOrders();
+
+  Stream<OrderRealtimeEvent> watchOrderStatus(int platformOrderId);
+
+  Stream<OrderRealtimeEvent> watchOrdersStatus(Iterable<int> platformOrderIds);
 }

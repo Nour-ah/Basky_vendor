@@ -1,29 +1,66 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/realtime/realtime_refresh_mixin.dart';
 import '../../../orders/domain/entities/order_filter_result_entity.dart';
 import '../../../orders/domain/entities/order_status.dart';
 import '../../../orders/domain/usecases/get_filtered_orders_usecase.dart';
+import '../../../orders/domain/usecases/watch_new_vendor_orders_usecase.dart';
+import '../../../orders/domain/usecases/watch_orders_status_usecase.dart';
+import '../../../orders/presentation/cubit/active_orders_watch_mixin.dart';
 import 'home_orders_state.dart';
 
-class HomeOrdersCubit extends Cubit<HomeOrdersState> {
+class HomeOrdersCubit extends Cubit<HomeOrdersState>
+    with
+        RealtimeRefreshMixin<HomeOrdersState>,
+        ActiveOrdersWatchMixin<HomeOrdersState> {
   final GetFilteredOrdersUseCase getFilteredOrdersUseCase;
+  final WatchNewVendorOrdersUseCase watchNewVendorOrdersUseCase;
+  final WatchOrdersStatusUseCase watchOrdersStatusUseCase;
 
   static const int _limit = 15;
   OrderStatus _selectedStatus = OrderStatus.unknown;
 
-  HomeOrdersCubit({required this.getFilteredOrdersUseCase}) : super(HomeOrdersInitial());
+  HomeOrdersCubit({
+    required this.getFilteredOrdersUseCase,
+    required this.watchNewVendorOrdersUseCase,
+    required this.watchOrdersStatusUseCase,
+  }) : super(HomeOrdersInitial()) {
+    listenForRealtimeRefresh(
+      watchNewVendorOrdersUseCase(),
+      () => fetchOrders(silent: true),
+    );
+  }
 
-  /// Initial load or pull-to-refresh
-  Future<void> fetchOrders({bool isRefresh = false}) async {
+  @override
+  void onChange(Change<HomeOrdersState> change) {
+    super.onChange(change);
+    final next = change.nextState;
+    if (next is HomeOrdersLoaded) {
+      watchActiveOrders(
+        next.orders,
+        watch: watchOrdersStatusUseCase.call,
+        onRefresh: () => fetchOrders(silent: true),
+      );
+    }
+  }
+
+  /// Initial load or pull-to-refresh.
+  /// [silent] keeps the current list on screen and ignores failures
+  /// (used for realtime updates).
+  Future<void> fetchOrders({
+    bool isRefresh = false,
+    bool silent = false,
+  }) async {
     if (isClosed) return;
 
-    if (isRefresh) {
-      emit(HomeOrdersLoading(isTabSwitch: false));
-    } else if (state is! HomeOrdersLoaded) {
+    final keepCurrent = silent && state is HomeOrdersLoaded;
+    if (!keepCurrent && (isRefresh || state is! HomeOrdersLoaded)) {
       emit(HomeOrdersLoading(isTabSwitch: false));
     }
 
-    debugPrint('🔵 HomeOrdersCubit: Fetching orders (status: ${_selectedStatus.toApiString()})');
+    debugPrint(
+      '🔵 HomeOrdersCubit: Fetching orders (status: ${_selectedStatus.toApiString()})',
+    );
 
     final result = await getFilteredOrdersUseCase(
       status: _selectedStatus == OrderStatus.unknown ? null : _selectedStatus,
@@ -36,7 +73,7 @@ class HomeOrdersCubit extends Cubit<HomeOrdersState> {
     result.fold(
       (failure) {
         debugPrint('❌ HomeOrdersCubit: ${failure.message}');
-        emit(HomeOrdersError(message: failure.message));
+        if (!keepCurrent) emit(HomeOrdersError(message: failure.message));
       },
       (data) {
         debugPrint('✅ HomeOrdersCubit: Loaded ${data.orders.length} orders');
@@ -76,7 +113,8 @@ class HomeOrdersCubit extends Cubit<HomeOrdersState> {
     if (isClosed) return;
 
     result.fold(
-      (failure) => debugPrint('❌ HomeOrdersCubit pagination failed: ${failure.message}'),
+      (failure) =>
+          debugPrint('❌ HomeOrdersCubit pagination failed: ${failure.message}'),
       (data) {
         final merged = OrderFilterResultEntity(
           stats: data.stats,

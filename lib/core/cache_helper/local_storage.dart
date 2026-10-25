@@ -13,6 +13,7 @@ class LocalStorage {
   static const String _authTokenKey = 'auth_token';
   static const String _userTypeKey = 'user_type';
   static const String _userDataKey = 'user_data';
+  static const String _vendorIdKey = 'vendor_id';
   static const String _languageKey = 'language_code';
 
   /// Initialize SharedPreferences
@@ -127,11 +128,24 @@ class LocalStorage {
     await removeData(key: _userDataKey);
   }
 
-  /// Clear auth data (token + user data) but keep user type
+  /// Save the logged-in user's vendor id (used for realtime channels)
+  static Future<void> saveVendorId(int vendorId) async {
+    await saveData(key: _vendorIdKey, value: vendorId);
+  }
+
+  /// Get cached vendor id
+  static Future<int?> getVendorId() async {
+    final value = await getData(key: _vendorIdKey);
+    return value is int ? value : null;
+  }
+
+  /// Clear auth data (token + user data + vendor id + vendor type)
   /// Used on logout
   static Future<void> clearAuthData() async {
     await clearAuthToken();
     await clearUserData();
+    await removeData(key: _vendorIdKey);
+    await clearUserType();
   }
 
   /// Check if user is logged in (has valid token)

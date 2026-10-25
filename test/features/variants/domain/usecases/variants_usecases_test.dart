@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/core/usecases/usecase.dart';
-import 'package:spider_restaurant/features/variants/domain/entities/variant_entity.dart';
-import 'package:spider_restaurant/features/variants/domain/repositories/variant_repository.dart';
-import 'package:spider_restaurant/features/variants/domain/usecases/add_variant_usecase.dart';
-import 'package:spider_restaurant/features/variants/domain/usecases/delete_variant_usecase.dart';
-import 'package:spider_restaurant/features/variants/domain/usecases/get_variants_usecase.dart';
-import 'package:spider_restaurant/features/variants/domain/usecases/update_variant_usecase.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/core/usecases/usecase.dart';
+import 'package:basky_vendor/features/variants/domain/entities/variant_entity.dart';
+import 'package:basky_vendor/features/variants/domain/repositories/variant_repository.dart';
+import 'package:basky_vendor/features/variants/domain/usecases/add_variant_usecase.dart';
+import 'package:basky_vendor/features/variants/domain/usecases/delete_variant_usecase.dart';
+import 'package:basky_vendor/features/variants/domain/usecases/get_variants_usecase.dart';
+import 'package:basky_vendor/features/variants/domain/usecases/update_variant_usecase.dart';
 
 class FakeVariantRepository implements VariantRepository {
   List<VariantEntity> variants = [];

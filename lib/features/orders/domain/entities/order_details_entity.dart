@@ -3,7 +3,11 @@ import 'order_item_entity.dart';
 import 'order_status.dart';
 
 class OrderDetailsEntity extends Equatable {
+  /// Vendor-orders row id.
   final int id;
+
+  /// Platform order id (`order_id`), used by the `orders.{id}` socket channel.
+  final int? platformOrderId;
   final String orderCode;
   final OrderStatus status;
   final String dateTime;
@@ -35,6 +39,7 @@ class OrderDetailsEntity extends Equatable {
 
   const OrderDetailsEntity({
     required this.id,
+    this.platformOrderId,
     required this.orderCode,
     required this.status,
     required this.dateTime,
@@ -59,6 +64,7 @@ class OrderDetailsEntity extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        platformOrderId,
         orderCode,
         status,
         dateTime,

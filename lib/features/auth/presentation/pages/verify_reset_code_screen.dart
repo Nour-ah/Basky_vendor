@@ -14,10 +14,7 @@ import '../widgets/auth_otp_field.dart';
 class VerifyResetCodeScreen extends StatefulWidget {
   final String email;
 
-  const VerifyResetCodeScreen({
-    super.key,
-    required this.email,
-  });
+  const VerifyResetCodeScreen({super.key, required this.email});
 
   @override
   State<VerifyResetCodeScreen> createState() => _VerifyResetCodeScreenState();
@@ -80,17 +77,24 @@ class _VerifyResetCodeScreenState extends State<VerifyResetCodeScreen> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.red.withValues(alpha: 0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.error_outline, color: Colors.white, size: 20),
+                                const Icon(
+                                  Icons.error_outline,
+                                  color: AppColors.primary,
+                                  size: 20,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     errorMessage,
-                                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -119,7 +123,9 @@ class _VerifyResetCodeScreenState extends State<VerifyResetCodeScreen> {
                               ? null
                               : () {
                                   if (_formKey.currentState!.validate()) {
-                                    context.read<ResetPasswordCubit>().verifyCode(
+                                    context
+                                        .read<ResetPasswordCubit>()
+                                        .verifyCode(
                                           code: _otpController.text.trim(),
                                         );
                                   }
@@ -131,15 +137,18 @@ class _VerifyResetCodeScreenState extends State<VerifyResetCodeScreen> {
                           children: [
                             Text(
                               LocaleKeys.didntReceiveCode.tr(),
-                              style: const TextStyle(color: Colors.white70, fontSize: 14),
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
                             ),
                             GestureDetector(
                               onTap: isLoading
                                   ? null
                                   : () {
-                                      context.read<ResetPasswordCubit>().sendResetCode(
-                                            email: widget.email,
-                                          );
+                                      context
+                                          .read<ResetPasswordCubit>()
+                                          .sendResetCode(email: widget.email);
                                     },
                               child: Text(
                                 LocaleKeys.resendCode.tr(),

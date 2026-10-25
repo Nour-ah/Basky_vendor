@@ -17,6 +17,7 @@ import '../../features/auth/domain/usecases/verify_email_usecase.dart';
 import '../../features/auth/domain/usecases/verify_phone_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/get_vendor_types_usecase.dart';
 import '../../features/auth/domain/usecases/is_logged_in_usecase.dart';
 import '../../features/auth/domain/usecases/send_reset_code_usecase.dart';
 import '../../features/auth/domain/usecases/verify_reset_code_usecase.dart';
@@ -37,6 +38,7 @@ import '../../features/home/presentation/cubit/toggle_status_cubit.dart';
 
 import '../../features/auth/presentation/cubit/splash_cubit.dart';
 
+import '../../features/orders/data/datasources/orders_realtime_datasource.dart';
 import '../../features/orders/data/datasources/orders_remote_datasource.dart';
 import '../../features/orders/data/repositories/orders_repository_impl.dart';
 import '../../features/orders/domain/repositories/orders_repository.dart';
@@ -44,7 +46,11 @@ import '../../features/orders/domain/usecases/get_filtered_orders_usecase.dart';
 import '../../features/orders/domain/usecases/get_order_details_usecase.dart';
 import '../../features/orders/domain/usecases/get_order_invoice_usecase.dart';
 import '../../features/orders/domain/usecases/get_orders_usecase.dart';
+import '../../features/orders/domain/usecases/resolve_vendor_order_id_usecase.dart';
 import '../../features/orders/domain/usecases/update_order_status_usecase.dart';
+import '../../features/orders/domain/usecases/watch_new_vendor_orders_usecase.dart';
+import '../../features/orders/domain/usecases/watch_order_status_usecase.dart';
+import '../../features/orders/domain/usecases/watch_orders_status_usecase.dart';
 import '../../features/orders/presentation/cubit/order_details_cubit.dart';
 import '../../features/orders/presentation/cubit/order_invoice_cubit.dart';
 import '../../features/orders/presentation/cubit/orders_cubit.dart';
@@ -52,16 +58,21 @@ import '../../features/orders/presentation/cubit/orders_cubit.dart';
 import '../../features/my_restaurant/data/datasources/restaurant_remote_datasource.dart';
 import '../../features/my_restaurant/data/repositories/restaurant_repository_impl.dart';
 import '../../features/my_restaurant/domain/repositories/restaurant_repository.dart';
+import '../../features/my_restaurant/domain/usecases/add_branch_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/add_product_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/delete_branch_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/delete_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_branch_details_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_categories_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/get_countries_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_products_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_variants_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_vendor_branch_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/get_vendor_branches_usecase.dart';
+import '../../features/my_restaurant/domain/usecases/update_branch_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/update_product_usecase.dart';
 import '../../features/my_restaurant/domain/usecases/toggle_restaurant_status_usecase.dart';
+import '../../features/my_restaurant/presentation/cubit/add_branch_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/add_food_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/branches_cubit.dart';
 import '../../features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
@@ -94,6 +105,17 @@ import '../../features/time_slots/domain/repositories/time_slots_repository.dart
 import '../../features/time_slots/domain/usecases/time_slots_usecases.dart';
 import '../../features/time_slots/presentation/cubit/time_slots_cubit.dart';
 
+// Prescriptions Feature
+import '../../features/prescriptions/data/datasources/prescriptions_remote_datasource.dart';
+import '../../features/prescriptions/data/repositories/prescriptions_repository_impl.dart';
+import '../../features/prescriptions/domain/repositories/prescriptions_repository.dart';
+import '../../features/prescriptions/domain/usecases/get_vendor_prescription_request_details_usecase.dart';
+import '../../features/prescriptions/domain/usecases/get_vendor_prescription_requests_usecase.dart';
+import '../../features/prescriptions/domain/usecases/submit_prescription_quotation_usecase.dart';
+import '../../features/prescriptions/presentation/cubit/prescription_details_cubit.dart';
+import '../../features/prescriptions/presentation/cubit/prescription_quotation_cubit.dart';
+import '../../features/prescriptions/presentation/cubit/prescriptions_list_cubit.dart';
+
 // Variants Feature
 import '../../features/variants/data/datasources/variants_remote_datasource.dart';
 import '../../features/variants/data/repositories/variants_repository_impl.dart';
@@ -103,6 +125,18 @@ import '../../features/variants/domain/usecases/delete_variant_usecase.dart';
 import '../../features/variants/domain/usecases/get_variants_usecase.dart' as new_variants;
 import '../../features/variants/domain/usecases/update_variant_usecase.dart';
 import '../../features/variants/presentation/cubit/variants_cubit.dart';
+
+// Notifications (core + feature)
+import '../notifications/device_token_service.dart';
+import '../notifications/notifications_services.dart';
+import '../realtime/realtime_client.dart';
+import '../../features/notifications/data/datasources/notifications_remote_datasource.dart';
+import '../../features/notifications/data/repositories/notifications_repository_impl.dart';
+import '../../features/notifications/domain/repositories/notifications_repository.dart';
+import '../../features/notifications/domain/usecases/get_notifications_usecase.dart';
+import '../../features/notifications/domain/usecases/mark_all_notifications_read_usecase.dart';
+import '../../features/notifications/domain/usecases/mark_notification_read_usecase.dart';
+import '../../features/notifications/presentation/cubit/notifications_cubit.dart';
 
  final sl = GetIt.instance;
 
@@ -117,6 +151,14 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
+  // Notifications core (needed by AuthRepository after login)
+  sl.registerLazySingleton(() => DeviceTokenService(dio: sl()));
+  sl.registerLazySingleton(
+    () => NotificationsServices(deviceTokenService: sl()),
+  );
+
+  // Realtime (Reverb socket, shared by all features)
+  sl.registerLazySingleton(() => RealtimeClient());
 
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(),
@@ -133,6 +175,8 @@ Future<void> initDependencies() async {
     () => AuthRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),
+      deviceTokenService: sl(),
+      realtimeClient: sl(),
     ),
   );
 
@@ -147,6 +191,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => IsLoggedInUseCase(sl()));
+  sl.registerLazySingleton(() => GetVendorTypesUseCase(sl()));
 
   // ============================================================
   // Auth Feature - Cubits
@@ -161,6 +206,7 @@ Future<void> initDependencies() async {
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
       isLoggedInUseCase: sl(),
+      getVendorTypesUseCase: sl(),
     ),
   );
 
@@ -218,6 +264,8 @@ Future<void> initDependencies() async {
       getHomeStatsUseCase: sl(),
       getCurrentUserUseCase: sl(),
       getVendorBranchUseCase: sl(),
+      getVendorPrescriptionRequestsUseCase: sl(),
+      watchNewVendorOrdersUseCase: sl(),
     ),
   );
   sl.registerFactory(
@@ -226,7 +274,11 @@ Future<void> initDependencies() async {
     ),
   );
   sl.registerFactory(
-    () => HomeOrdersCubit(getFilteredOrdersUseCase: sl()),
+    () => HomeOrdersCubit(
+      getFilteredOrdersUseCase: sl(),
+      watchNewVendorOrdersUseCase: sl(),
+      watchOrdersStatusUseCase: sl(),
+    ),
   );
 
   // ============================================================
@@ -235,6 +287,9 @@ Future<void> initDependencies() async {
   // Data Sources
   sl.registerLazySingleton<OrdersRemoteDataSource>(
     () => OrdersRemoteDataSourceImpl(dio: sl()),
+  );
+  sl.registerLazySingleton<OrdersRealtimeDataSource>(
+    () => OrdersRealtimeDataSourceImpl(realtimeClient: sl()),
   );
 
   // Restaurant Catalog Feature
@@ -249,7 +304,10 @@ Future<void> initDependencies() async {
 
   // Repositories
   sl.registerLazySingleton<OrdersRepository>(
-    () => OrdersRepositoryImpl(remoteDataSource: sl()),
+    () => OrdersRepositoryImpl(
+      remoteDataSource: sl(),
+      realtimeDataSource: sl(),
+    ),
   );
 
   // Restaurant Catalog Feature
@@ -267,12 +325,20 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetFilteredOrdersUseCase(sl()));
   sl.registerLazySingleton(() => GetOrderDetailsUseCase(sl()));
   sl.registerLazySingleton(() => GetOrderInvoiceUseCase(sl()));
+  sl.registerLazySingleton(() => ResolveVendorOrderIdUseCase(sl()));
   sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));
+  sl.registerLazySingleton(() => WatchNewVendorOrdersUseCase(sl()));
+  sl.registerLazySingleton(() => WatchOrderStatusUseCase(sl()));
+  sl.registerLazySingleton(() => WatchOrdersStatusUseCase(sl()));
 
   // Restaurant Catalog Feature
   sl.registerLazySingleton(() => GetVendorBranchUseCase(sl()));
   sl.registerLazySingleton(() => GetVendorBranchesUseCase(sl()));
   sl.registerLazySingleton(() => GetBranchDetailsUseCase(sl()));
+  sl.registerLazySingleton(() => AddBranchUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateBranchUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteBranchUseCase(sl()));
+  sl.registerLazySingleton(() => GetCountriesUseCase(sl()));
   sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
   sl.registerLazySingleton(() => GetProductsUseCase(sl()));
   sl.registerLazySingleton(() => AddProductUseCase(sl()));
@@ -291,12 +357,15 @@ Future<void> initDependencies() async {
     () => OrdersCubit(
       getOrdersUseCase: sl(),
       updateOrderStatusUseCase: sl(),
+      watchNewVendorOrdersUseCase: sl(),
+      watchOrdersStatusUseCase: sl(),
     ),
   );
   sl.registerFactory(
     () => OrderDetailsCubit(
       getOrderDetailsUseCase: sl(),
       updateOrderStatusUseCase: sl(),
+      watchOrderStatusUseCase: sl(),
     ),
   );
   sl.registerFactory(
@@ -342,7 +411,10 @@ Future<void> initDependencies() async {
   );
 
   // Restaurant Catalog Feature
-  sl.registerFactory(() => BranchesCubit(getVendorBranchesUseCase: sl()));
+  sl.registerFactory(() => BranchesCubit(
+        getVendorBranchesUseCase: sl(),
+        deleteBranchUseCase: sl(),
+      ));
   sl.registerFactory(() => RestaurantCatalogCubit(
         getCategoriesUseCase: sl(),
         getProductsUseCase: sl(),
@@ -351,6 +423,11 @@ Future<void> initDependencies() async {
   sl.registerFactory(
     () => RestaurantDetailsCubit(getBranchDetailsUseCase: sl()),
   );
+  sl.registerFactory(() => AddBranchCubit(
+        getCountriesUseCase: sl(),
+        addBranchUseCase: sl(),
+        updateBranchUseCase: sl(),
+      ));
   sl.registerFactory(() => AddFoodCubit(
         getCategoriesUseCase: sl(),
         addProductUseCase: sl(),
@@ -374,6 +451,7 @@ Future<void> initDependencies() async {
       isLoggedInUseCase: sl(),
       getCurrentUserUseCase: sl(),
       logoutUseCase: sl(),
+      deviceTokenService: sl(),
     ),
   );
 
@@ -396,6 +474,56 @@ Future<void> initDependencies() async {
       addVariantUseCase: sl(),
       updateVariantUseCase: sl(),
       deleteVariantUseCase: sl(),
+    ),
+  );
+
+  // ============================================================
+  // Prescriptions Feature
+  // ============================================================
+  sl.registerLazySingleton<PrescriptionsRemoteDataSource>(
+    () => PrescriptionsRemoteDataSourceImpl(dio: sl()),
+  );
+  sl.registerLazySingleton<PrescriptionsRepository>(
+    () => PrescriptionsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetVendorPrescriptionRequestsUseCase(sl()));
+  sl.registerLazySingleton(
+    () => GetVendorPrescriptionRequestDetailsUseCase(sl()),
+  );
+  sl.registerLazySingleton(() => SubmitPrescriptionQuotationUseCase(sl()));
+  sl.registerFactory(
+    () => PrescriptionsListCubit(
+      getVendorPrescriptionRequestsUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => PrescriptionDetailsCubit(
+      getVendorPrescriptionRequestDetailsUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => PrescriptionQuotationCubit(
+      submitPrescriptionQuotationUseCase: sl(),
+    ),
+  );
+
+  // ============================================================
+  // Notifications Feature
+  // ============================================================
+  sl.registerLazySingleton<NotificationsRemoteDataSource>(
+    () => NotificationsRemoteDataSourceImpl(dio: sl()),
+  );
+  sl.registerLazySingleton<NotificationsRepository>(
+    () => NotificationsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetNotificationsUseCase(sl()));
+  sl.registerLazySingleton(() => MarkNotificationReadUseCase(sl()));
+  sl.registerLazySingleton(() => MarkAllNotificationsReadUseCase(sl()));
+  sl.registerFactory(
+    () => NotificationsCubit(
+      getNotificationsUseCase: sl(),
+      markNotificationReadUseCase: sl(),
+      markAllNotificationsReadUseCase: sl(),
     ),
   );
 }

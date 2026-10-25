@@ -1,26 +1,77 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/realtime/realtime_refresh_mixin.dart';
 import '../../domain/entities/order_status.dart';
 import '../../domain/entities/order_summary_entity.dart';
 import '../../domain/usecases/get_orders_usecase.dart';
 import '../../domain/usecases/update_order_status_usecase.dart';
+import '../../domain/usecases/watch_new_vendor_orders_usecase.dart';
+import '../../domain/usecases/watch_orders_status_usecase.dart';
+import 'active_orders_watch_mixin.dart';
 import 'orders_state.dart';
 
-class OrdersCubit extends Cubit<OrdersState> {
+class OrdersCubit extends Cubit<OrdersState>
+    with RealtimeRefreshMixin<OrdersState>, ActiveOrdersWatchMixin<OrdersState> {
   final GetOrdersUseCase getOrdersUseCase;
   final UpdateOrderStatusUseCase updateOrderStatusUseCase;
+  final WatchNewVendorOrdersUseCase watchNewVendorOrdersUseCase;
+  final WatchOrdersStatusUseCase watchOrdersStatusUseCase;
 
   static const int _limit = 15;
+  OrderStatus _filter = OrderStatus.unknown;
 
   OrdersCubit({
     required this.getOrdersUseCase,
     required this.updateOrderStatusUseCase,
-  }) : super(OrdersInitial());
+    required this.watchNewVendorOrdersUseCase,
+    required this.watchOrdersStatusUseCase,
+  }) : super(OrdersInitial()) {
+    listenForRealtimeRefresh(watchNewVendorOrdersUseCase(), refreshSilently);
+  }
+
+  @override
+  void onChange(Change<OrdersState> change) {
+    super.onChange(change);
+    final next = change.nextState;
+    if (next is OrdersLoaded || next is OrdersEmpty) {
+      watchActiveOrders(
+        next is OrdersLoaded ? next.orders : const [],
+        watch: watchOrdersStatusUseCase.call,
+        onRefresh: refreshSilently,
+      );
+    }
+  }
+
+  /// Reloads the first page of the current filter without a loader;
+  /// failures are ignored so the current list stays on screen.
+  Future<void> refreshSilently() async {
+    if (isClosed) return;
+    if (state is! OrdersLoaded && state is! OrdersEmpty) return;
+
+    final filter = _filter;
+    final result = await getOrdersUseCase(status: filter, page: 1, limit: _limit);
+    if (isClosed || filter != _filter) return;
+
+    result.fold(
+      (failure) => debugPrint('❌ OrdersCubit: Silent refresh failed - ${failure.message}'),
+      (orders) => emit(
+        orders.isEmpty
+            ? OrdersEmpty(filter: filter)
+            : OrdersLoaded(
+                orders: orders,
+                filter: filter,
+                currentPage: 1,
+                hasReachedMax: orders.length < _limit,
+              ),
+      ),
+    );
+  }
 
   Future<void> fetchOrders({OrderStatus filter = OrderStatus.unknown, bool isRefresh = false}) async {
     if (isClosed) return;
-    
+    _filter = filter;
+
     if (isRefresh || state is! OrdersLoaded) {
       emit(OrdersLoading());
     } else if (state is OrdersLoaded && !isRefresh && (state as OrdersLoaded).filter != filter) {
@@ -86,20 +137,10 @@ class OrdersCubit extends Cubit<OrdersState> {
     final originalOrders = List<OrderSummaryEntity>.from(currentState.orders);
 
     // Optimistic UI Update
-    final updatedOrders = originalOrders.map((order) {
-      if (order.id == orderId) {
-        return OrderSummaryEntity(
-          id: order.id,
-          orderCode: order.orderCode,
-          status: newStatus,
-          dateTime: order.dateTime,
-          orderType: order.orderType,
-          itemCount: order.itemCount,
-          totalAmount: order.totalAmount,
-        );
-      }
-      return order;
-    }).toList();
+    final updatedOrders = originalOrders
+        .map((order) =>
+            order.id == orderId ? order.copyWith(status: newStatus) : order)
+        .toList();
 
     emit(currentState.copyWith(orders: updatedOrders));
 

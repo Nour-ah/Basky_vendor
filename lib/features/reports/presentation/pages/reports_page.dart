@@ -99,7 +99,8 @@ class ReportsPage extends StatelessWidget {
                         Expanded(
                           child: ReportStatCard(
                             title: LocaleKeys.totalRevenue.tr(),
-                            value: summary.totalRevenue.toStringAsFixed(0),
+                            value:
+                                '${summary.totalRevenue.toStringAsFixed(0)} ${LocaleKeys.currency.tr()}',
                             icon: Icons.payments_outlined,
                             color: AppColors.success,
                           ),

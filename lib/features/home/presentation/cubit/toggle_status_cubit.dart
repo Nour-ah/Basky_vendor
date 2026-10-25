@@ -5,13 +5,12 @@ import 'toggle_status_state.dart';
 class ToggleStatusCubit extends Cubit<ToggleStatusState> {
   final ToggleRestaurantStatusUseCase toggleRestaurantStatusUseCase;
 
-  ToggleStatusCubit({
-    required this.toggleRestaurantStatusUseCase,
-  }) : super(ToggleStatusInitial());
+  ToggleStatusCubit({required this.toggleRestaurantStatusUseCase})
+    : super(ToggleStatusInitial());
 
   Future<void> toggleStatus(bool currentIsOpen) async {
     final newIsOpen = !currentIsOpen;
-    
+
     // Optimistically update the UI to the new state
     emit(ToggleStatusSuccess(newIsOpen));
 

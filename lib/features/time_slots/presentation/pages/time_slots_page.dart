@@ -65,8 +65,11 @@ class TimeSlotsPage extends StatelessWidget {
                 message: state.message,
                 context: context,
               );
-            } else if (state is TimeSlotsError) {
-              AppSnackBarHelper.showErrorSnackBar(message: state.message, context: context);
+            } else if (state is TimeSlotsActionError) {
+              AppSnackBarHelper.showErrorSnackBar(
+                message: state.message,
+                context: context,
+              );
             }
           },
           builder: (context, state) {
@@ -90,10 +93,14 @@ class TimeSlotsPage extends StatelessWidget {
                 actionLabel: LocaleKeys.addTimeSlot.tr(),
               );
             }
-            if (state is TimeSlotsLoaded || state is TimeSlotsSubmitting) {
+            if (state is TimeSlotsLoaded ||
+                state is TimeSlotsSubmitting ||
+                state is TimeSlotsActionError) {
               final slots = state is TimeSlotsLoaded
                   ? state.slots
-                  : (state as TimeSlotsSubmitting).slots;
+                  : state is TimeSlotsSubmitting
+                      ? state.slots
+                      : (state as TimeSlotsActionError).slots;
 
               return RefreshIndicator(
                 onRefresh: () => context.read<TimeSlotsCubit>().fetchTimeSlots(),

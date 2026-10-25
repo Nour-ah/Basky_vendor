@@ -1,11 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'package:spider_restaurant/core/theme/app_text_styles.dart';
-import 'package:spider_restaurant/core/widgets/custom_image_view.dart';
-import 'package:spider_restaurant/core/widgets/marquee_widget.dart';
+import 'package:basky_vendor/core/theme/app_text_styles.dart';
+import 'package:basky_vendor/core/widgets/custom_image_view.dart';
+import 'package:basky_vendor/core/widgets/marquee_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_images.dart';
+import '../../../notifications/presentation/pages/notifications_page.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({
@@ -21,6 +22,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userAddress;
   final String? userImageUrl;
 
+  static const double _toolbarHeight = 80;
+
   @override
   Widget build(BuildContext context) {
     final imageUrl = userImageUrl?.trim() ?? '';
@@ -32,6 +35,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       elevation: 0,
+      toolbarHeight: _toolbarHeight,
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -78,13 +82,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   const SizedBox(height: 2),
                   MarqueeWidget(
-                    child: Text(userName, style: AppTextStyle.fontWhite16Bold),
+                    child: Text(
+                      userName,
+                      style: AppTextStyle.fontWhite16Bold.copyWith(height: 1.2),
+                    ),
                   ),
-                  const SizedBox(height: 2),
                   Text(
                     dateString,
                     style: AppTextStyle.fontWhite12Regular.copyWith(
                       color: AppColors.white.withValues(alpha: 0.8),
+                      height: 1.2,
                     ),
                   ),
                 ],
@@ -94,22 +101,29 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            icon: CustomImageView(
-              imagePath: AppImages.logo,
-              fit: BoxFit.scaleDown,
-              width: 22,
-              height: 22,
+        Center(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: const BoxDecoration(
+              color: AppColors.white,
+              shape: BoxShape.circle,
             ),
-            onPressed: () {},
-            constraints: const BoxConstraints(),
-            padding: const EdgeInsets.all(8),
+            child: IconButton(
+              icon: const CustomImageView(
+                imagePath: AppImages.notification,
+                fit: BoxFit.scaleDown,
+                width: 22,
+                height: 22,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                );
+              },
+              constraints: const BoxConstraints(),
+              padding: const EdgeInsets.all(8),
+            ),
           ),
         ),
       ],
@@ -117,7 +131,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 16);
+  Size get preferredSize => const Size.fromHeight(_toolbarHeight);
 }
 
 class _ProfileAvatar extends StatelessWidget {

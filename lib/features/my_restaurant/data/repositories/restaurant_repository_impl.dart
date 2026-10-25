@@ -1,9 +1,11 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
+import '../../domain/entities/add_branch_params.dart';
 import '../../domain/entities/add_product_params.dart';
 import '../../domain/entities/branch_details_response_entity.dart';
 import '../../domain/entities/category_entity.dart';
+import '../../domain/entities/country_entity.dart';
 import '../../domain/entities/product_details_entity.dart';
 import '../../domain/entities/product_summary_entity.dart';
 import '../../domain/entities/product_variant_entity.dart';
@@ -33,6 +35,26 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<Either<Failure, BranchDetailsResponseEntity>> getBranchDetails(int branchId, {int page = 1}) async {
     return _execute(() => remoteDataSource.getBranchDetails(branchId, page: page));
+  }
+
+  @override
+  Future<Either<Failure, void>> addBranch(AddBranchParams params) async {
+    return _execute(() => remoteDataSource.addBranch(params));
+  }
+
+  @override
+  Future<Either<Failure, void>> updateBranch(int branchId, AddBranchParams params) async {
+    return _execute(() => remoteDataSource.updateBranch(branchId, params));
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteBranch(int branchId) async {
+    return _execute(() => remoteDataSource.deleteBranch(branchId));
+  }
+
+  @override
+  Future<Either<Failure, List<CountryEntity>>> getCountries() async {
+    return _execute(() => remoteDataSource.getCountries());
   }
 
   @override

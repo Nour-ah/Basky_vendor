@@ -2,21 +2,30 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_vendor_branches_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/branches_cubit.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/branches_state.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/delete_branch_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/get_vendor_branches_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/branches_cubit.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/branches_state.dart';
 
-class MockGetVendorBranchesUseCase extends Mock implements GetVendorBranchesUseCase {}
+class MockGetVendorBranchesUseCase extends Mock
+    implements GetVendorBranchesUseCase {}
+
+class MockDeleteBranchUseCase extends Mock implements DeleteBranchUseCase {}
 
 void main() {
   late BranchesCubit cubit;
   late MockGetVendorBranchesUseCase mockUseCase;
+  late MockDeleteBranchUseCase mockDeleteUseCase;
 
   setUp(() {
     mockUseCase = MockGetVendorBranchesUseCase();
-    cubit = BranchesCubit(getVendorBranchesUseCase: mockUseCase);
+    mockDeleteUseCase = MockDeleteBranchUseCase();
+    cubit = BranchesCubit(
+      getVendorBranchesUseCase: mockUseCase,
+      deleteBranchUseCase: mockDeleteUseCase,
+    );
   });
 
   tearDown(() {
@@ -40,8 +49,7 @@ void main() {
   blocTest<BranchesCubit, BranchesState>(
     'emits [BranchesLoading, BranchesLoaded] when fetching branches is successful',
     build: () {
-      when(() => mockUseCase())
-          .thenAnswer((_) async => Right(tBranches));
+      when(() => mockUseCase()).thenAnswer((_) async => Right(tBranches));
       return cubit;
     },
     act: (cubit) => cubit.fetchBranches(),
@@ -57,8 +65,7 @@ void main() {
   blocTest<BranchesCubit, BranchesState>(
     'emits [BranchesLoading, BranchesEmpty] when branches list is empty',
     build: () {
-      when(() => mockUseCase())
-          .thenAnswer((_) async => const Right([]));
+      when(() => mockUseCase()).thenAnswer((_) async => const Right([]));
       return cubit;
     },
     act: (cubit) => cubit.fetchBranches(),

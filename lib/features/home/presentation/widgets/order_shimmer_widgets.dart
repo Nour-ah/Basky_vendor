@@ -30,9 +30,10 @@ class _ShimmerBoxState extends State<ShimmerBox>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat();
-    _animation = Tween<double>(begin: -1.5, end: 1.5).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: -1.5,
+      end: 1.5,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -94,7 +95,10 @@ class OrderCardShimmer extends StatelessWidget {
             children: [
               const ShimmerBox(width: 40, height: 40, borderRadius: 20),
               const SizedBox(width: 12),
-              ShimmerBox(width: MediaQuery.of(context).size.width * 0.35, height: 18),
+              ShimmerBox(
+                width: MediaQuery.of(context).size.width * 0.35,
+                height: 18,
+              ),
               const Spacer(),
               const ShimmerBox(width: 72, height: 28, borderRadius: 14),
             ],
@@ -105,7 +109,10 @@ class OrderCardShimmer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ShimmerBox(width: MediaQuery.of(context).size.width * 0.3, height: 14),
+              ShimmerBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: 14,
+              ),
               const ShimmerBox(width: 80, height: 14),
             ],
           ),
@@ -125,11 +132,29 @@ class OrderStatsShimmer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         children: [
-          Expanded(child: ShimmerBox(width: double.infinity, height: 32, borderRadius: 24)),
+          Expanded(
+            child: ShimmerBox(
+              width: double.infinity,
+              height: 32,
+              borderRadius: 24,
+            ),
+          ),
           const SizedBox(width: 12),
-          Expanded(child: ShimmerBox(width: double.infinity, height: 32, borderRadius: 24)),
+          Expanded(
+            child: ShimmerBox(
+              width: double.infinity,
+              height: 32,
+              borderRadius: 24,
+            ),
+          ),
           const SizedBox(width: 12),
-          Expanded(child: ShimmerBox(width: double.infinity, height: 32, borderRadius: 24)),
+          Expanded(
+            child: ShimmerBox(
+              width: double.infinity,
+              height: 32,
+              borderRadius: 24,
+            ),
+          ),
         ],
       ),
     );

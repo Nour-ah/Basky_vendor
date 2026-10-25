@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/utils/navigation_utils.dart';
 import '../cubit/reset_password_cubit.dart';
 import '../cubit/reset_password_state.dart';
 import '../widgets/reset_password_step_indicator.dart';
@@ -155,10 +156,13 @@ class _ForgotPasswordView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Close dialog
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-                (route) => false,
+              Navigator.of(context).pop();
+              safeNavigate(
+                context,
+                () => Navigator.of(context).pushAndRemoveUntil(
+                  appRoute((_) => const LoginPage()),
+                  (route) => false,
+                ),
               );
             },
             child: Text('goToLogin'.tr()),

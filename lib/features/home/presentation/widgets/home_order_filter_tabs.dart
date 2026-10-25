@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../orders/domain/entities/order_status.dart';
+import '../cubit/home_orders_state.dart';
 
 class HomeOrderFilterTabs extends StatelessWidget {
   final OrderStatus selected;
@@ -14,14 +15,7 @@ class HomeOrderFilterTabs extends StatelessWidget {
     required this.onSelected,
   });
 
-  // The tab statuses shown in Home screen (as requested by backend)
-  static const List<OrderStatus> _statuses = [
-    OrderStatus.processing,
-    OrderStatus.readyForPickup,
-    OrderStatus.shipped,
-    OrderStatus.delivered,
-    OrderStatus.cancelled,
-  ];
+  static const List<OrderStatus> _statuses = kHomeOrderFilterStatuses;
 
   String _label(BuildContext context, OrderStatus status) {
     switch (status) {
@@ -33,6 +27,8 @@ class HomeOrderFilterTabs extends StatelessWidget {
         return 'processing'.tr();
       case OrderStatus.readyForPickup:
         return 'ready_for_pickup'.tr();
+      case OrderStatus.pickingUp:
+        return 'picking_up'.tr();
       case OrderStatus.shipped:
         return 'shipped'.tr();
       case OrderStatus.delivered:
@@ -80,7 +76,10 @@ class HomeOrderFilterTabs extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeInOut,
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected ? activeColor : AppColors.white,
                   borderRadius: BorderRadius.circular(22),
@@ -135,11 +134,23 @@ class HomeOrdersStatsRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         children: [
-          _MiniStatChip(label: 'today'.tr(), count: today, color: AppColors.primary),
+          _MiniStatChip(
+            label: 'today'.tr(),
+            count: today,
+            color: AppColors.primary,
+          ),
           const SizedBox(width: 10),
-          _MiniStatChip(label: 'thisWeek'.tr(), count: week, color: const Color(0xFF8B5CF6)),
+          _MiniStatChip(
+            label: 'thisWeek'.tr(),
+            count: week,
+            color: const Color(0xFF8B5CF6),
+          ),
           const SizedBox(width: 10),
-          _MiniStatChip(label: 'thisMonth'.tr(), count: month, color: const Color(0xFFF59E0B)),
+          _MiniStatChip(
+            label: 'thisMonth'.tr(),
+            count: month,
+            color: const Color(0xFFF59E0B),
+          ),
         ],
       ),
     );
@@ -151,7 +162,11 @@ class _MiniStatChip extends StatelessWidget {
   final int count;
   final Color color;
 
-  const _MiniStatChip({required this.label, required this.count, required this.color});
+  const _MiniStatChip({
+    required this.label,
+    required this.count,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +183,10 @@ class _MiniStatChip extends StatelessWidget {
           children: [
             Text(
               '$count',
-              style: AppTextStyle.fontBlack16Bold.copyWith(color: color, fontSize: 18),
+              style: AppTextStyle.fontBlack16Bold.copyWith(
+                color: color,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 2),
             Text(

@@ -32,12 +32,16 @@ class TimeSlotsRepositoryImpl implements TimeSlotsRepository {
       return Left(NetworkFailure(e.message));
     } on UnauthorizedException catch (e) {
       return Left(UnauthorizedFailure(e.message));
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(e.message, errors: e.errors));
     } on ParsingException catch (e) {
       return Left(ParsingFailure(e.message));
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
+    } catch (_) {
+      return const Left(
+        ServerFailure('Something went wrong. Please try again.'),
+      );
     }
   }
 }

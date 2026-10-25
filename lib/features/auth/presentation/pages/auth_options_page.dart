@@ -1,10 +1,11 @@
+import 'package:basky_vendor/core/theme/app_colors.dart';
+import 'package:basky_vendor/core/utils/navigation_utils.dart';
+import 'package:basky_vendor/features/auth/presentation/pages/login_page.dart';
+import 'package:basky_vendor/features/auth/presentation/pages/register_page.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_background_widget.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_button.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_card_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:spider_restaurant/core/theme/app_colors.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/login_page.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/register_page.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_background_widget.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_button.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_card_widget.dart';
 
 class AuthOptionsPage extends StatelessWidget {
   const AuthOptionsPage({super.key});
@@ -42,8 +43,7 @@ class AuthOptionsPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             const Text(
-                            //  'Sign in or create an account to manage\nyour restaurant and orders.',
-                              'Sign in account to manage\nyour restaurant and orders.',
+                              'Sign in or create an account to manage\nyour vendor and orders.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
@@ -54,32 +54,32 @@ class AuthOptionsPage extends StatelessWidget {
                             const SizedBox(height: 32),
                             AuthButton(
                               text: 'Sign In',
-                              backgroundColor: AppColors.promoRed,
+                              backgroundColor: AppColors.white,
+                              textColor: AppColors.primary,
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginPage(),
-                                  ),
+                                  appRoute((_) => const LoginPage()),
                                 );
                               },
                             ),
                             const SizedBox(height: 16),
-                            // AuthButton(
-                            //   text: 'Sign Up',
-                            //   backgroundColor: AppColors.promoRed,
-                            //   onPressed: () {
-                            //     Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //         builder: (context) => const RegisterPage(),
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
+                            AuthButton(
+                              text: 'Sign Up',
+                              backgroundColor: AppColors.white,
+                              textColor: AppColors.primary,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  appRoute((_) => const RegisterPage()),
+                                );
+                              },
+                            ),
                           ],
                         ),
-                        SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.1,
+                        ),
                       ],
                     ),
                   ),

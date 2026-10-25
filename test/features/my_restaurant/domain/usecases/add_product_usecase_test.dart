@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/add_product_params.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_status.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/repositories/restaurant_repository.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/add_product_usecase.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/add_product_params.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_status.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/repositories/restaurant_repository.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/add_product_usecase.dart';
 
 class MockRestaurantRepository implements RestaurantRepository {
   bool shouldFail = false;

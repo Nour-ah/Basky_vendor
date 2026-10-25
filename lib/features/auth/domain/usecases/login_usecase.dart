@@ -7,7 +7,15 @@ class LoginUseCase {
   final AuthRepository repository;
   LoginUseCase(this.repository);
 
-  Future<Either<Failure, AuthResponse>> call({required String login, required String password}) {
-    return repository.login(login: login, password: password);
+  Future<Either<Failure, AuthResponse>> call({
+    required String login,
+    required String password,
+    String? fcmToken,
+  }) {
+    return repository.login(
+      login: login,
+      password: password,
+      fcmToken: fcmToken,
+    );
   }
 }

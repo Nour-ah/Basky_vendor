@@ -1,6 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/usecases/get_current_user_usecase.dart';
+import '../../domain/usecases/get_vendor_types_usecase.dart';
 import '../../domain/usecases/is_logged_in_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
@@ -19,6 +22,7 @@ class AuthCubit extends Cubit<AuthState> {
   final LogoutUseCase logoutUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final IsLoggedInUseCase isLoggedInUseCase;
+  final GetVendorTypesUseCase getVendorTypesUseCase;
 
   AuthCubit({
     required this.loginUseCase,
@@ -29,6 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
     required this.logoutUseCase,
     required this.getCurrentUserUseCase,
     required this.isLoggedInUseCase,
+    required this.getVendorTypesUseCase,
   }) : super(AuthInitial());
 
   Future<void> checkAuthStatus() async {
@@ -39,10 +44,30 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> login({required String login, required String password}) async {
     emit(AuthLoading());
-    final result = await loginUseCase(login: login, password: password);
+    String? fcmToken;
+    try {
+      fcmToken = await FirebaseMessaging.instance.getToken();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Login FCM token fetch failed: $e');
+      }
+    }
+    final result = await loginUseCase(
+      login: login,
+      password: password,
+      fcmToken: fcmToken,
+    );
     result.fold(
       (failure) => emit(AuthError(message: failure.message)),
       (response) => emit(AuthLoginSuccess(user: response.user, token: response.token)),
+    );
+  }
+
+  Future<void> loadVendorTypes() async {
+    final result = await getVendorTypesUseCase();
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (types) => emit(AuthVendorTypesLoaded(types: types)),
     );
   }
 
@@ -56,6 +81,8 @@ class AuthCubit extends Cubit<AuthState> {
     required String restaurantNameAr,
     required String restaurantPhone,
     required String address,
+    required int vendorTypeId,
+    String? imagePath,
   }) async {
     emit(AuthLoading());
     final result = await registerUseCase(
@@ -68,14 +95,17 @@ class AuthCubit extends Cubit<AuthState> {
       restaurantNameAr: restaurantNameAr,
       restaurantPhone: restaurantPhone,
       address: address,
+      vendorTypeId: vendorTypeId,
+      imagePath: imagePath,
     );
     result.fold(
       (failure) => emit(AuthError(message: failure.message)),
-      (message) => emit(
+      (registerResult) => emit(
         AuthRegisterSuccess(
-          message: message,
+          message: registerResult.message,
           phone: ownerPhone,
           email: ownerEmail,
+          isActive: registerResult.user?.isActive ?? true,
         ),
       ),
     );

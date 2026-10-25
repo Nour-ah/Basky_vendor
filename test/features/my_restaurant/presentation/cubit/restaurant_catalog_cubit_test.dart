@@ -1,21 +1,23 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/core/error/failures.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/add_product_params.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/branch_details_response_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/category_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_details_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_summary_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/repositories/restaurant_repository.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_status.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/delete_product_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_categories_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/usecases/get_products_usecase.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/restaurant_catalog_state.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_variant_entity.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
+import 'package:basky_vendor/core/error/failures.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/add_branch_params.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/add_product_params.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/branch_details_response_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/category_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/country_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_details_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_summary_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/repositories/restaurant_repository.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_status.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/delete_product_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/get_categories_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/usecases/get_products_usecase.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/restaurant_catalog_cubit.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/restaurant_catalog_state.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_variant_entity.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/vendor_branch_entity.dart';
 
 class FakeRestaurantRepository implements RestaurantRepository {
   @override
@@ -43,6 +45,25 @@ class FakeRestaurantRepository implements RestaurantRepository {
           products: [],
         ),
       );
+
+  @override
+  Future<Either<Failure, void>> addBranch(AddBranchParams params) async =>
+      const Right(null);
+
+  @override
+  Future<Either<Failure, void>> updateBranch(
+    int branchId,
+    AddBranchParams params,
+  ) async =>
+      const Right(null);
+
+  @override
+  Future<Either<Failure, void>> deleteBranch(int branchId) async =>
+      const Right(null);
+
+  @override
+  Future<Either<Failure, List<CountryEntity>>> getCountries() async =>
+      const Right([]);
 
   @override
   Future<Either<Failure, List<CategoryEntity>>> getCategories() async => const Right([]);

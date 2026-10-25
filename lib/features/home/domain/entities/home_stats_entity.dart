@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'recent_order_entity.dart';
 
 class HomeStatsEntity extends Equatable {
-  final int totalOrders;
-  final double totalEarnings;
+  final int todayOrders;
+  final double todayEarnings;
   final List<RecentOrderEntity> recentOrders;
   final int pendingOrders;
   final int preparingOrders;
@@ -11,8 +11,8 @@ class HomeStatsEntity extends Equatable {
   final int deliveredOrders;
 
   const HomeStatsEntity({
-    required this.totalOrders,
-    required this.totalEarnings,
+    required this.todayOrders,
+    required this.todayEarnings,
     required this.recentOrders,
     required this.pendingOrders,
     required this.preparingOrders,
@@ -22,12 +22,12 @@ class HomeStatsEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        totalOrders,
-        totalEarnings,
-        recentOrders,
-        pendingOrders,
-        preparingOrders,
-        readyOrders,
-        deliveredOrders,
-      ];
+    todayOrders,
+    todayEarnings,
+    recentOrders,
+    pendingOrders,
+    preparingOrders,
+    readyOrders,
+    deliveredOrders,
+  ];
 }

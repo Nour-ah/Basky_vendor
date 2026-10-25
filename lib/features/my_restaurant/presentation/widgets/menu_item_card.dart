@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/widgets/safe_network_image.dart';
 import '../models/menu_item_model.dart';
 
@@ -42,7 +44,7 @@ class MenuItemCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '\$ ${item.price.toStringAsFixed(2)}',
+                          '${item.price.toStringAsFixed(2)} ${LocaleKeys.currency.tr()}',
                           style: AppTextStyle.fontGreen14Bold.copyWith(
                             fontSize: 12,
                           ),

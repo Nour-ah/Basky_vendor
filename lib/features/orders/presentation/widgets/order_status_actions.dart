@@ -13,11 +13,10 @@ class OrderStatusActions extends StatelessWidget {
   final OrderStatus currentStatus;
   final ValueChanged<OrderStatus> onStatusSelected;
 
+  // Vendor stops at ready_for_pickup; shipped/delivered are delivery-app only.
   static const _allowedTransitions = {
     OrderStatus.pending: [OrderStatus.processing, OrderStatus.cancelled],
     OrderStatus.processing: [OrderStatus.readyForPickup, OrderStatus.cancelled],
-    OrderStatus.readyForPickup: [OrderStatus.shipped],
-    OrderStatus.shipped: [OrderStatus.delivered],
   };
 
   @override

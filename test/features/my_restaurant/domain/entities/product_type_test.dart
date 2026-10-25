@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/product_type.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/product_type.dart';
 
 void main() {
   group('ProductType', () {

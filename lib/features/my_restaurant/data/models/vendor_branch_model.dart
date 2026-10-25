@@ -5,6 +5,8 @@ class VendorBranchModel extends VendorBranchEntity {
   const VendorBranchModel({
     required super.id,
     required super.name,
+    super.nameEn,
+    super.nameAr,
     required super.address,
     required super.isOpen,
     required super.rating,
@@ -15,14 +17,21 @@ class VendorBranchModel extends VendorBranchEntity {
     super.phone,
     super.latitude,
     super.longitude,
+    super.countryId,
   });
 
   factory VendorBranchModel.fromJson(Map<String, dynamic> json) {
+    final nameEn = _localizedPart(json['name'], 'en');
+    final nameAr = _localizedPart(json['name'], 'ar');
+    final displayName = _parseLocalizedName(json['name']) ??
+        json['restaurant_name']?.toString() ??
+        '';
+
     return VendorBranchModel(
       id: json['id'] as int? ?? 0,
-      name: _parseLocalizedName(json['name']) ??
-          json['restaurant_name']?.toString() ??
-          '',
+      name: displayName,
+      nameEn: nameEn ?? (displayName.isNotEmpty ? displayName : null),
+      nameAr: nameAr,
       address: json['address']?.toString() ?? '',
       isOpen: _parseIsOpen(json),
       rating: _parseRating(json),
@@ -46,7 +55,18 @@ class VendorBranchModel extends VendorBranchEntity {
       phone: json['phone']?.toString(),
       latitude: json['latitude']?.toString(),
       longitude: json['longitude']?.toString(),
+      countryId: json['country_id'] is int
+          ? json['country_id'] as int
+          : int.tryParse(json['country_id']?.toString() ?? ''),
     );
+  }
+
+  static String? _localizedPart(dynamic value, String key) {
+    if (value is Map) {
+      final text = value[key]?.toString();
+      if (text != null && text.isNotEmpty) return text;
+    }
+    return null;
   }
 
   static String? _parseLocalizedName(dynamic value) {

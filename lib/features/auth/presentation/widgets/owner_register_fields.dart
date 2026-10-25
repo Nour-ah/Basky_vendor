@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:spider_restaurant/core/translations/locale_keys.g.dart';
+import 'package:basky_vendor/core/translations/locale_keys.g.dart';
 import 'auth_phone_field.dart';
 import 'auth_text_field.dart';
 

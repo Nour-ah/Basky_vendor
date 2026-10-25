@@ -20,12 +20,14 @@ class HomeLoaded extends HomeState {
   final User user;
   final VendorBranchEntity? branch;
   final String selectedStatus;
+  final int? pendingPrescriptionCount;
 
   const HomeLoaded({
     required this.stats,
     required this.user,
     this.branch,
     required this.selectedStatus,
+    this.pendingPrescriptionCount,
   });
 
   List<RecentOrderEntity> get filteredOrders {
@@ -33,7 +35,9 @@ class HomeLoaded extends HomeState {
     return stats.recentOrders.where((order) {
       final os = order.status.toLowerCase();
       if (ss == 'ready_for_delivery') {
-        return os == 'ready_for_delivery' || os == 'ready' || os == 'ready_for_pickup';
+        return os == 'ready_for_delivery' ||
+            os == 'ready' ||
+            os == 'ready_for_pickup';
       }
       if (ss == 'pending') {
         return os == 'pending' || os == 'confirmed';
@@ -42,14 +46,24 @@ class HomeLoaded extends HomeState {
         return os == 'cooking' || os == 'processing' || os == 'preparing';
       }
       if (ss == 'on_the_way') {
-        return os == 'on_the_way' || os == 'out_for_delivery' || os == 'shipped' || os == 'delivered';
+        return os == 'on_the_way' ||
+            os == 'out_for_delivery' ||
+            os == 'picking_up' ||
+            os == 'shipped' ||
+            os == 'delivered';
       }
       return false;
     }).toList();
   }
 
   @override
-  List<Object?> get props => [stats, user, branch, selectedStatus];
+  List<Object?> get props => [
+    stats,
+    user,
+    branch,
+    selectedStatus,
+    pendingPrescriptionCount,
+  ];
 }
 
 class HomeError extends HomeState {

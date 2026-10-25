@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Basky Vendor</string>
+    <string name="facebook_app_id">1388182069424258</string>
+    <string name="fb_login_protocol_scheme">fb1388182069424258</string>
+    <string name="facebook_client_token">66a86dbf777c8ffd39490e4de5093768</string>
+</resources>

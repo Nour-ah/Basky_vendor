@@ -5,6 +5,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../domain/entities/time_slot_entity.dart';
+import '../../domain/utils/time_slot_time_format.dart';
 
 class TimeSlotFormSheet extends StatefulWidget {
   const TimeSlotFormSheet({
@@ -45,8 +46,10 @@ class _TimeSlotFormSheetState extends State<TimeSlotFormSheet> {
   void initState() {
     super.initState();
     _selectedDay = widget.initialDay;
-    _opensController = TextEditingController(text: widget.initialOpensAt);
-    _closesController = TextEditingController(text: widget.initialClosesAt);
+    _opensController =
+        TextEditingController(text: toApiTimeHi(widget.initialOpensAt));
+    _closesController =
+        TextEditingController(text: toApiTimeHi(widget.initialClosesAt));
   }
 
   @override
@@ -117,8 +120,8 @@ class _TimeSlotFormSheetState extends State<TimeSlotFormSheet> {
               widget.onSubmit(
                 AddTimeSlotParams(
                   dayOfWeek: _selectedDay,
-                  opensAt: _opensController.text.trim(),
-                  closesAt: _closesController.text.trim(),
+                  opensAt: toApiTimeHi(_opensController.text),
+                  closesAt: toApiTimeHi(_closesController.text),
                 ),
               );
             },

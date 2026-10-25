@@ -5,6 +5,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/translations/locale_keys.g.dart';
+import '../../../../core/widgets/app_skeleton_loading.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 import '../../../../core/widgets/state_view_widget.dart';
 import '../cubit/order_details_cubit.dart';
@@ -70,7 +71,7 @@ class OrderDetailsPage extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is OrderDetailsLoading) {
-              return const LoadingSkeletonList(itemCount: 4);
+              return const OrderDetailsSkeleton();
             }
             if (state is OrderDetailsError) {
               return StateViewWidget(

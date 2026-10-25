@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../models/drawer_item_model.dart';
 
 class DrawerItemWidget extends StatelessWidget {
@@ -31,7 +32,31 @@ class DrawerItemWidget extends StatelessWidget {
           child: Icon(item.icon, color: AppColors.primary, size: 20),
         ),
         title: Text(item.title, style: textStyle),
-        trailing: Icon(Icons.arrow_forward_ios, size: 14, color: trailingColor),
+        subtitle: item.subtitle == null
+            ? null
+            : Text(item.subtitle!, style: AppTextStyle.fontGrey12Regular),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (item.badgeCount != null && item.badgeCount! > 0)
+              Container(
+                margin: const EdgeInsetsDirectional.only(end: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.promoRed,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '${item.badgeCount}',
+                  style: AppTextStyle.fontWhite14Regular.copyWith(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            Icon(Icons.arrow_forward_ios, size: 14, color: trailingColor),
+          ],
+        ),
         onTap: item.onTap,
       ),
     );

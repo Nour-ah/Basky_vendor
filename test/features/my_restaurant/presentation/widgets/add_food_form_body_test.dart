@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:spider_restaurant/features/my_restaurant/domain/entities/add_product_params.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/add_food_cubit.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/cubit/add_food_state.dart';
-import 'package:spider_restaurant/features/my_restaurant/presentation/widgets/add_food_form_body.dart';
-import 'package:spider_restaurant/features/my_restaurant/ui/widgets/add_food_type_dropdown.dart';
+import 'package:basky_vendor/features/my_restaurant/domain/entities/add_product_params.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/add_food_cubit.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/cubit/add_food_state.dart';
+import 'package:basky_vendor/features/my_restaurant/presentation/widgets/add_food_form_body.dart';
+import 'package:basky_vendor/features/my_restaurant/ui/widgets/add_food_type_dropdown.dart';
 
 class MockAddFoodCubit extends Mock implements AddFoodCubit {}
 

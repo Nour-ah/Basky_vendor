@@ -1,19 +1,22 @@
+import 'package:basky_vendor/core/di/injection_container.dart';
+import 'package:basky_vendor/core/theme/app_colors.dart';
+import 'package:basky_vendor/core/utils/navigation_utils.dart';
+import 'package:basky_vendor/core/translations/locale_keys.g.dart';
+import 'package:basky_vendor/features/auth/domain/entities/user.dart';
+import 'package:basky_vendor/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:basky_vendor/features/auth/presentation/cubit/auth_state.dart';
+import 'package:basky_vendor/features/auth/presentation/pages/account_under_review_page.dart';
+import 'package:basky_vendor/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:basky_vendor/features/auth/presentation/pages/register_page.dart';
+import 'package:basky_vendor/features/auth/presentation/pages/verify_email_screen.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_background_widget.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_button.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_card_widget.dart';
+import 'package:basky_vendor/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:basky_vendor/features/home/presentation/pages/home_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spider_restaurant/core/di/injection_container.dart';
-import 'package:spider_restaurant/core/theme/app_colors.dart';
-import 'package:spider_restaurant/core/translations/locale_keys.g.dart';
-import 'package:spider_restaurant/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:spider_restaurant/features/auth/presentation/cubit/auth_state.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/register_page.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_background_widget.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_button.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_card_widget.dart';
-import 'package:spider_restaurant/features/auth/presentation/widgets/auth_text_field.dart';
-import 'package:spider_restaurant/features/auth/presentation/pages/verify_email_screen.dart';
-import 'package:spider_restaurant/features/home/presentation/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,18 +38,49 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _goToHome(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
+    safeNavigate(
       context,
-      MaterialPageRoute(builder: (_) =>   HomePage()),
-          (route) => false,
+      () => Navigator.pushAndRemoveUntil(
+        context,
+        appRoute((_) => HomePage()),
+        (route) => false,
+      ),
     );
   }
 
   void _goToRegister(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const RegisterPage()),
+      appRoute((_) => const RegisterPage()),
     );
+  }
+
+  void _navigateAfterLogin(BuildContext context, User user) {
+    if (!user.isActive) {
+      safeNavigate(
+        context,
+        () => Navigator.pushAndRemoveUntil(
+          context,
+          appRoute((_) => const AccountUnderReviewPage()),
+          (route) => false,
+        ),
+      );
+      return;
+    }
+
+    if (user.isVerified) {
+      _goToHome(context);
+    } else if (user.emailVerifiedAt == null || user.emailVerifiedAt!.isEmpty) {
+      safeNavigate(
+        context,
+        () => Navigator.pushReplacement(
+          context,
+          appRoute((_) => VerifyEmailScreen(email: user.email)),
+        ),
+      );
+    } else {
+      _goToHome(context);
+    }
   }
 
   @override
@@ -56,24 +90,17 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider(
       create: (_) => sl<AuthCubit>(),
       child: BlocConsumer<AuthCubit, AuthState>(
+        listenWhen: (previous, current) =>
+            current is AuthLoginSuccess || current is AuthError,
         listener: (context, state) {
           if (state is AuthLoginSuccess) {
-            if (state.user.isVerified) {
-              _goToHome(context);
-            } else if (state.user.emailVerifiedAt == null ||
-                state.user.emailVerifiedAt!.isEmpty) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => VerifyEmailScreen(email: state.user.email)),
-              );
-            } else {
-              _goToHome(context);
-            }
+            _navigateAfterLogin(context, state.user);
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message),
-                  backgroundColor: AppColors.promoRed),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.promoRed,
+              ),
             );
           }
         },
@@ -93,8 +120,9 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: AlignmentDirectional.centerStart,
                           child: IconButton(
                             icon: Icon(
-                              isAr ? Icons.arrow_back_ios_new : Icons
-                                  .arrow_back_ios,
+                              isAr
+                                  ? Icons.arrow_back_ios_new
+                                  : Icons.arrow_back_ios,
                               color: Colors.white,
                             ),
                             onPressed: () => Navigator.pop(context),
@@ -102,16 +130,18 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Expanded(
                           child: SingleChildScrollView(
-                            padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                            padding: const EdgeInsets.fromLTRB(24, 350, 24, 24),
                             child: Form(
                               key: _formKey,
                               child: AuthCardWidget(
                                 children: [
                                   Text(
                                     LocaleKeys.login.tr(),
-                                    style: const TextStyle(color: Colors.white,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   const SizedBox(height: 24),
                                   AuthTextField(
@@ -119,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                                     prefixIcon: Icons.email_outlined,
                                     controller: _emailController,
                                     validator: (value) =>
-                                    (value == null || value.isEmpty)
+                                        (value == null || value.isEmpty)
                                         ? LocaleKeys.emailRequired.tr()
                                         : null,
                                   ),
@@ -143,40 +173,51 @@ class _LoginPageState extends State<LoginPage> {
                                   const SizedBox(height: 24),
                                   AuthButton(
                                     text: LocaleKeys.signIn.tr(),
-                                    backgroundColor: AppColors.promoRed,
+                                    backgroundColor: AppColors.white,
+                                    textColor: AppColors.primary,
                                     isLoading: isLoading,
-                                    onPressed: isLoading ? null : () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context.read<AuthCubit>().login(
-                                          login: _emailController.text.trim(),
-                                          password: _passwordController.text,
-                                        );
-                                      }
-                                    },
+                                    onPressed: isLoading
+                                        ? null
+                                        : () {
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              context.read<AuthCubit>().login(
+                                                login: _emailController.text
+                                                    .trim(),
+                                                password:
+                                                    _passwordController.text,
+                                              );
+                                            }
+                                          },
                                   ),
                                   const SizedBox(height: 8),
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.push(context,
-                                            MaterialPageRoute(builder: (
-                                                _) => const ForgotPasswordPage())),
+                                    onPressed: () => Navigator.push(
+                                      context,
+                                      appRoute(
+                                        (_) => const ForgotPasswordPage(),
+                                      ),
+                                    ),
                                     child: Text(
                                       LocaleKeys.forgotPassword.tr(),
                                       style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w500),
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  // TextButton(
-                                  //   onPressed: () => _goToRegister(context),
-                                  //   child: Text(
-                                  //     LocaleKeys.dontHaveAccount.tr(),
-                                  //     style: const TextStyle(
-                                  //         color: Colors.white, fontSize: 13),
-                                  //   ),
-                                  // ),
+                                  TextButton(
+                                    onPressed: () => _goToRegister(context),
+                                    child: Text(
+                                      LocaleKeys.dontHaveAccount.tr(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
